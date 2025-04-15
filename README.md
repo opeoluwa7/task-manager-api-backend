@@ -13,6 +13,7 @@ For full API details, check the Postman Documentation [here](https://documenter.
   - **Express.js:** Express is a minimal and flexible Node.js web framework that simplifies building APIs and web applications by handling routing, middleware, and HTTP requests.
 - **Database:**
   - **PostgresSQL(hosted on Railway):** Postgres is a powerful, open-source relational database system known for its reliability, scalability and advanced SQL compliance.
+  - **Redis:** Redis is an in-memory data store known for its speed, used for caching, session management, real-time analytics, and more.
 - **Authentication:**
   - **JWT(JSON Web Token):** A compact, secure way to represent authentication data, often used for user authentication and API author ization.
   - **bcrypt:** A hashing library used to securely hash and compare passwords to enhance authentication & security.
@@ -23,63 +24,15 @@ For full API details, check the Postman Documentation [here](https://documenter.
 
 ## Features
 
-- Authentication for accessing protected routes and resources.
+- Authentication with access and refresh tokens for accessing protected routes and resources.
+- Uses HttpOnly cookies to store the tokens and ensures smooth perfomance for users.
+- Presence of rate limiters to prevent abuse of the API.
 - Can be used to create, update and delete tasks.
 - Can be used to help track schedule based on factors like deadline and priority.
 - Registered users can update their own data and delete their account.
 - Users can upload images and retrive them.
 
-## **Setup Guide**
-
-> **Note:** This is only needed if you want to run the API locally. By default, the API is hosted on **Railway** and is ready to use.
-
-### **Clone the Repository**
-
-First, download the project files:
-
-```
-git clone https://github.com/opeoluwa7/task_manager_api_backend.git
-cd task_manager_api
-```
-
-Install Dependencies
-
-Run the following command to install required packages:
-
-`npm install`
-
-Configure Environment Variables
-
-If you want to run the API locally, you’ll need to set up environment variables.
-
-Create a .env file in the project root and add the following variables:
-
-```
-DB_URL=your_postgresql_database_url
-JWT_SECRET=your_jwt_secret_key
-JWT_EXP_IN_SEC=your_token_expiry_in_seconds
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-```
-
-Where to get these values?
-
-    •	Database URL → Use your own PostgreSQL database or a Railway-hosted one.
-    •	JWT Secrets → Set your own values for security.
-    •	Cloudinary Variables → Sign up at Cloudinary to get API keys.
-
-Run the Server Locally
-
-Start the development server:
-
-npm start
-
-If everything is set up correctly, the server will start on http://localhost:3000.
-
-Test with Postman
-
-To test the API, use the provided [Postman documentation](https://documenter.getpostman.com/view/42958843/2sB2cPk5wr).
+## **Note:** By default, the API is hosted on **Railway** and is ready to use.
 
 ## API USAGE
 
@@ -105,21 +58,12 @@ Here's a basic example of how to use the API.
 {
   "success": "true",
   "data": "data",
-  "token": "your_jwt_token"
 }
 ```
 
 **Get all tasks (Protected route)**
 
 **Endpoint:** GET /tasks/all
-
-**Headers:**
-
-```
-{
-  "Authorization": "Bearer your_jwt_token"
-}
-```
 
 **Response:**
 
@@ -137,17 +81,18 @@ Here's a basic example of how to use the API.
 ## Project Structure
 
 ```
+dist
 src/
-    |-- common #Rate limiter
-    |-- config #Config files(DB queries, env.js)
+    |-- config #Config files(DB queries, pool, cloudinaryConfig, env.js)
     |-- controllers # Request handlers
     |-- middlewares # Auth and other middleware
     |-- routes # API routes
     |-- utils # jwt and other helpers
+    index.ts
 README.md
-index.js
 package-lock.json
 package.json
+tsconfig.json
 ```
 
 ## Deployment
