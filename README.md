@@ -4,7 +4,7 @@ A node.js API built with typescript that helps manage tasks, handle CRUD operati
 
 ## Documentation
 
-For full API details, check the Postman Documentation [here](https://documenter.getpostman.com/view/42958843/2sB2cPk5wr)
+For full API details, check the Postman Documentation [here](https://documenter.getpostman.com/view/42958843/2sB2cbayuZ)
 
 ## Tech Stack
 
