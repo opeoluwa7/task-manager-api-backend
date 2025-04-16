@@ -34,4 +34,4 @@ app.use("/api", UserRoutes);
 app.use("/api", TaskRoutes);
 
 app.use(errorHandler);
-app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}...Running...`))
+app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}.........Running..........`))
