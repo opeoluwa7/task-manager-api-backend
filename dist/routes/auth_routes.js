@@ -2,7 +2,8 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const router = require("express").Router();
+const express_1 = __importDefault(require("express"));
+const router = express_1.default.Router();
 const auth_controller_1 = __importDefault(require("../controllers/auth_controller"));
 const rateLimiterMiddleware_1 = __importDefault(require("../middlewares/rateLimiterMiddleware"));
 const is_authorized_1 = __importDefault(require("../middlewares/is_authorized"));

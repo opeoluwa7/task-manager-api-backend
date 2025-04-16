@@ -51,28 +51,28 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
          res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         })
 
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         })
 
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
@@ -129,27 +129,27 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: '/api/refresh-token'
         })
 
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         })
 
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
@@ -186,13 +186,13 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
 
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         })
@@ -233,13 +233,13 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
 
         res.clearCookie('resetToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
         res.cookie('resetToken', resetToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 
@@ -322,13 +322,13 @@ const refreshAccessToken = async(req: Request, res: Response, next: NextFunction
 
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
 
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         })
 

@@ -58,23 +58,23 @@ const updateUser = async (req, res, next) => {
             const newRefreshToken = (0, jwt_1.generateRefreshToken)(user_id);
             res.clearCookie('accessToken', {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'none'
             });
             res.clearCookie('refreshToken', {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'none',
                 path: '/api/refresh-token'
             });
             res.cookie('accessToken', newAccessToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'none'
             });
             res.cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'none',
                 path: '/api/refresh-token'
             });

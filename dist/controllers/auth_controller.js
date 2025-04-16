@@ -38,24 +38,24 @@ const register = async (req, res, next) => {
         const refreshToken = (0, jwt_1.generateRefreshToken)(user_id);
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         });
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         });
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.status(201).json({
@@ -100,24 +100,24 @@ const login = async (req, res, next) => {
         const refreshToken = (0, jwt_1.generateRefreshToken)(user_id);
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: '/api/refresh-token'
         });
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         });
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.status(201).json({
@@ -148,12 +148,12 @@ const logout = async (req, res, next) => {
         await redis_1.default.setex(refresh_token, expiresIn, "blacklisted");
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: "/api/refresh-token"
         });
@@ -185,12 +185,12 @@ const requestPasswordReset = async (req, res, next) => {
         await (0, resetEmailConfig_1.default)(user.email, resetToken);
         res.clearCookie('resetToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.cookie('resetToken', resetToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.status(200).json({
@@ -248,12 +248,12 @@ const refreshAccessToken = async (req, res, next) => {
         const newAccessToken = (0, jwt_1.generateAccessToken)(user_id);
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         return res.status(200).json({
