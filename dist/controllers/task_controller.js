@@ -2,32 +2,25 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const task_queries_1 = __importDefault(require("../config/db/task_queries"));
+const task_queries_1 = __importDefault(require("../config/db_queries/task_queries"));
+const task_schema_1 = require("../schemas/task_schema");
 const createNewTask = async (req, res, next) => {
     try {
-        const task = req.body;
-        task.priority = task.priority.toLowerCase();
-        task.status = task.status.toLowerCase();
-        task.user_id = req.user?.user_id;
-        if (!task) {
+        const value = task_schema_1.createTaskSchema.safeParse(req.body);
+        if (!value.success)
             return res.status(400).json({
                 success: false,
-                error: "Empty fields, Please fill out form"
+                error: value.error.format()
             });
-        }
-        if (!task.user_id) {
-            return res.status(401).json({
+        const task = value.data;
+        const task_deadline = new Date(task.deadline);
+        const user_id = req.user?.user_id;
+        const results = await task_queries_1.default.createTask(task.title, task.description, task.status, task.priority, task_deadline, user_id);
+        if (!results)
+            return res.status(500).json({
                 success: false,
-                error: "User not identified, please login again"
+                error: "Error creating task"
             });
-        }
-        const results = await task_queries_1.default.createTask(task.title, task.description, task.status, task.priority, task.deadline, task.user_id);
-        if (!results) {
-            return res.status(400).json({
-                success: false,
-                error: "Something went wrong"
-            });
-        }
         res.status(201).json({
             success: true,
             message: "Task created successfully",
@@ -42,17 +35,10 @@ const getAllTasks = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
         const filters = req.query;
-        let limit = 10;
-        let page = 1;
+        let limit = 20;
         let offset = 0;
-        if (!user_id) {
-            return res.status(401).json({
-                success: false,
-                error: "User not identified, please login again"
-            });
-        }
         const results = await task_queries_1.default.getTasks(user_id, filters, limit, offset);
-        if (results.length === 0) {
+        if (results?.length === 0) {
             return res.status(404).json({
                 success: false,
                 error: "No tasks found!"
@@ -70,28 +56,28 @@ const getAllTasks = async (req, res, next) => {
 };
 const updateUserTask = async (req, res, next) => {
     try {
-        const updatedTask = req.body;
-        const user_id = req.user?.user_id;
-        if (!updatedTask) {
+        const value = task_schema_1.updateTaskSchema.safeParse(req.body);
+        if (!value.success) {
             return res.status(400).json({
                 success: false,
-                error: "Required fields are missing. Please fill out form"
+                error: value.error.format()
             });
         }
-        updatedTask.priority = updatedTask.priority.toLowerCase();
-        updatedTask.status = updatedTask.status.toLowerCase();
-        if (!user_id) {
-            return res.status(401).json({
+        const updatedTask = value.data;
+        const user_id = req.user?.user_id;
+        const task_id = Number(req.params.id);
+        const updatedTask_deadline = new Date(updatedTask.deadline);
+        const results = await task_queries_1.default.updateTask(updatedTask.title, updatedTask.description, updatedTask.status, updatedTask.priority, updatedTask_deadline, user_id, task_id);
+        const afterUpdateTask = await task_queries_1.default.getTaskById(user_id, task_id);
+        if (!afterUpdateTask)
+            return res.status(404).json({
                 success: false,
-                error: "User not identified, please login again"
+                error: "Task not found in the database."
             });
-        }
-        const task_id = parseInt(req.params.id);
-        const results = await task_queries_1.default.updateTask(updatedTask.title, updatedTask.description, updatedTask.status, updatedTask.priority, updatedTask.deadline, user_id, task_id);
         if (!results) {
             return res.status(500).json({
                 succcess: false,
-                error: "Something went wrong"
+                error: "Error updating task. Something went wrong, try again"
             });
         }
         res.status(200).json({
@@ -107,13 +93,7 @@ const updateUserTask = async (req, res, next) => {
 const deleteUserTask = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        if (!user_id) {
-            return res.status(401).json({
-                success: false,
-                error: "User not identified, please login again"
-            });
-        }
-        const task_id = parseInt(req.params.id);
+        const task_id = Number(req.params.id);
         let task = await task_queries_1.default.getTaskById(user_id, task_id);
         if (!task) {
             return res.status(404).json({
@@ -125,7 +105,7 @@ const deleteUserTask = async (req, res, next) => {
         if (!result) {
             return res.status(500).json({
                 success: false,
-                error: "Something went wrong"
+                error: "Error deleting task. Something went wrong"
             });
         }
         res.status(200).json({

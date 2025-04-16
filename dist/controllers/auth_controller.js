@@ -5,40 +5,67 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const redis_1 = __importDefault(require("../utils/redis"));
 const bcrypt_1 = require("../utils/bcrypt");
 const jwt_1 = require("../utils/jwt");
-const joi_validation_1 = require("../utils/joi_validation");
-const auth_queries_1 = require("../config/db/auth_queries");
-const user_queries_1 = __importDefault(require("../config/db/user_queries"));
+const auth_queries_1 = require("../config/db_queries/auth_queries");
+const user_queries_1 = __importDefault(require("../config/db_queries/user_queries"));
 const resetEmailConfig_1 = __importDefault(require("../config/resetEmailConfig"));
+const user_schema_1 = require("../schemas/user_schema");
+;
 const register = async (req, res, next) => {
     try {
-        const object = req.body;
-        const { error, value } = joi_validation_1.authSchema.validate(object, { convert: true });
-        if (error)
+        const value = user_schema_1.registerSchema.safeParse(req.body);
+        if (!value.success) {
             return res.status(400).json({
                 success: false,
-                error: error.details[0].message
+                error: value.error.format()
             });
-        const { email, password, name } = value;
+        }
+        const { name, email, password } = value.data;
         const existingUser = await auth_queries_1.authQueries.getUserDetails(email);
-        if (existingUser) {
+        if (existingUser)
             return res.status(400).json({
                 success: false,
                 error: "This email is already registered"
             });
-        }
         const encryptedPassword = await (0, bcrypt_1.encryptPassword)(password);
         const results = await auth_queries_1.authQueries.createUser(name, email, encryptedPassword);
+        if (!results)
+            return res.status(500).json({
+                success: false,
+                error: "Error creating user"
+            });
         const user_id = results.user_id;
-        const accessToken = (0, jwt_1.generateAccessToken)(email, user_id);
+        const accessToken = (0, jwt_1.generateAccessToken)(user_id);
+        const refreshToken = (0, jwt_1.generateRefreshToken)(user_id);
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            path: "/api/refresh-token"
+        });
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            path: "/api/refresh-token"
+        });
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
         res.status(201).json({
             success: true,
             message: "User registered successfully!",
             user: {
                 user_id: user_id,
-                name,
-                email
+                name: results.name,
+                email: results.email
             },
-            token: accessToken
         });
     }
     catch (error) {
@@ -47,41 +74,60 @@ const register = async (req, res, next) => {
 };
 const login = async (req, res, next) => {
     try {
-        const { error, value } = joi_validation_1.authSchema.validate(req.body, { convert: true });
-        if (error)
+        const value = user_schema_1.loginSchema.safeParse(req.body);
+        if (!value.success)
             return res.status(400).json({
                 success: false,
-                error: error.details[0].message
+                error: value.error.format()
             });
-        const { email, password } = value;
+        const { email, password } = value.data;
         const user = await auth_queries_1.authQueries.getUserDetails(email);
-        if (!user) {
+        if (!user)
             return res.status(404).json({
                 success: false,
-                error: "User not found"
+                error: "User not found. Please register or confirm your details"
             });
-        }
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
         const name = user.name;
         const match = await (0, bcrypt_1.comparePasswords)(password, storedHashedPassword);
-        if (!match) {
-            return res.status(401).json({
+        if (!match)
+            return res.status(400).json({
                 success: false,
                 error: "Passwords don\'t match"
             });
-        }
-        const accessToken = (0, jwt_1.generateAccessToken)(email, user_id);
-        console.log(accessToken);
-        res.status(200).json({
+        const accessToken = (0, jwt_1.generateAccessToken)(user_id);
+        const refreshToken = (0, jwt_1.generateRefreshToken)(user_id);
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            path: '/api/refresh-token'
+        });
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            path: "/api/refresh-token"
+        });
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        res.status(201).json({
             success: true,
             message: "User login successful!",
             user: {
                 user_id: user_id,
                 name,
                 email
-            },
-            token: accessToken
+            }
         });
     }
     catch (error) {
@@ -90,16 +136,27 @@ const login = async (req, res, next) => {
 };
 const logout = async (req, res, next) => {
     try {
-        const authHeaders = req.headers['authorization'];
-        const token = authHeaders.split(' ')[1];
-        if (!token) {
-            return res.status(400).json({
+        const access_token = req.cookies['accessToken'];
+        const refresh_token = req.cookies['refreshtoken'];
+        if (!access_token)
+            return res.status(401).json({
                 success: false,
-                error: "Token required in the request body"
+                error: "Token not found. Please login again"
             });
-        }
         const expiresIn = 900;
-        await redis_1.default.setex(token, expiresIn, "blacklisted");
+        await redis_1.default.setex(access_token, expiresIn, "blacklisted");
+        await redis_1.default.setex(refresh_token, expiresIn, "blacklisted");
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none',
+            path: "/api/refresh-token"
+        });
         res.status(200).json({
             success: true,
             message: "User logged out successfully!"
@@ -111,26 +168,34 @@ const logout = async (req, res, next) => {
 };
 const requestPasswordReset = async (req, res, next) => {
     try {
-        const { error, value } = joi_validation_1.authSchema.fork(['password'], field => field.optional()).validate({ email: req.body.email }, { convert: true });
-        if (error)
+        const value = user_schema_1.forgotPasswordSchema.safeParse(req.body);
+        if (!value.success)
             return res.status(400).json({
                 success: false,
-                error: error.details[0].message
+                error: value.error.format()
             });
-        let { email } = value;
+        const { email } = value.data;
         const user = await auth_queries_1.authQueries.getUserDetails(email);
-        if (!user) {
+        if (!user)
             return res.status(404).json({
                 success: false,
                 error: "User not found"
             });
-        }
-        const resetToken = (0, jwt_1.generateAccessToken)(user.email, user.user_id);
+        const resetToken = (0, jwt_1.generateAccessToken)(user.user_id);
         await (0, resetEmailConfig_1.default)(user.email, resetToken);
+        res.clearCookie('resetToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        res.cookie('resetToken', resetToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
         res.status(200).json({
             success: true,
             message: "Password reset email sent.",
-            resetToken: resetToken
         });
     }
     catch (error) {
@@ -139,36 +204,34 @@ const requestPasswordReset = async (req, res, next) => {
 };
 const resetPassword = async (req, res, next) => {
     try {
-        const { error, value } = joi_validation_1.authSchema.fork(['email'], field => field.optional()).validate(req.body, { convert: true });
-        if (error)
+        const value = user_schema_1.resetPasswordSchema.safeParse(req.body);
+        if (!value.success)
             return res.status(400).json({
                 success: false,
-                error: error.details[0].message
+                error: value.error.format()
             });
-        const { password: newPassword, resetToken } = value;
-        const verified = (0, jwt_1.verifyToken)(resetToken);
-        if (!verified) {
-            return res.status(500).json({
-                error: "token not verified"
+        const resetToken = req.cookies['resetToken'];
+        const { password: newPassword } = value.data;
+        const verified = (0, jwt_1.verifyAccessToken)(resetToken);
+        if (!verified)
+            return res.status(401).json({
+                error: "Reset Token not verified. Try again"
             });
-        }
         const user = await user_queries_1.default.getUserAfterAuth(verified.user_id);
         const currentPassword = user.password;
         const match = await (0, bcrypt_1.comparePasswords)(newPassword, currentPassword);
-        if (match) {
+        if (match)
             return res.status(400).json({
                 success: false,
                 error: "Passwords must not match. change it for better security."
             });
-        }
         const encryptedPassword = await (0, bcrypt_1.encryptPassword)(newPassword);
         const results = await user_queries_1.default.updateUser(user.name, user.email, encryptedPassword, user.user_id);
-        if (!results) {
-            return res.status(400).json({
+        if (!results)
+            return res.status(500).json({
                 success: false,
                 error: "Something went wrong"
             });
-        }
         res.status(200).json({
             success: true,
             message: "Password reset successful!",
@@ -179,10 +242,34 @@ const resetPassword = async (req, res, next) => {
         next(error);
     }
 };
+const refreshAccessToken = async (req, res, next) => {
+    try {
+        const user_id = req.user?.user_id;
+        const newAccessToken = (0, jwt_1.generateAccessToken)(user_id);
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'none'
+        });
+        return res.status(200).json({
+            success: true,
+            message: "Token refreshed successfully"
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
 module.exports = {
     register,
     login,
     logout,
     requestPasswordReset,
-    resetPassword
+    resetPassword,
+    refreshAccessToken
 };

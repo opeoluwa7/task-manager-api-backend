@@ -117,8 +117,7 @@
     "typeRoots": [
       "./src/types, ./node_modules/@types",
       "./src/types"
-    ],
-    "types": ["node"]
+    ]
       /* Skip type checking all .d.ts files. */
   },
 

@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 const router = require("express").Router();
-const rateLimit = require("../common/rate_limiter.js");
-const updateLimit = rateLimit(10, 10, "Too many update attempts. Try again in 10 minutes");
-const isAuthenticated = require("../middlewares/is_authenticated.js");
-const UserController = require("../controllers/user_controller.js");
-router.get('/find-user', [isAuthenticated.check], UserController.findUser);
-router.patch('/update-user', [isAuthenticated.check], updateLimit, UserController.updateUser);
-router.delete('/delete-user', [isAuthenticated.check], UserController.deleteUser);
+const rateLimiterMiddleware_1 = __importDefault(require("../middlewares/rateLimiterMiddleware"));
+const rateLimit = (0, rateLimiterMiddleware_1.default)(10, 5, "Too many attempts. Try again in 10 minutes.");
+const is_authorized_1 = __importDefault(require("../middlewares/is_authorized"));
+const user_controller_1 = __importDefault(require("../controllers/user_controller"));
+router.get('/find-user', [is_authorized_1.default.check], user_controller_1.default.findUser);
+router.patch('/update-user', [is_authorized_1.default.check, rateLimit], user_controller_1.default.updateUser);
+router.delete('/delete-user', [is_authorized_1.default.check], user_controller_1.default.deleteUser);
 module.exports = router;

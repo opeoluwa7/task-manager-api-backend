@@ -1,7 +1,9 @@
-const router = require("express").Router();
+import express from "express";
+import { ImageController } from "../controllers/upload_controller";
 import  upload  from "../middlewares/uploadMiddleware";
 import isAuthorized from "../middlewares/is_authorized"
-import { ImageController } from "../controllers/upload_controller";
+
+const router = express.Router();
 
 
 router.post('/user/upload-image', [isAuthorized.check, upload.single("image")], ImageController.uploadImage);

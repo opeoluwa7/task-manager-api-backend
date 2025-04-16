@@ -3,17 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blacklistToken = exports.verifyToken = exports.generateAccessToken = void 0;
+exports.blacklistToken = exports.verifyRefreshToken = exports.verifyAccessToken = exports.generateRefreshToken = exports.generateAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const redis_1 = __importDefault(require("./redis"));
 const env_1 = require("../config/env");
 const JWTSECRET = env_1.env.JWTSECRET;
 const JWTEXPTIME = env_1.env.JWTEXPTIME;
-console.log('This is the jwt exp time:', JWTEXPTIME);
-console.log(JWTSECRET);
-const generateAccessToken = (email, user_id) => {
+const JWT_REFRESH_SECRET = env_1.env.JWT_REFRESH_SECRET;
+const JWT_REFRESH_EXP_TIME = env_1.env.JWT_REFRESH_EXP_TIME;
+const generateAccessToken = (user_id) => {
     const payload = {
-        email,
         user_id
     };
     return jsonwebtoken_1.default.sign(payload, JWTSECRET, {
@@ -21,10 +20,23 @@ const generateAccessToken = (email, user_id) => {
     });
 };
 exports.generateAccessToken = generateAccessToken;
-const verifyToken = (token) => {
+const generateRefreshToken = (user_id) => {
+    const payload = {
+        user_id
+    };
+    return jsonwebtoken_1.default.sign(payload, JWT_REFRESH_SECRET, {
+        expiresIn: JWT_REFRESH_EXP_TIME
+    });
+};
+exports.generateRefreshToken = generateRefreshToken;
+const verifyAccessToken = (token) => {
     return jsonwebtoken_1.default.verify(token, JWTSECRET);
 };
-exports.verifyToken = verifyToken;
+exports.verifyAccessToken = verifyAccessToken;
+const verifyRefreshToken = (token) => {
+    return jsonwebtoken_1.default.verify(token, JWT_REFRESH_SECRET);
+};
+exports.verifyRefreshToken = verifyRefreshToken;
 const blacklistToken = (token, expiry = JWTEXPTIME) => {
     const blacklist = redis_1.default.set(token, 'blacklisted', { EX: expiry });
     return blacklist;

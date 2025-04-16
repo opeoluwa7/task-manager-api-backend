@@ -22,8 +22,4 @@ export const env = {
     EMAIL_PORT: process.env.EMAIL_PORT,
     EMAIL_SECURE: process.env.EMAIL_SECURE,
     EMAIL_SERVICE: process.env.EMAIL_SERVICE,
-    HTTPONLY: process.env.HTTPONLY,
-    COOKIE_SECURE: process.env.COOKIE_SECURE,
-    SAMESITE: process.env.SAMESITE
-
 }

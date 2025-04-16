@@ -1,4 +1,6 @@
-const router = require("express").Router();
+import express from "express";
+
+const router = express.Router()
 
 import AuthController from "../controllers/auth_controller";
 

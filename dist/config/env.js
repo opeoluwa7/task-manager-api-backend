@@ -6,6 +6,8 @@ exports.env = {
     PORT: process.env.PORT,
     JWTSECRET: process.env.JWTSECRET,
     JWTEXPTIME: process.env.JWTEXPTIME,
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+    JWT_REFRESH_EXP_TIME: process.env.JWT_REFRESH_EXP_TIME,
     DB_URL: process.env.DB_URL,
     DB_HOST: process.env.DB_HOST,
     DB_USER: process.env.DB_USER,
@@ -20,6 +22,6 @@ exports.env = {
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS,
     EMAIL_PORT: process.env.EMAIL_PORT,
-    SECURE: process.env.SECURE,
-    EMAIL_SERVICE: process.env.EMAIL_SERVICE
+    EMAIL_SECURE: process.env.EMAIL_SECURE,
+    EMAIL_SERVICE: process.env.EMAIL_SERVICE,
 };

@@ -2,7 +2,7 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const pool_1 = __importDefault(require("./pool"));
+const pool_1 = __importDefault(require("../db_pool/pool"));
 const createTask = async (title, description, status, priority, deadline, user_id) => {
     try {
         // const allowedStatus = ['pending', 'in_progress', 'completed'];
@@ -18,7 +18,7 @@ const createTask = async (title, description, status, priority, deadline, user_i
         return results.rows[0];
     }
     catch (error) {
-        throw error;
+        return null;
     }
 };
 const getTasks = async (user_id, filters, limit, offset) => {
@@ -41,7 +41,7 @@ const getTasks = async (user_id, filters, limit, offset) => {
         return results.rows;
     }
     catch (error) {
-        throw error;
+        return null;
     }
 };
 const getTaskById = async (user_id, task_id) => {
@@ -52,6 +52,7 @@ const getTaskById = async (user_id, task_id) => {
         return results.rows[0];
     }
     catch (error) {
+        return null;
     }
 };
 const updateTask = async (title, description, status, priority, deadline, user_id, task_id) => {
@@ -62,7 +63,7 @@ const updateTask = async (title, description, status, priority, deadline, user_i
         return results.rows[0];
     }
     catch (error) {
-        throw error;
+        return null;
     }
 };
 const deleteTask = async (task_id) => {
@@ -73,7 +74,7 @@ const deleteTask = async (task_id) => {
         return results.rows;
     }
     catch (error) {
-        throw error;
+        return null;
     }
 };
 module.exports = {
