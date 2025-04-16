@@ -2,7 +2,7 @@ import Redis from "ioredis";
 import { env } from "../config/env";
 
 
-const redis = new Redis(env.REDIS_URL!); 
+const redis = new Redis(env.REDIS_URL! + '?family=0'); 
 
 redis.on('connect', () => {
     console.log('Successfully connected to redis');
