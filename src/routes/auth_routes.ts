@@ -16,6 +16,6 @@ router.post('/login', rateLimit, AuthController.login);
 router.post('/logout', [rateLimit, isAuthorized.check], AuthController.logout);
 router.post('/forgot-password', rateLimit, AuthController.requestPasswordReset);
 router.post('/reset-password', rateLimit, AuthController.resetPassword);
-router.post('/refresh-token', refreshTokenMiddlware, AuthController.refreshAccessToken)
+router.post('/refresh-token', [rateLimit, refreshTokenMiddlware], AuthController.refreshAccessToken)
 
 export = router
