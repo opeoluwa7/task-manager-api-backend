@@ -211,6 +211,11 @@ const resetPassword = async (req, res, next) => {
                 error: value.error.format()
             });
         const resetToken = req.cookies['resetToken'];
+        if (!resetToken)
+            return res.status(401).json({
+                success: false,
+                error: "No reset token provided. Go back to forgot password"
+            });
         const { password: newPassword } = value.data;
         const verified = (0, jwt_1.verifyAccessToken)(resetToken);
         if (!verified)

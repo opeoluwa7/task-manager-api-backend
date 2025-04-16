@@ -14,5 +14,5 @@ router.post('/login', rateLimit, auth_controller_1.default.login);
 router.post('/logout', [rateLimit, is_authorized_1.default.check], auth_controller_1.default.logout);
 router.post('/forgot-password', rateLimit, auth_controller_1.default.requestPasswordReset);
 router.post('/reset-password', rateLimit, auth_controller_1.default.resetPassword);
-router.post('/refresh-token', refreshTokenMiddleware_1.default, auth_controller_1.default.refreshAccessToken);
+router.post('/refresh-token', [rateLimit, refreshTokenMiddleware_1.default], auth_controller_1.default.refreshAccessToken);
 module.exports = router;
