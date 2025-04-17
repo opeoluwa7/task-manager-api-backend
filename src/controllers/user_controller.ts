@@ -89,11 +89,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 
         res.status(200).json({ 
             success: true,
-            updatedUser: {
-                user_id: user_id,
-                name: results.name,
-                email: results.email,
-            },
+            updatedUser: results
         });
     } catch (error) {
         next(error)

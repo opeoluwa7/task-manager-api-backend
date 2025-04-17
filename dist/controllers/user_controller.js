@@ -70,11 +70,7 @@ const updateUser = async (req, res, next) => {
         const results = await user_queries_1.default.updateUser(name, newEmail, encryptedPassword, user_id);
         res.status(200).json({
             success: true,
-            updatedUser: {
-                user_id: user_id,
-                name: results.name,
-                email: results.email,
-            },
+            updatedUser: results
         });
     }
     catch (error) {
