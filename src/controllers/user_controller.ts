@@ -42,7 +42,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
             })
         }
 
-        const { email: newEmail, password: newPassword, name } = value.data;
+        const { email: newEmail, password: newPassword, name: newName } = value.data;
 
         const user = await userQueries.getUserAfterAuth(user_id);
 
@@ -62,17 +62,19 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
                 
             await redis.setex(access_token, expiresIn, "blacklisted");
 
+            res.clearCookie('accessToken', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none'
+            })
+
             const newAccessToken: string | '' = generateAccessToken(user_id);
 
             console.log(user_id);
 
             console.log("Access token:", newAccessToken);
 
-            res.clearCookie('accessToken', {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none'
-            })
+            
 
             res.cookie('accessToken', newAccessToken, {
                 httpOnly: true,
@@ -82,9 +84,9 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 
          }
 
-        let encryptedPassword = newPassword ? await encryptPassword(newPassword) : currentPassword
+        const encryptedPassword = newPassword ? await encryptPassword(newPassword) : currentPassword
 
-        const results = await userQueries.updateUser(name, newEmail, encryptedPassword, user_id);
+        const results = await userQueries.updateUser(newName, newEmail, encryptedPassword, user_id);
  
 
         res.status(200).json({ 

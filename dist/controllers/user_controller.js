@@ -39,7 +39,7 @@ const updateUser = async (req, res, next) => {
                 error: value.error.format()
             });
         }
-        const { email: newEmail, password: newPassword, name } = value.data;
+        const { email: newEmail, password: newPassword, name: newName } = value.data;
         const user = await user_queries_1.default.getUserAfterAuth(user_id);
         if (!user)
             return res.status(404).json({
@@ -52,22 +52,22 @@ const updateUser = async (req, res, next) => {
             const access_token = req.cookies['accessToken'];
             const expiresIn = 900;
             await redis_1.default.setex(access_token, expiresIn, "blacklisted");
-            const newAccessToken = (0, jwt_1.generateAccessToken)(user_id);
-            console.log(user_id);
-            console.log("Access token:", newAccessToken);
             res.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
             });
+            const newAccessToken = (0, jwt_1.generateAccessToken)(user_id);
+            console.log(user_id);
+            console.log("Access token:", newAccessToken);
             res.cookie('accessToken', newAccessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
             });
         }
-        let encryptedPassword = newPassword ? await (0, bcrypt_1.encryptPassword)(newPassword) : currentPassword;
-        const results = await user_queries_1.default.updateUser(name, newEmail, encryptedPassword, user_id);
+        const encryptedPassword = newPassword ? await (0, bcrypt_1.encryptPassword)(newPassword) : currentPassword;
+        const results = await user_queries_1.default.updateUser(newName, newEmail, encryptedPassword, user_id);
         res.status(200).json({
             success: true,
             updatedUser: results
