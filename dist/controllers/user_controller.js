@@ -68,6 +68,7 @@ const updateUser = async (req, res, next) => {
         }
         const encryptedPassword = newPassword ? await (0, bcrypt_1.encryptPassword)(newPassword) : currentPassword;
         const results = await user_queries_1.default.updateUser(newName, newEmail, encryptedPassword, user_id);
+        console.log(newName, newEmail, encryptedPassword, user_id);
         res.status(200).json({
             success: true,
             updatedUser: results

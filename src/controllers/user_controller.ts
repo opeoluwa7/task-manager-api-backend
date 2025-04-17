@@ -87,6 +87,8 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
         const encryptedPassword = newPassword ? await encryptPassword(newPassword) : currentPassword
 
         const results = await userQueries.updateUser(newName, newEmail, encryptedPassword, user_id);
+
+        console.log(newName, newEmail, encryptedPassword, user_id);
  
 
         res.status(200).json({ 
