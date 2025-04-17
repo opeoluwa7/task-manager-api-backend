@@ -12,7 +12,7 @@ import ImageRoutes from "./routes/uploads_route"
 const PORT = env.PORT || 3000;
 
 const corsOptions = {
-        origin: 'https://task-manager-app-frontend-blue.vercel.app',
+        origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:5173'],
         credentials: true,
         methods: 'GET,PATCH,POST,DELETE',
         allowedHeaders: "Content-Type"
