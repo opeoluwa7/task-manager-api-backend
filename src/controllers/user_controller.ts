@@ -65,7 +65,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
             await redis.setex(refresh_token, expiresIn, "blacklisted");
 
             const newAccessToken: string | '' = generateAccessToken(user_id);
-            const newRefreshToken: string = generateRefreshToken(user_id);
+            const newRefreshToken: string | '' = generateRefreshToken(user_id);
 
             res.clearCookie('accessToken', {
                 httpOnly: true,
