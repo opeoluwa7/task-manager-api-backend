@@ -1,6 +1,6 @@
 import redis from "../utils/redis"
 import { encryptPassword, comparePasswords } from "../utils/bcrypt";
-import { generateAccessToken, generateRefreshToken, verifyResetToken } from "../utils/jwt";
+import { generateAccessToken, generateRefreshToken, generateResetToken, verifyResetToken } from "../utils/jwt";
 import { authQueries } from "../config/db_queries/auth_queries";
 import userQueries from "../config/db_queries/user_queries";
 import sendPasswordResetEmail from "../config/resetEmailConfig";
@@ -226,7 +226,7 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
             error: "User not found"
         });
 
-        const resetToken = generateAccessToken(user.user_id);
+        const resetToken = generateResetToken(user.user_id);
 
 
         await sendPasswordResetEmail(user.email, resetToken);

@@ -181,7 +181,7 @@ const requestPasswordReset = async (req, res, next) => {
                 success: false,
                 error: "User not found"
             });
-        const resetToken = (0, jwt_1.generateAccessToken)(user.user_id);
+        const resetToken = (0, jwt_1.generateResetToken)(user.user_id);
         await (0, resetEmailConfig_1.default)(user.email, resetToken);
         res.clearCookie('resetToken', {
             httpOnly: true,
