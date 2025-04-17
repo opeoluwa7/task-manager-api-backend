@@ -1,6 +1,6 @@
 import redis from "../utils/redis"
 import { encryptPassword, comparePasswords } from "../utils/bcrypt";
-import { generateAccessToken, generateRefreshToken, verifyAccessToken } from "../utils/jwt";
+import { generateAccessToken, generateRefreshToken, verifyResetToken } from "../utils/jwt";
 import { authQueries } from "../config/db_queries/auth_queries";
 import userQueries from "../config/db_queries/user_queries";
 import sendPasswordResetEmail from "../config/resetEmailConfig";
@@ -263,6 +263,8 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
             error: value.error.format()
         })
 
+        const {password: newPassword} = value.data;
+
         const resetToken = req.cookies['resetToken'];
 
         if (!resetToken) return res.status(401).json({
@@ -270,12 +272,10 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
             error: "No reset token provided. Go back to forgot password"
         })
 
-        const {password: newPassword} = value.data;
-
-        const verified = verifyAccessToken(resetToken) as JwtPayload;
+        const verified = verifyResetToken(resetToken) as JwtPayload;
 
         if (!verified) return res.status(401).json({
-            error: "Reset Token not verified. Try again"
+            error: "Invalid reset token. go back to forgot password"
         })
         
         const user = await userQueries.getUserAfterAuth(verified.user_id);

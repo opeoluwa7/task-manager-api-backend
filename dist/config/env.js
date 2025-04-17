@@ -8,6 +8,8 @@ exports.env = {
     JWTEXPTIME: process.env.JWTEXPTIME,
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
     JWT_REFRESH_EXP_TIME: process.env.JWT_REFRESH_EXP_TIME,
+    RESET_TOKEN_SECRET: process.env.RESET_TOKEN_SECRET,
+    RESET_TOKEN_EXP: process.env.RESET_TOKEN_EXP,
     DB_URL: process.env.DB_URL,
     CLOUD_NAME: process.env.CLOUD_NAME,
     API_KEY: process.env.API_KEY,
