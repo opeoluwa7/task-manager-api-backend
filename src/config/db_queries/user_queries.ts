@@ -18,7 +18,7 @@ const updateUser = async (newName: string, newEmail: string, encryptedPassword: 
 
         return results.rows[0]
     } catch (error) {
-        return null
+        throw error
     }
 }
 
