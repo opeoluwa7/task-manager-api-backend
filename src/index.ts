@@ -6,7 +6,10 @@ import AuthRoutes from "./routes/auth_routes";
 import UserRoutes from "./routes/user_routes";
 import TaskRoutes from "./routes/task_routes";
 import errorHandler from "./middlewares/error_handler";
-import ImageRoutes from "./routes/uploads_route"
+import ImageRoutes from "./routes/uploads_route";
+import createRateLimiter from "./middlewares/rateLimiterMiddleware";
+
+const rateLimit = createRateLimiter(60, 1000, "The server has received too many requests from this IP. Try again in one hour.")
 
 
 const PORT = env.PORT || 3000;
@@ -28,6 +31,8 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+app.use("/api", rateLimit);
 app.use("/api", ImageRoutes)
 app.use("/api", AuthRoutes);
 app.use("/api", UserRoutes);

@@ -6,7 +6,7 @@ import TaskController from "../controllers/task_controller";
 import isAuthorized from "../middlewares/is_authorized";
 import createRateLimiter from "../middlewares/rateLimiterMiddleware";
 
-const rateLimit = createRateLimiter(10, 10, "Too many attempts. Try again in 10 minutes.");
+const rateLimit = createRateLimiter(30, 100, "Too many attempts. Try again in 10 minutes.");
 
 router.get('/all-tasks', [isAuthorized.check, rateLimit], TaskController.getAllTasks);
 router.post('/create-task', [isAuthorized.check, rateLimit], TaskController.createNewTask);
