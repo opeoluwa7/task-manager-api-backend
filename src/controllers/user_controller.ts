@@ -62,7 +62,9 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
                 
             await redis.setex(access_token, expiresIn, "blacklisted");
 
-            const newAccessToken: string | '' = generateAccessToken(req.user?.user_id);
+            const newAccessToken: string | '' = generateAccessToken(user_id);
+
+            console.log(user_id);
 
             console.log("Access token:", newAccessToken);
 

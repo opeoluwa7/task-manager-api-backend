@@ -52,7 +52,8 @@ const updateUser = async (req, res, next) => {
             const access_token = req.cookies['accessToken'];
             const expiresIn = 900;
             await redis_1.default.setex(access_token, expiresIn, "blacklisted");
-            const newAccessToken = (0, jwt_1.generateAccessToken)(req.user?.user_id);
+            const newAccessToken = (0, jwt_1.generateAccessToken)(user_id);
+            console.log(user_id);
             console.log("Access token:", newAccessToken);
             res.clearCookie('accessToken', {
                 httpOnly: true,
