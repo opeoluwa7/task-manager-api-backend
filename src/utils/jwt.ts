@@ -11,10 +11,10 @@ const JWT_REFRESH_EXP_TIME = env.JWT_REFRESH_EXP_TIME;
 const RESET_TOKEN_SECRET= env.RESET_TOKEN_SECRET;
 const RESET_TOKEN_EXP = env.RESET_TOKEN_EXP;
 
-export const generateAccessToken = (user_id: number) => {
+export const generateAccessToken = (user_id: Number) => {
     
     type tokenPayload = {
-        user_id: number
+        user_id: Number
     } 
 
     const payload: tokenPayload = {
@@ -30,10 +30,10 @@ export const generateAccessToken = (user_id: number) => {
     )
 }
 
-export const generateRefreshToken = (user_id: number) => {
+export const generateRefreshToken = (user_id: Number) => {
     
     type refreshTokenPayload = {
-        user_id: number
+        user_id: Number
     }
 
     const payload: refreshTokenPayload = {
@@ -49,10 +49,10 @@ export const generateRefreshToken = (user_id: number) => {
     )
 }
 
-export const generateResetToken = (user_id: number) => {
+export const generateResetToken = (user_id: Number) => {
     
     type resetTokenPayload = {
-        user_id: number
+        user_id: Number
     }
 
     const payload: resetTokenPayload = {

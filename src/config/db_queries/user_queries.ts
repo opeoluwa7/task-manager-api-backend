@@ -1,7 +1,7 @@
 import pool from "../db_pool/pool";
 
 
-const getUserAfterAuth = async (user_id: number) => {
+const getUserAfterAuth = async (user_id: Number) => {
     try {
         const results = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
 
@@ -12,7 +12,7 @@ const getUserAfterAuth = async (user_id: number) => {
     }
 }
 
-const updateUser = async (newName: string, newEmail: string, encryptedPassword: string, user_id: number) => {
+const updateUser = async (newName: string, newEmail: string, encryptedPassword: string, user_id: Number) => {
     try {
         const results = await pool.query('UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email), password = COALESCE($3, password) WHERE user_id = $4 RETURNING *', [newName, newEmail, encryptedPassword, user_id]);
 
@@ -22,7 +22,7 @@ const updateUser = async (newName: string, newEmail: string, encryptedPassword: 
     }
 }
 
-const deleteUser = async(user_id: number) => {
+const deleteUser = async(user_id: Number) => {
     try {
         const results = await pool.query('DELETE FROM users WHERE user_id = $1 RETURNING *', [user_id])
 

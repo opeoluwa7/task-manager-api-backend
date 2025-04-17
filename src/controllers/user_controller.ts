@@ -31,7 +31,7 @@ const findUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user_id = req.user?.user_id;
+        const user_id: Number = req.user?.user_id;
 
         const value = updateUserSchema.safeParse(req.body)
 
@@ -63,6 +63,8 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
             await redis.setex(access_token, expiresIn, "blacklisted");
 
             const newAccessToken: string | '' = generateAccessToken(user_id);
+
+            console.log("Access token:", newAccessToken);
 
             res.clearCookie('accessToken', {
                 httpOnly: true,
