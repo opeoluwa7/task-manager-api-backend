@@ -50,41 +50,29 @@ const updateUser = async (req, res, next) => {
         const currentPassword = user.password;
         if (newEmail && newEmail !== currentEmail) {
             const access_token = req.cookies['accessToken'];
-            const refresh_token = req.cookies['refreshToken'];
             const expiresIn = 900;
             await redis_1.default.setex(access_token, expiresIn, "blacklisted");
-            await redis_1.default.setex(refresh_token, expiresIn, "blacklisted");
             const newAccessToken = (0, jwt_1.generateAccessToken)(user_id);
-            const newRefreshToken = (0, jwt_1.generateRefreshToken)(user_id);
             res.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
-            });
-            res.clearCookie('refreshToken', {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                path: '/api/refresh-token'
             });
             res.cookie('accessToken', newAccessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
             });
-            res.cookie('refreshToken', newRefreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                path: '/api/refresh-token'
-            });
         }
         let encryptedPassword = newPassword ? await (0, bcrypt_1.encryptPassword)(newPassword) : currentPassword;
         const results = await user_queries_1.default.updateUser(name, newEmail, encryptedPassword, user_id);
-        delete results.password;
         res.status(200).json({
             success: true,
-            updatedUser: results,
+            updatedUser: {
+                user_id: results.user_id,
+                name: results.name,
+                email: results.email,
+            },
         });
     }
     catch (error) {

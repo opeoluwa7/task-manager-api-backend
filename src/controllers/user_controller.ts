@@ -57,27 +57,17 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
         if (newEmail && newEmail !== currentEmail) {
 
             const access_token = req.cookies['accessToken'];
-            const refresh_token = req.cookies['refreshToken'];
             
             const expiresIn: number = 900;
                 
             await redis.setex(access_token, expiresIn, "blacklisted");
-            await redis.setex(refresh_token, expiresIn, "blacklisted");
 
             const newAccessToken: string | '' = generateAccessToken(user_id);
-            const newRefreshToken: string | '' = generateRefreshToken(user_id);
 
             res.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
-            })
-
-            res.clearCookie('refreshToken', {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                path: '/api/refresh-token'
             })
 
             res.cookie('accessToken', newAccessToken, {
@@ -86,25 +76,20 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
                 sameSite: 'none'
             })
 
-            res.cookie('refreshToken', newRefreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                path: '/api/refresh-token'
-            })
-        }
+         }
 
         let encryptedPassword = newPassword ? await encryptPassword(newPassword) : currentPassword
 
         const results = await userQueries.updateUser(name, newEmail, encryptedPassword, user_id);
-
-        
-        delete results.password;
  
 
         res.status(200).json({ 
             success: true,
-            updatedUser: results,
+            updatedUser: {
+                user_id: results.user_id,
+                name: results.name,
+                email: results.email,
+            },
         });
     } catch (error) {
         next(error)

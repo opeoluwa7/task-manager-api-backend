@@ -234,13 +234,15 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
         res.clearCookie('resetToken', {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            path: '/api/reset-password'
         })
 
         res.cookie('resetToken', resetToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            path: '/api/reset-password'
         })
 
         res.status(200).json({
@@ -311,7 +313,8 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
         res.clearCookie("resetToken", {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            path: '/api/reset-password'
         })
 
         res.status(200).json({
