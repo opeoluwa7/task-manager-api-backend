@@ -277,6 +277,8 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
         if (!verified) return res.status(401).json({
             error: "Invalid reset token. go back to forgot password"
         })
+
+        console.log(verified.user_id);
         
         const user = await userQueries.getUserAfterAuth(verified.user_id);
 

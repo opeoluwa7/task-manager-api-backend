@@ -222,6 +222,7 @@ const resetPassword = async (req, res, next) => {
             return res.status(401).json({
                 error: "Invalid reset token. go back to forgot password"
             });
+        console.log(verified.user_id);
         const user = await user_queries_1.default.getUserAfterAuth(verified.user_id);
         const currentPassword = user.password;
         const match = await (0, bcrypt_1.comparePasswords)(newPassword, currentPassword);
