@@ -13,15 +13,15 @@ export const registerSchema = z.object({
 })
 
 export const updateUserSchema = z.object({
-        name: z.string().trim(),
+        name: z.string().trim().optional(),
         email: z.string().toLowerCase().email({
                         message: "Enter a valid email address"
-                }).trim(),
+                }).trim().optional(),
         password: z.string().min(8, {
                         message: "Password must be a minimum of 8 characters long"
                 }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
                         message: "Password must include at least one letter, one number, and one special character"
-                }).trim()
+                }).trim().optional()
 })
 
 export const loginSchema = z.object({

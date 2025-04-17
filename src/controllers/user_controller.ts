@@ -42,7 +42,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
             })
         }
 
-        const { email: newEmail, password: newPassword, name: newName } = value.data;
+        const { email: newEmail, password: newPassword, name } = value.data;
 
         const user = await userQueries.getUserAfterAuth(user_id);
 
@@ -51,10 +51,18 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
             error: "User not found"
         })
 
-        const currentEmail = user.email;
+        let currentEmail = user.email;
+        let currentName = user.name;
         const currentPassword = user.password;
 
+        if (newEmail && newEmail === currentEmail) return res.status(400).json({
+            success: false,
+            error: "This email is already in use"
+        })
+
         if (newEmail && newEmail !== currentEmail) {
+
+            currentEmail = newEmail
 
             const access_token = req.cookies['accessToken'];
             
@@ -84,11 +92,15 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 
          }
 
-        const encryptedPassword = newPassword ? await encryptPassword(newPassword) : currentPassword
+        const encryptedPassword = newPassword && newPassword !== currentPassword ? await encryptPassword(newPassword) : currentPassword;
 
-        const results = await userQueries.updateUser(newName, newEmail, encryptedPassword, user_id);
+        if (name && name !== currentName) currentName = name
 
-        console.log(newName, newEmail, encryptedPassword, user_id);
+
+
+        const results = await userQueries.updateUser(currentName, currentEmail, encryptedPassword, user_id);
+
+        console.log(name, newEmail, encryptedPassword, user_id);
  
 
         res.status(200).json({ 
