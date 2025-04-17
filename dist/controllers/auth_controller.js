@@ -237,6 +237,11 @@ const resetPassword = async (req, res, next) => {
                 success: false,
                 error: "Something went wrong"
             });
+        res.clearCookie("resetToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none'
+        });
         res.status(200).json({
             success: true,
             message: "Password reset successful!",

@@ -306,7 +306,11 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
             error: "Something went wrong"
         })
 
-      
+        res.clearCookie("resetToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none'
+        })
 
         res.status(200).json({
             success: true,
