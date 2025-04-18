@@ -63,7 +63,7 @@ const updateTask = async (title, description, status, priority, deadline, user_i
         return results.rows[0];
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
 const deleteTask = async (task_id) => {
