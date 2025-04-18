@@ -80,7 +80,7 @@ const updateTask = async (title: string, description: string, status: string, pr
 
         return results.rows[0]
     } catch (error) {
-        throw error
+        return null
     }
 }
 

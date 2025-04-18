@@ -5,7 +5,7 @@ export const createTaskSchema = z.object({
         description: z.string().trim().optional(),
         status: z.string().toLowerCase().trim().optional(),
         priority: z.string().toLowerCase().trim().optional(),
-        deadline: z.string().date().trim().optional()
+        deadline: z.coerce.date().optional()
 })
 
 export const updateTaskSchema = z.object({
@@ -13,5 +13,5 @@ export const updateTaskSchema = z.object({
         description: z.string().trim().optional(),
         status: z.string().toLowerCase().trim().optional(),
         priority: z.string().toLowerCase().trim().optional(),
-        deadline: z.string().date().trim().optional()
+        deadline: z.coerce.date().optional()
 })
