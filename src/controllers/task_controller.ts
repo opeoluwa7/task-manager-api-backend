@@ -84,14 +84,12 @@ const updateUserTask = async (req: Request, res: Response, next: NextFunction) =
         
         const task_id = Number(req.params.id);
 
-        const updatedTask_deadline = new Date(updatedTask.deadline!)
-
         const results = await taskQueries.updateTask(
             updatedTask.title!,
             updatedTask.description!,
             updatedTask.status!,
             updatedTask.priority!,
-            updatedTask_deadline,
+            updatedTask.deadline!,
             user_id,
             task_id
         );

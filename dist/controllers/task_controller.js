@@ -65,8 +65,7 @@ const updateUserTask = async (req, res, next) => {
         const updatedTask = value.data;
         const user_id = req.user?.user_id;
         const task_id = Number(req.params.id);
-        const updatedTask_deadline = new Date(updatedTask.deadline);
-        const results = await task_queries_1.default.updateTask(updatedTask.title, updatedTask.description, updatedTask.status, updatedTask.priority, updatedTask_deadline, user_id, task_id);
+        const results = await task_queries_1.default.updateTask(updatedTask.title, updatedTask.description, updatedTask.status, updatedTask.priority, updatedTask.deadline, user_id, task_id);
         const afterUpdateTask = await task_queries_1.default.getTaskById(user_id, task_id);
         if (!afterUpdateTask)
             return res.status(404).json({
