@@ -9,7 +9,6 @@ const auth_queries_1 = require("../config/db_queries/auth_queries");
 const user_queries_1 = __importDefault(require("../config/db_queries/user_queries"));
 const resetEmailConfig_1 = __importDefault(require("../config/resetEmailConfig"));
 const user_schema_1 = require("../schemas/user_schema");
-;
 const register = async (req, res, next) => {
     try {
         const value = user_schema_1.registerSchema.safeParse(req.body);

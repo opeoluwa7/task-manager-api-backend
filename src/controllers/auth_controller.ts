@@ -7,7 +7,6 @@ import sendPasswordResetEmail from "../config/resetEmailConfig";
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { loginSchema, registerSchema, forgotPasswordSchema, resetPasswordSchema } from "../schemas/user_schema";
-;
 
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -253,7 +252,6 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
     } catch (error) {
         next(error)
     }
-
 }
 
 const resetPassword = async(req: Request, res: Response, next: NextFunction) => {
