@@ -8,7 +8,8 @@ const uploadImage = async(req: Request, res: Response, next: NextFunction) => {
             if (err) {
                 return res.status(400).json({
                     success: false,
-                    message: "Error uploading image"
+                    message: "Error uploading image",
+                    error: err.message
                 })
             }
 
