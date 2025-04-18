@@ -12,6 +12,8 @@ const uploadImage = async(req: Request, res: Response, next: NextFunction) => {
                 })
             }
 
+            console.log(result)
+
             const imgUrl: string = result.url;
             const user_id: number = req.user?.user_id;
 

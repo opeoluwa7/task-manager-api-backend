@@ -15,6 +15,7 @@ const uploadImage = async (req, res, next) => {
                     message: "Error uploading image"
                 });
             }
+            console.log(result);
             const imgUrl = result.url;
             const user_id = req.user?.user_id;
             const imageUpload = await uploadQueries_1.default.uploadImageUrl(imgUrl, user_id);
