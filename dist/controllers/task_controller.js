@@ -13,9 +13,8 @@ const createNewTask = async (req, res, next) => {
                 error: value.error.format()
             });
         const task = value.data;
-        const task_deadline = new Date(task.deadline);
         const user_id = req.user?.user_id;
-        const results = await task_queries_1.default.createTask(task.title, task.description, task.status, task.priority, task_deadline, user_id);
+        const results = await task_queries_1.default.createTask(task.title, task.description, task.status, task.priority, task.deadline, user_id);
         if (!results)
             return res.status(500).json({
                 success: false,

@@ -13,8 +13,6 @@ const createNewTask = async (req: Request, res: Response, next: NextFunction) =>
 
         const task = value.data;
 
-        const task_deadline = new Date(task.deadline!)
-
         const user_id = req.user?.user_id;
 
         const results = await taskQueries.createTask(
@@ -22,7 +20,7 @@ const createNewTask = async (req: Request, res: Response, next: NextFunction) =>
             task.description!,
             task.status!,
             task.priority!,
-            task_deadline,
+            task.deadline!,
             user_id
         );
 
