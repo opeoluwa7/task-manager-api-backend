@@ -47,7 +47,9 @@ const removeImage = async (req: Request, res: Response, next: NextFunction) => {
         
         const task_id = Number(req.params.id);
 
-        const results = await uploadQueries.removeImageUrl(user_id, task_id)
+        const imageUrl = await uploadQueries.getImageUrl(user_id, task_id);
+
+        const results = await uploadQueries.removeImageUrl(imageUrl, user_id, task_id)
 
         if (!results) return res.status(404).json({
             success: false,

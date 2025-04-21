@@ -27,9 +27,22 @@ const updateImageUrl = async (image_url, user_id, task_id) => {
         throw error;
     }
 };
-const removeImageUrl = async (user_id, task_id) => {
+const getImageUrl = async (user_id, task_id) => {
+    try {
+        const results = await pool_1.default.query('SELECT image_url FROM tasks WHERE user_id = $1 and task_id = $2', [
+            user_id,
+            task_id
+        ]);
+        return results.rows[0];
+    }
+    catch (error) {
+        throw error;
+    }
+};
+const removeImageUrl = async (image_url, user_id, task_id) => {
     try {
         const results = await pool_1.default.query('UPDATE tasks SET image_url = NULL WHERE user_id = $2 and task_id = $3 RETURNING *', [
+            image_url,
             user_id,
             task_id
         ]);
@@ -41,6 +54,7 @@ const removeImageUrl = async (user_id, task_id) => {
 };
 module.exports = {
     uploadImageUrl,
+    getImageUrl,
     updateImageUrl,
     removeImageUrl
 };
