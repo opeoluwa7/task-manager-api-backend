@@ -53,6 +53,26 @@ const getAllTasks = async (req, res, next) => {
         next(error);
     }
 };
+const getEachTask = async (req, res, next) => {
+    try {
+        const user_id = req.user?.user_id;
+        const task_id = Number(req.params.id);
+        const results = await task_queries_1.default.getTaskById(user_id, task_id);
+        if (!results)
+            return res.status(404).json({
+                success: false,
+                error: "Task not found"
+            });
+        res.status(200).json({
+            success: true,
+            message: "Task",
+            Task: results
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
 const updateUserTask = async (req, res, next) => {
     try {
         const value = task_schema_1.updateTaskSchema.safeParse(req.body);
@@ -118,6 +138,7 @@ const deleteUserTask = async (req, res, next) => {
 module.exports = {
     createNewTask,
     getAllTasks,
+    getEachTask,
     updateUserTask,
     deleteUserTask
 };

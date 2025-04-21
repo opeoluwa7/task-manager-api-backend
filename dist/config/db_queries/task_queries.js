@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const pool_1 = __importDefault(require("../db_pool/pool"));
 const createTask = async (title, description, status, priority, deadline, user_id) => {
     try {
-        // const allowedStatus = ['pending', 'in_progress', 'completed'];
-        // const allowedPriority = ['low', 'medium', 'high'];
         const results = await pool_1.default.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
             title,
             description,

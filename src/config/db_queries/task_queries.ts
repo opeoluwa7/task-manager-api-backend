@@ -1,12 +1,8 @@
 import pool from "../db_pool/pool";
 
-const createTask = async (title: string, description: string, status: string, priority: string, deadline: Date, user_id: number) => {
+const createTask = async (title: string, description: string, status: string, priority: string, deadline: Date, user_id: Number) => {
 
     try {
-
-        // const allowedStatus = ['pending', 'in_progress', 'completed'];
-        // const allowedPriority = ['low', 'medium', 'high'];
-
         const results = await pool.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
             title,
             description,
@@ -28,7 +24,7 @@ type FiltersType = {
     priority?: string
 }
 
-const getTasks = async (user_id: number, filters: FiltersType, limit: number, offset: any) => {
+const getTasks = async (user_id: Number, filters: FiltersType, limit: Number, offset: any) => {
     try {
 
         let query = 'SELECT * FROM tasks WHERE user_id = $1 ';
@@ -58,10 +54,10 @@ const getTasks = async (user_id: number, filters: FiltersType, limit: number, of
     }
 }
 
-const getTaskById = async (user_id: number, task_id: number) => {
+const getTaskById = async (user_id: Number, task_id: Number) => {
     try {
         const query = 'SELECT * FROM tasks WHERE user_id = $1 and task_id = $2';
-        const values: number[] = [user_id, task_id];
+        const values: Number[] = [user_id, task_id];
 
         const results = await pool.query(query, values);
 
@@ -71,7 +67,7 @@ const getTaskById = async (user_id: number, task_id: number) => {
     }
 }
 
-const updateTask = async (title: string, description: string, status: string, priority: string, deadline: Date, user_id: number, task_id: number) => {
+const updateTask = async (title: string, description: string, status: string, priority: string, deadline: Date, user_id: Number, task_id: Number) => {
     try {
         const query = 'UPDATE tasks SET title = COALESCE($1, title), description = COALESCE($2, description), status = COALESCE($3, status), priority = COALESCE($4, priority), deadline = COALESCE($5, deadline) WHERE user_id = $6 and task_id = $7 RETURNING *';
         const values = [title, description, status, priority, deadline, user_id, task_id];
@@ -84,7 +80,7 @@ const updateTask = async (title: string, description: string, status: string, pr
     }
 }
 
-const deleteTask = async (task_id: number) => {
+const deleteTask = async (task_id: Number) => {
     try {
         const query = 'DELETE FROM tasks WHERE task_id = $1 RETURNING *';
         const value = [task_id];

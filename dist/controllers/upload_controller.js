@@ -38,6 +38,26 @@ const uploadImage = async (req, res, next) => {
         next(err);
     }
 };
+const removeImage = async (req, res, next) => {
+    try {
+        const user_id = req.user?.user_id;
+        const task_id = Number(req.params.id);
+        const results = await uploadQueries_1.default.removeImageUrl(user_id, task_id);
+        if (!results)
+            return res.status(404).json({
+                success: false,
+                error: "Image not found"
+            });
+        res.status(200).json({
+            success: true,
+            message: "Image removed successfully!"
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
 exports.ImageController = {
-    uploadImage
+    uploadImage,
+    removeImage
 };

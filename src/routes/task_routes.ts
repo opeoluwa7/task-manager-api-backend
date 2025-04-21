@@ -4,13 +4,14 @@ const router = express.Router();
 
 import TaskController from "../controllers/task_controller";
 import isAuthorized from "../middlewares/is_authorized";
-import createRateLimiter from "../middlewares/rateLimiterMiddleware";
 
-const rateLimit = createRateLimiter(30, 100, "Too many attempts. Try again in 10 minutes.");
 
-router.get('/all-tasks', [isAuthorized.check, rateLimit], TaskController.getAllTasks);
-router.post('/create-task', [isAuthorized.check, rateLimit], TaskController.createNewTask);
-router.patch('/update-task/:id', [isAuthorized.check, rateLimit], TaskController.updateUserTask);
-router.delete('/delete-task/:id', [isAuthorized.check , rateLimit], TaskController.deleteUserTask);
+
+
+router.get('/all-tasks', isAuthorized.check, TaskController.getAllTasks);
+router.get('/task', isAuthorized.check, TaskController.getEachTask);
+router.post('/create-task', isAuthorized.check, TaskController.createNewTask);
+router.patch('/update-task/:id', isAuthorized.check, TaskController.updateUserTask);
+router.delete('/delete-task/:id', isAuthorized.check, TaskController.deleteUserTask);
 
 export default router;

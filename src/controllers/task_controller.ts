@@ -13,7 +13,7 @@ const createNewTask = async (req: Request, res: Response, next: NextFunction) =>
 
         const task = value.data;
 
-        const user_id: number = req.user?.user_id;
+        const user_id: Number = req.user?.user_id;
 
         const results = await taskQueries.createTask(
             task.title!,
@@ -42,7 +42,7 @@ const createNewTask = async (req: Request, res: Response, next: NextFunction) =>
 
 const getAllTasks = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user_id = req.user?.user_id;
+        const user_id: Number = req.user?.user_id;
 
         const filters = req.query;
         let limit = 20;
@@ -62,6 +62,29 @@ const getAllTasks = async (req: Request, res: Response, next: NextFunction) => {
             message: "All tasks",
             tasks: results
         });
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getEachTask = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user_id: Number = req.user?.user_id;
+
+        const task_id: Number = Number(req.params.id);
+
+        const results = await taskQueries.getTaskById(user_id, task_id);
+
+        if (!results) return res.status(404).json({
+            success: false,
+            error: "Task not found"
+        })
+
+        res.status(200).json({
+            success: true,
+            message: "Task",
+            Task: results
+        })
     } catch (error) {
         next(error)
     }
@@ -156,6 +179,7 @@ const deleteUserTask = async (req: Request, res: Response, next: NextFunction) =
 export = {
     createNewTask,
     getAllTasks,
+    getEachTask,
     updateUserTask,
     deleteUserTask
 }
