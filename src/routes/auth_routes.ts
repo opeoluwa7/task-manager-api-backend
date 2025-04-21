@@ -9,7 +9,7 @@ import refreshTokenMiddlware from "../middlewares/refreshTokenMiddleware";
 
 
 router.post('/register', AuthController.register);
-router.post('/verify-email', AuthController.verifyUser);
+router.get('/verify-email', AuthController.verifyUser);
 router.post('/login', AuthController.login);
 router.post('/logout', isAuthorized.check, AuthController.logout);
 router.post('/forgot-password', AuthController.requestPasswordReset);
