@@ -16,7 +16,7 @@ const uploadImageUrl = async (image_url) => {
 };
 const updateImageUrl = async (image_url, user_id, task_id) => {
     try {
-        const results = await pool_1.default.query('UPDATE tasks SET image_url = (COALESCE, image_url) WHERE user_id = $2 and task_id = $3', [
+        const results = await pool_1.default.query('UPDATE tasks SET image_url = COALESCE($1, image_url) WHERE user_id = $2 and task_id = $3', [
             image_url,
             user_id,
             task_id
