@@ -8,7 +8,7 @@ const router = express_1.default.Router();
 const task_controller_1 = __importDefault(require("../controllers/task_controller"));
 const is_authorized_1 = __importDefault(require("../middlewares/is_authorized"));
 router.get('/all-tasks', is_authorized_1.default.check, task_controller_1.default.getAllTasks);
-router.get('/task', is_authorized_1.default.check, task_controller_1.default.getEachTask);
+router.get('/task/:id', is_authorized_1.default.check, task_controller_1.default.getEachTask);
 router.post('/create-task', is_authorized_1.default.check, task_controller_1.default.createNewTask);
 router.patch('/update-task/:id', is_authorized_1.default.check, task_controller_1.default.updateUserTask);
 router.delete('/delete-task/:id', is_authorized_1.default.check, task_controller_1.default.deleteUserTask);
