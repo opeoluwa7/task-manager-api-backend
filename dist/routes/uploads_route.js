@@ -8,6 +8,5 @@ const upload_controller_1 = require("../controllers/upload_controller");
 const uploadMiddleware_1 = __importDefault(require("../middlewares/uploadMiddleware"));
 const is_authorized_1 = __importDefault(require("../middlewares/is_authorized"));
 const router = express_1.default.Router();
-router.post('/user/upload-image', [is_authorized_1.default.check, uploadMiddleware_1.default.single("image")], upload_controller_1.ImageController.uploadImage);
-router.get('/user/get-images', [is_authorized_1.default.check], upload_controller_1.ImageController.getImages);
+router.post('/task-image', [is_authorized_1.default.check, uploadMiddleware_1.default.single("image")], upload_controller_1.ImageController.uploadImage);
 exports.default = router;

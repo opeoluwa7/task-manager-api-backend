@@ -18,12 +18,11 @@ const uploadImage = async (req, res, next) => {
             }
             console.log(result);
             const imgUrl = result.url;
-            const user_id = req.user?.user_id;
-            const imageUpload = await uploadQueries_1.default.uploadImageUrl(imgUrl, user_id);
+            const imageUpload = await uploadQueries_1.default.uploadImageUrl(imgUrl);
             if (!imageUpload)
                 return res.status(400).json({
                     success: false,
-                    error: "Image upload failed. Are you logged in?"
+                    error: "Something went wrong"
                 });
             res.status(201).json({
                 success: true,
@@ -36,26 +35,6 @@ const uploadImage = async (req, res, next) => {
         next(err);
     }
 };
-const getImages = async (req, res, next) => {
-    try {
-        const user_id = req.user?.user_id;
-        const result = await uploadQueries_1.default.getImages(user_id);
-        if (result?.length === 0)
-            return res.status(404).json({
-                success: false,
-                error: "No images found",
-            });
-        res.status(200).json({
-            success: true,
-            images: result,
-            mesage: "Successful!"
-        });
-    }
-    catch (err) {
-        next(err);
-    }
-};
 exports.ImageController = {
-    uploadImage,
-    getImages
+    uploadImage
 };

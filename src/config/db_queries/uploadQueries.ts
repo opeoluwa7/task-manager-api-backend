@@ -1,10 +1,9 @@
 import pool from "../db_pool/pool";
 
-const uploadImageUrl = async(image_url: string, user_id: number) => {
+const uploadImageUrl = async(image_url: string) => {
     try {
-        const results = await pool.query('INSERT INTO images (image_url, user_id) VALUES($1, $2) RETURNING *', [
-            image_url,
-            user_id
+        const results = await pool.query('INSERT INTO tasks (image_url) VALUES($1) RETURNING image_url', [
+            image_url
         ]);
 
         return results.rows[0];
@@ -13,19 +12,7 @@ const uploadImageUrl = async(image_url: string, user_id: number) => {
     }
 }
 
-const getImages = async(user_id: number) => {
-    try {
-        const results = await pool.query('SELECT image_url FROM images WHERE user_id = $1', [
-            user_id
-        ]);
-
-        return results.rows
-    } catch (error) {
-        return null
-    }
-};
 
 export = {
-    uploadImageUrl,
-    getImages
+    uploadImageUrl
 }
