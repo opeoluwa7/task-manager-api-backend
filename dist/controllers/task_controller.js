@@ -4,9 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const task_queries_1 = __importDefault(require("../config/db_queries/task_queries"));
 const task_schema_1 = require("../schemas/task_schema");
+const cloudinaryConfig_1 = __importDefault(require("../config/cloudinaryConfig"));
+const uploadQueries_1 = __importDefault(require("../config/db_queries/uploadQueries"));
 const createNewTask = async (req, res, next) => {
     try {
-        const value = task_schema_1.createTaskSchema.safeParse(req.body);
+        const data = JSON.parse(req.body);
+        const value = task_schema_1.createTaskSchema.safeParse(data);
         if (!value.success)
             return res.status(400).json({
                 success: false,
@@ -14,6 +17,24 @@ const createNewTask = async (req, res, next) => {
             });
         const task = value.data;
         const user_id = req.user?.user_id;
+        cloudinaryConfig_1.default.uploader.upload(req.file?.path, async (err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Error uploading image",
+                    error: err.message
+                });
+            }
+            console.log(result);
+            const imgUrl = result.url;
+            const user_id = req.user?.user_id;
+            const imageUpload = await uploadQueries_1.default.uploadImageUrl(imgUrl, user_id);
+            if (!imageUpload)
+                return res.status(400).json({
+                    success: false,
+                    error: "Image upload failed. Are you logged in?"
+                });
+        });
         const results = await task_queries_1.default.createTask(task.title, task.description, task.status, task.priority, task.deadline, user_id);
         if (!results)
             return res.status(500).json({

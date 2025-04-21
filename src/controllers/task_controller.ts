@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import taskQueries from '../config/db_queries/task_queries';
 import { createTaskSchema, updateTaskSchema } from '../schemas/task_schema';
+import cloudinary from '../config/cloudinaryConfig';
+import uploadQueries from '../config/db_queries/uploadQueries';
 
 const createNewTask = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const value = createTaskSchema.safeParse(req.body)
+
+        const data = JSON.parse(req.body)
+        const value = createTaskSchema.safeParse(data)
 
         if (!value.success) return res.status(400).json({
             success: false,
@@ -14,6 +18,28 @@ const createNewTask = async (req: Request, res: Response, next: NextFunction) =>
         const task = value.data;
 
         const user_id = req.user?.user_id;
+
+        cloudinary.uploader.upload(req.file?.path, async (err: Error, result: any) => {
+            if (err) {
+                return res.status(400).json({
+                success: false,
+                message: "Error uploading image",
+                error: err.message
+                })
+            }
+
+            console.log(result)
+
+            const imgUrl: string = result.url;
+            const user_id: number = req.user?.user_id;
+
+            const imageUpload = await uploadQueries.uploadImageUrl(imgUrl, user_id);
+
+            if (!imageUpload) return res.status(400).json({
+                success: false,
+                error: "Image upload failed. Are you logged in?"
+            }) 
+        })
 
         const results = await taskQueries.createTask(
             task.title!,
