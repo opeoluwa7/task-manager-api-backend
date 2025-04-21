@@ -2,12 +2,14 @@ require("dotenv").config();
 
 export const env = {
     PORT: process.env.PORT,
-    JWTSECRET: process.env.JWTSECRET,
-    JWTEXPTIME: process.env.JWTEXPTIME,
-    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-    JWT_REFRESH_EXP_TIME: process.env.JWT_REFRESH_EXP_TIME,
+    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
+    ACCESS_TOKEN_EXP: process.env.ACCESS_TOKEN_EXP,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
+    REFRESH_TOKEN_EXP: process.env.REFRESH_TOKEN_EXP,
     RESET_TOKEN_SECRET: process.env.RESET_TOKEN_SECRET,
     RESET_TOKEN_EXP: process.env.RESET_TOKEN_EXP,
+    VERIFICATION_TOKEN_SECRET: process.env.VERIFICATION_TOKEN_SECRET,
+    VERIFICATION_TOKEN_EXP: process.env.VERIFICATION_TOKEN_EXP,
     DB_URL: process.env.DB_URL, 
     CLOUD_NAME: process.env.CLOUD_NAME,
     API_KEY: process.env.API_KEY,

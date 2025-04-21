@@ -7,11 +7,10 @@ const user_schema_1 = require("../schemas/user_schema");
 const bcrypt_1 = require("../utils/bcrypt");
 const jwt_1 = require("../utils/jwt");
 const redis_1 = __importDefault(require("../utils/redis"));
-const auth_queries_1 = require("../config/db_queries/auth_queries");
 const findUser = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const user = await user_queries_1.default.getUserAfterAuth(user_id);
+        const user = await user_queries_1.default.getUserWithId(user_id);
         if (!user)
             return res.status(404).json({
                 success: false,
@@ -40,8 +39,8 @@ const updateUser = async (req, res, next) => {
                 error: value.error.format()
             });
         const { email: newEmail, password: newPassword, name: newName } = value.data;
-        const user = await user_queries_1.default.getUserAfterAuth(user_id);
-        const existingUser = await auth_queries_1.authQueries.getUserDetails(newEmail);
+        const user = await user_queries_1.default.getUserWithId(user_id);
+        const existingUser = await user_queries_1.default.getUserWithEmail(newEmail);
         if (existingUser)
             return res.status(400).json({
                 success: false,

@@ -5,9 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const redis_1 = __importDefault(require("../utils/redis"));
 const bcrypt_1 = require("../utils/bcrypt");
 const jwt_1 = require("../utils/jwt");
-const auth_queries_1 = require("../config/db_queries/auth_queries");
 const user_queries_1 = __importDefault(require("../config/db_queries/user_queries"));
-const resetEmailConfig_1 = __importDefault(require("../config/resetEmailConfig"));
+const emailConfig_1 = require("../config/emailConfig");
 const user_schema_1 = require("../schemas/user_schema");
 const register = async (req, res, next) => {
     try {
@@ -19,53 +18,39 @@ const register = async (req, res, next) => {
             });
         }
         const { name, email, password } = value.data;
-        const existingUser = await auth_queries_1.authQueries.getUserDetails(email);
-        if (existingUser)
-            return res.status(400).json({
+        const hashedPassword = await (0, bcrypt_1.encryptPassword)(password);
+        const verificationToken = (0, jwt_1.generateVerificationToken)(email);
+        const expiresIn = 600;
+        await redis_1.default.setex("name", expiresIn, name);
+        await redis_1.default.setex("email", expiresIn, email);
+        await redis_1.default.setex("password", expiresIn, hashedPassword);
+        await redis_1.default.setex("verification-token", expiresIn, verificationToken);
+        await (0, emailConfig_1.sendEmailVerificationLink)(email);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+const verifyUser = async (req, res, next) => {
+    try {
+        const token = await redis_1.default.get("verification-token");
+        const verificationToken = (0, jwt_1.verifyVerificationToken)(token);
+        if (!verificationToken)
+            return res.status(401).json({
                 success: false,
-                error: "This email is already registered"
+                error: "Invalid verification token. Please register"
             });
-        const encryptedPassword = await (0, bcrypt_1.encryptPassword)(password);
-        const results = await auth_queries_1.authQueries.createUser(name, email, encryptedPassword);
+        const name = await redis_1.default.get("name");
+        const email = await redis_1.default.get("email");
+        const password = await redis_1.default.get("password");
+        const isVerified = true;
+        const results = await user_queries_1.default.createUser(name, email, password, isVerified);
         if (!results)
             return res.status(500).json({
                 success: false,
-                error: "Error creating user"
+                error: "Error verifying user"
             });
-        const user_id = results.user_id;
-        const accessToken = (0, jwt_1.generateAccessToken)(user_id);
-        const refreshToken = (0, jwt_1.generateRefreshToken)(user_id);
-        res.clearCookie('refreshToken', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token"
-        });
-        res.clearCookie('accessToken', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        });
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token"
-        });
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        });
-        res.status(201).json({
-            success: true,
-            message: "User registered successfully!",
-            user: {
-                user_id: user_id,
-                name: results.name,
-                email: results.email
-            },
-        });
+        res.status(200).send("User verified successfully!. You can now login");
     }
     catch (error) {
         next(error);
@@ -80,7 +65,7 @@ const login = async (req, res, next) => {
                 error: value.error.format()
             });
         const { email, password } = value.data;
-        const user = await auth_queries_1.authQueries.getUserDetails(email);
+        const user = await user_queries_1.default.getUserWithEmail(email);
         if (!user)
             return res.status(404).json({
                 success: false,
@@ -174,14 +159,14 @@ const requestPasswordReset = async (req, res, next) => {
                 error: value.error.format()
             });
         const { email } = value.data;
-        const user = await auth_queries_1.authQueries.getUserDetails(email);
+        const user = await user_queries_1.default.getUserWithEmail(email);
         if (!user)
             return res.status(404).json({
                 success: false,
                 error: "User not found"
             });
         const resetToken = (0, jwt_1.generateResetToken)(user.user_id);
-        await (0, resetEmailConfig_1.default)(user.email, resetToken);
+        await (0, emailConfig_1.sendPasswordResetEmail)(user.email);
         res.clearCookie('resetToken', {
             httpOnly: true,
             secure: true,
@@ -224,7 +209,7 @@ const resetPassword = async (req, res, next) => {
                 error: "Invalid reset token. go back to forgot password"
             });
         console.log(verified.user_id);
-        const user = await user_queries_1.default.getUserAfterAuth(verified.user_id);
+        const user = await user_queries_1.default.getUserWithId(verified.user_id);
         const currentPassword = user.password;
         const match = await (0, bcrypt_1.comparePasswords)(newPassword, currentPassword);
         if (match)

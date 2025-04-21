@@ -4,12 +4,14 @@ import { env } from "../config/env";
 
 
 
-const JWTSECRET = env.JWTSECRET;
-const JWTEXPTIME = env.JWTEXPTIME;
-const JWT_REFRESH_SECRET =env.JWT_REFRESH_SECRET;
-const JWT_REFRESH_EXP_TIME = env.JWT_REFRESH_EXP_TIME;
+const ACCESS_TOKEN_SECRET = env.ACCESS_TOKEN_SECRET;
+const ACCESS_TOKEN_EXP = env.ACCESS_TOKEN_EXP;
+const REFRESH_TOKEN_SECRET =env.REFRESH_TOKEN_SECRET;
+const REFRESH_TOKEN_EXP = env.REFRESH_TOKEN_EXP;
 const RESET_TOKEN_SECRET= env.RESET_TOKEN_SECRET;
 const RESET_TOKEN_EXP = env.RESET_TOKEN_EXP;
+const VERIFICATION_TOKEN_SECRET = env.VERIFICATION_TOKEN_SECRET;
+const VERIFICATION_TOKEN_EXP = env.VERIFICATION_TOKEN_EXP;
 
 export const generateAccessToken = (user_id: Number) => {
     
@@ -23,9 +25,9 @@ export const generateAccessToken = (user_id: Number) => {
 
     return jwt.sign(
         payload,
-        JWTSECRET as string,
+        ACCESS_TOKEN_SECRET as string,
         {
-            expiresIn: JWTEXPTIME
+            expiresIn: ACCESS_TOKEN_EXP
         } as jwt.SignOptions
     )
 }
@@ -42,9 +44,9 @@ export const generateRefreshToken = (user_id: Number) => {
 
     return jwt.sign(
         payload,
-        JWT_REFRESH_SECRET as string,
+        REFRESH_TOKEN_SECRET as string,
         {
-            expiresIn: JWT_REFRESH_EXP_TIME
+            expiresIn: REFRESH_TOKEN_EXP
         } as jwt.SignOptions
     )
 }
@@ -68,22 +70,43 @@ export const generateResetToken = (user_id: Number) => {
     )
 }
 
+export const generateVerificationToken = (email: string) => {
+
+    type resetTokenPayload = {
+        email: string
+    }
+
+    const payload: resetTokenPayload = {
+        email
+    }
+
+    return jwt.sign(
+        payload,
+        VERIFICATION_TOKEN_SECRET as string,
+        {
+            expiresIn: VERIFICATION_TOKEN_EXP
+        } as jwt.SignOptions
+    )
+}
+
+
+
 export const verifyAccessToken = (token: string) => {
-    return jwt.verify(token, JWTSECRET as string) as JwtPayload
+    return jwt.verify(token, ACCESS_TOKEN_SECRET as string) as JwtPayload
 }
 
 export const verifyRefreshToken = (token: string) => {
-    return jwt.verify(token, JWT_REFRESH_SECRET as string) as JwtPayload
+    return jwt.verify(token, REFRESH_TOKEN_SECRET as string) as JwtPayload
 }
 
 export const verifyResetToken = (token: string) => {
     return jwt.verify(token, RESET_TOKEN_SECRET as string) as JwtPayload
 }
 
-export const blacklistToken = (token: string, expiry = JWTEXPTIME) => {
-    const blacklist = redis.set(token, 'blacklisted', { EX: expiry} as any);
-     
-    return blacklist;
+export const verifyVerificationToken = (token: string) => {
+    return jwt.verify(token, VERIFICATION_TOKEN_SECRET as string) as JwtPayload
 }
+
+
 
 

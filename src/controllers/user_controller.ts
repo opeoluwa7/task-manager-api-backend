@@ -4,13 +4,13 @@ import { encryptPassword } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { Request, Response, NextFunction } from "express";
 import redis from "../utils/redis";
-import { authQueries } from "../config/db_queries/auth_queries";
+
 
 
 const findUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id: number = req.user?.user_id;
-        const user = await userQueries.getUserAfterAuth(user_id);
+        const user = await userQueries.getUserWithId(user_id);
 
         if (!user) return res.status(404).json({
             success: false,
@@ -43,8 +43,8 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 
         const { email: newEmail, password: newPassword, name: newName } = value.data;
 
-        const user = await userQueries.getUserAfterAuth(user_id);
-        const existingUser = await authQueries.getUserDetails(newEmail!);
+        const user = await userQueries.getUserWithId(user_id);
+        const existingUser = await userQueries.getUserWithEmail(newEmail!);
 
         if (existingUser) return res.status(400).json({
             success: false,

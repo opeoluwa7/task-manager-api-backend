@@ -1,9 +1,8 @@
 import redis from "../utils/redis"
 import { encryptPassword, comparePasswords } from "../utils/bcrypt";
-import { generateAccessToken, generateRefreshToken, generateResetToken, verifyResetToken } from "../utils/jwt";
-import { authQueries } from "../config/db_queries/auth_queries";
+import { generateAccessToken, generateRefreshToken, generateResetToken, generateVerificationToken, verifyResetToken, verifyVerificationToken } from "../utils/jwt";
 import userQueries from "../config/db_queries/user_queries";
-import sendPasswordResetEmail from "../config/resetEmailConfig";
+import { sendEmailVerificationLink, sendPasswordResetEmail } from "../config/emailConfig";
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { loginSchema, registerSchema, forgotPasswordSchema, resetPasswordSchema } from "../schemas/user_schema";
@@ -22,69 +21,48 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
         const { name, email, password } = value.data;
 
-        const existingUser = await authQueries.getUserDetails(email);
+        const hashedPassword = await encryptPassword(password);
 
-        if (existingUser) return res.status(400).json({ 
-            success: false,
-            error: "This email is already registered" 
-        });
+        const verificationToken = generateVerificationToken(email);
         
+        const expiresIn = 600
+        await redis.setex("name", expiresIn, name);
+        await redis.setex("email", expiresIn, email);
+        await redis.setex("password", expiresIn, hashedPassword);
+        await redis.setex("verification-token", expiresIn, verificationToken); 
 
-        const encryptedPassword = await encryptPassword(password);
+        await sendEmailVerificationLink(email)
 
-        const results = await authQueries.createUser(
-            name,
-            email,
-            encryptedPassword
-        );
+    } catch (error) {
+        next(error)
+    }
+}
+
+const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const token = await redis.get("verification-token");
+
+        const verificationToken = verifyVerificationToken(token!);
+
+        if (!verificationToken) return res.status(401).json({
+            success: false,
+            error: "Invalid verification token. Please register"
+        })
+
+        const name = await redis.get("name");
+        const email = await redis.get("email");
+        const password = await redis.get("password");
+        const isVerified = true; 
+
+        const results = await userQueries.createUser(name!, email!, password!, isVerified);
 
         if (!results) return res.status(500).json({
-                success: false,
-                error: "Error creating user"
+            success: false,
+            error: "Error verifying user"
         })
 
-        const user_id = results.user_id;
-
-        const accessToken = generateAccessToken(user_id);
-        const refreshToken = generateRefreshToken(user_id);
-
-         res.clearCookie('refreshToken', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token"
-        })
-
-        res.clearCookie('accessToken', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        })
-
-
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token"
-        })
-
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        })
-
-        res.status(201).json({
-            success: true,
-            message: "User registered successfully!",
-            user: {
-                user_id: user_id,
-                name: results.name,
-                email: results.email
-            },
-        })
-
+        res.status(200).send("User verified successfully!. You can now login")
     } catch (error) {
         next(error)
     }
@@ -102,7 +80,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
         const { email, password } = value.data;
 
-        const user = await authQueries.getUserDetails(email);
+        const user = await userQueries.getUserWithEmail(email);
 
         if (!user) return res.status(404).json({ 
             success: false,
@@ -218,7 +196,7 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
 
         const {email} = value.data;
 
-        const user = await authQueries.getUserDetails(email);
+        const user = await userQueries.getUserWithEmail(email);
 
         if (!user) return res.status(404).json({
             success: false,
@@ -228,7 +206,7 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
         const resetToken = generateResetToken(user.user_id);
 
 
-        await sendPasswordResetEmail(user.email, resetToken);
+        await sendPasswordResetEmail(user.email);
 
         res.clearCookie('resetToken', {
             httpOnly: true,
@@ -280,7 +258,7 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
 
         console.log(verified.user_id);
         
-        const user = await userQueries.getUserAfterAuth(verified.user_id);
+        const user = await userQueries.getUserWithId(verified.user_id);
 
 
   

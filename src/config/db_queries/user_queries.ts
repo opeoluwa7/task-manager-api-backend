@@ -1,7 +1,36 @@
 import pool from "../db_pool/pool";
 
 
-const getUserAfterAuth = async (user_id: Number) => {
+const createUser = async (name: string, email: string, password: string, isVerified: Boolean) => {
+        try {
+                const results = await pool.query('INSERT INTO users (name, email, password, is_verified) VALUES($1, $2, $3, $4) RETURNING name, email, user_id, is_verified', 
+            [
+                name, 
+                email, 
+                password, 
+                isVerified
+            ]);
+
+                return results.rows[0]
+            } catch (error) {
+                throw error
+            }
+}
+
+
+const getUserWithEmail = async (email: string) => {
+        try {
+
+                const results = await pool.query('SELECT user_id, email, password FROM users WHERE email = $1', [email]);
+
+                return results.rows[0]
+            } catch (error) {
+                throw error
+            }
+}
+
+
+const getUserWithId = async (user_id: Number) => {
     try {
         const results = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
 
@@ -33,7 +62,9 @@ const deleteUser = async(user_id: Number) => {
 }
 
 export = {
-    getUserAfterAuth,
+    createUser,
+    getUserWithEmail,
+    getUserWithId,
     updateUser,
     deleteUser
 }
