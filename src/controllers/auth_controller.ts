@@ -31,7 +31,12 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
         await redis.setex("password", expiresIn, hashedPassword);
         await redis.setex("verification-token", expiresIn, verificationToken); 
 
-        await sendEmailVerificationLink(email)
+        await sendEmailVerificationLink(email);
+
+        res.status(200).json({
+            success: true,
+            message: "An Email Verification link sent to you. Please verify"
+        })
 
     } catch (error) {
         next(error)
@@ -333,6 +338,7 @@ const refreshAccessToken = async(req: Request, res: Response, next: NextFunction
 
 export = {
     register,
+    verifyUser,
     login,
     logout,
     requestPasswordReset,

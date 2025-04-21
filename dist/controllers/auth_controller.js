@@ -26,6 +26,10 @@ const register = async (req, res, next) => {
         await redis_1.default.setex("password", expiresIn, hashedPassword);
         await redis_1.default.setex("verification-token", expiresIn, verificationToken);
         await (0, emailConfig_1.sendEmailVerificationLink)(email);
+        res.status(200).json({
+            success: true,
+            message: "An Email Verification link sent to you. Please verify"
+        });
     }
     catch (error) {
         next(error);
@@ -265,6 +269,7 @@ const refreshAccessToken = async (req, res, next) => {
 };
 module.exports = {
     register,
+    verifyUser,
     login,
     logout,
     requestPasswordReset,
