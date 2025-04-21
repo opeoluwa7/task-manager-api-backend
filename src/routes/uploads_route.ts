@@ -6,6 +6,6 @@ import isAuthorized from "../middlewares/is_authorized"
 const router = express.Router();
 
 
-router.post('/task-image', [isAuthorized.check, upload.single("image")], ImageController.uploadImage);
+router.post('/task-image/:id', [isAuthorized.check, upload.single("image")], ImageController.uploadImage);
 
 export default router
