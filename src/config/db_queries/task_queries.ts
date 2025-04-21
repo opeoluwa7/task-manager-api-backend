@@ -67,7 +67,7 @@ const getTaskById = async (user_id: number, task_id: number) => {
 
         return results.rows[0]
     } catch (error) {
-        return null
+        throw error
     }
 }
 
@@ -80,7 +80,7 @@ const updateTask = async (title: string, description: string, status: string, pr
 
         return results.rows[0]
     } catch (error) {
-        return null
+        throw error
     }
 }
 
@@ -93,7 +93,7 @@ const deleteTask = async (task_id: number) => {
 
         return results.rows
     } catch (error) {
-        return null
+        throw error
     }
 }
 

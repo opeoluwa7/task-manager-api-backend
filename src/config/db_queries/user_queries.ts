@@ -8,7 +8,7 @@ const getUserAfterAuth = async (user_id: Number) => {
 
         return results.rows[0]
     } catch (error) {
-        return null
+        throw error
     }
 }
 
@@ -28,7 +28,7 @@ const deleteUser = async(user_id: Number) => {
 
         return results.rows[0];
     } catch (error) {
-        return null
+        throw error
     }
 }
 

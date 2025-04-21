@@ -8,11 +8,26 @@ const uploadImageUrl = async(image_url: string) => {
 
         return results.rows[0];
     } catch (error) {
-        return null
+        throw error
+    }
+}
+
+const updateImageUrl = async (image_url: string, user_id: number, task_id: number) => {
+    try {
+        const results = await pool.query('UPDATE tasks SET image_url = (COALESCE, image_url) WHERE user_id = $2 and task_id = $3', [
+            image_url,
+            user_id,
+            task_id
+        ])
+
+        return results.rows[0]
+    } catch (error) {
+        throw error
     }
 }
 
 
 export = {
-    uploadImageUrl
+    uploadImageUrl,
+    updateImageUrl
 }

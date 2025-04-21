@@ -24,10 +24,13 @@ const uploadImage = async (req, res, next) => {
                     success: false,
                     error: "Something went wrong"
                 });
+            const user_id = req.user?.user_id;
+            const task_id = Number(req.params.id);
+            const results = await uploadQueries_1.default.updateImageUrl(imgUrl, user_id, task_id);
             res.status(201).json({
                 success: true,
                 message: "File uploaded successfully!",
-                image: imageUpload
+                image: results
             });
         });
     }

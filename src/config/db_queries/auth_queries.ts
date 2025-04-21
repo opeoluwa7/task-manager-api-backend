@@ -7,7 +7,7 @@ const createUser = async (name: string, email: string, password: string) => {
 
         return results.rows[0]
     } catch (error) {
-        return null
+        throw error
     }
 }
 
@@ -19,7 +19,7 @@ const getUserDetails = async (email: string) => {
 
         return results.rows[0]
     } catch (error) {
-        return null
+        throw error
     }
 }
 

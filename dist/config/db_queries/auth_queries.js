@@ -11,7 +11,7 @@ const createUser = async (name, email, password) => {
         return results.rows[0];
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
 const getUserDetails = async (email) => {
@@ -20,7 +20,7 @@ const getUserDetails = async (email) => {
         return results.rows[0];
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
 exports.authQueries = {

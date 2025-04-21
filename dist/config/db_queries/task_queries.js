@@ -52,7 +52,7 @@ const getTaskById = async (user_id, task_id) => {
         return results.rows[0];
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
 const updateTask = async (title, description, status, priority, deadline, user_id, task_id) => {
@@ -63,7 +63,7 @@ const updateTask = async (title, description, status, priority, deadline, user_i
         return results.rows[0];
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
 const deleteTask = async (task_id) => {
@@ -74,7 +74,7 @@ const deleteTask = async (task_id) => {
         return results.rows;
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
 module.exports = {
