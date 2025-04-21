@@ -39,10 +39,9 @@ const getImageUrl = async (user_id: Number, task_id: Number) => {
     }
 }
 
-const removeImageUrl = async (image_url: string, user_id: Number, task_id: Number) => {
+const removeImageUrl = async (user_id: Number, task_id: Number) => {
     try {
-        const results = await pool.query('UPDATE tasks SET image_url = NULL WHERE user_id = $2 and task_id = $3 RETURNING *', [
-            image_url,
+        const results = await pool.query('UPDATE tasks SET image_url = NULL WHERE user_id = $1 and task_id = $2 RETURNING *', [
             user_id,
             task_id
         ])
