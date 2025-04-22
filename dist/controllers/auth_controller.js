@@ -26,7 +26,7 @@ const register = async (req, res, next) => {
         await redis_1.default.setex("password", expiresIn, hashedPassword);
         await redis_1.default.setex("verification-token", expiresIn, verificationToken);
         await (0, emailConfig_1.sendEmailVerificationLink)(email);
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "An Email Verification link sent to you. Please verify"
         });
@@ -52,9 +52,9 @@ const verifyUser = async (req, res, next) => {
         if (!results)
             return res.status(500).json({
                 success: false,
-                error: "Error verifying user"
+                error: "Error creating user"
             });
-        res.status(200).send("User verified successfully!. You can now login");
+        res.status(200).send("<h1> User verified successfully!. You can now login </h1>");
     }
     catch (error) {
         next(error);
@@ -170,23 +170,28 @@ const requestPasswordReset = async (req, res, next) => {
                 error: "User not found"
             });
         const resetToken = (0, jwt_1.generateResetToken)(user.user_id);
+        const expiresIn = 600;
+        await redis_1.default.setex("reset-token", expiresIn, resetToken);
         await (0, emailConfig_1.sendPasswordResetEmail)(user.email);
-        res.clearCookie('resetToken', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/reset-password'
-        });
-        res.cookie('resetToken', resetToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/reset-password'
-        });
-        res.status(200).json({
+        res.status(201).json({
             success: true,
-            message: "Password reset email sent.",
+            message: "Your password reset email has been sent to you."
         });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+const resetPage = async (req, res, next) => {
+    try {
+        const html = `
+            <form method="POST" action="https://task-manager-api-2025.up.railway.app/api/reset-password" >
+                <input name="password" type="password" placeholder="Enter your new password" />
+                <input name="confirmPassword" type="password" placeholder="Confirm your new password" />
+                <input type="submit" />
+            </form>
+        `;
+        res.send(html);
     }
     catch (error) {
         next(error);
@@ -200,8 +205,8 @@ const resetPassword = async (req, res, next) => {
                 success: false,
                 error: value.error.format()
             });
-        const { password: newPassword } = value.data;
-        const resetToken = req.cookies['resetToken'];
+        const data = value.data;
+        const resetToken = await redis_1.default.get("reset-token");
         if (!resetToken)
             return res.status(401).json({
                 success: false,
@@ -212,28 +217,22 @@ const resetPassword = async (req, res, next) => {
             return res.status(401).json({
                 error: "Invalid reset token. go back to forgot password"
             });
-        console.log(verified.user_id);
         const user = await user_queries_1.default.getUserWithId(verified.user_id);
         const currentPassword = user.password;
-        const match = await (0, bcrypt_1.comparePasswords)(newPassword, currentPassword);
+        const match = await (0, bcrypt_1.comparePasswords)(data.password, currentPassword);
         if (match)
             return res.status(400).json({
                 success: false,
                 error: "Passwords must not match. change it for better security."
             });
-        const encryptedPassword = await (0, bcrypt_1.encryptPassword)(newPassword);
+        const encryptedPassword = await (0, bcrypt_1.encryptPassword)(data.password);
         const results = await user_queries_1.default.updateUser(user.name, user.email, encryptedPassword, user.user_id);
         if (!results)
             return res.status(500).json({
                 success: false,
                 error: "Something went wrong"
             });
-        res.clearCookie("resetToken", {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/reset-password'
-        });
+        delete data.confirmPassword;
         res.status(200).json({
             success: true,
             message: "Password reset successful!",
@@ -273,6 +272,7 @@ module.exports = {
     login,
     logout,
     requestPasswordReset,
+    resetPage,
     resetPassword,
     refreshAccessToken
 };

@@ -8,6 +8,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { loginSchema, registerSchema, forgotPasswordSchema, resetPasswordSchema } from "../schemas/user_schema";
 
 
+
 const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const value = registerSchema.safeParse(req.body);
@@ -33,7 +34,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
         await sendEmailVerificationLink(email);
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "An Email Verification link sent to you. Please verify"
         })
@@ -64,10 +65,10 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
 
         if (!results) return res.status(500).json({
             success: false,
-            error: "Error verifying user"
+            error: "Error creating user"
         })
 
-        res.status(200).send("User verified successfully!. You can now login")
+        res.status(200).send("<h1> User verified successfully!. You can now login </h1>")
     } catch (error) {
         next(error)
     }
@@ -91,8 +92,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             success: false,
             error: "User not found. Please register or confirm your details" 
         })
-        
-
  
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
@@ -210,27 +209,35 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
 
         const resetToken = generateResetToken(user.user_id);
 
+        const expiresIn = 600;
+
+        await redis.setex("reset-token", expiresIn, resetToken);
 
         await sendPasswordResetEmail(user.email);
 
-        res.clearCookie('resetToken', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/reset-password'
-        })
-
-        res.cookie('resetToken', resetToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/reset-password'
-        })
-
-        res.status(200).json({
+      
+        res.status(201).json({
             success: true,
-            message: "Password reset email sent.",
+            message: "Your password reset email has been sent to you."
         })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+const resetPage = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+
+
+        const html =`
+            <form method="POST" action="https://task-manager-api-2025.up.railway.app/api/reset-password" >
+                <input name="password" type="password" placeholder="Enter your new password" />
+                <input name="confirmPassword" type="password" placeholder="Confirm your new password" />
+                <input type="submit" />
+            </form>
+        `
+        res.send(html)
 
     } catch (error) {
         next(error)
@@ -246,9 +253,14 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
             error: value.error.format()
         })
 
-        const {password: newPassword} = value.data;
+        type DataType = {
+            password: string,
+            confirmPassword?: string
+        }
 
-        const resetToken = req.cookies['resetToken'];
+        const data: DataType = value.data;
+
+        const resetToken = await redis.get("reset-token");
 
         if (!resetToken) return res.status(401).json({
             success: false,
@@ -260,24 +272,19 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
         if (!verified) return res.status(401).json({
             error: "Invalid reset token. go back to forgot password"
         })
-
-        console.log(verified.user_id);
         
         const user = await userQueries.getUserWithId(verified.user_id);
-
-
   
         const currentPassword = user.password;
 
-        const match = await comparePasswords(newPassword, currentPassword);
+        const match = await comparePasswords(data.password, currentPassword);
 
         if (match) return res.status(400).json({
             success: false,
             error: "Passwords must not match. change it for better security."
         })
 
-
-        const encryptedPassword = await encryptPassword(newPassword);
+        const encryptedPassword = await encryptPassword(data.password);
         
         const results = await userQueries.updateUser(
             user.name,
@@ -291,12 +298,7 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
             error: "Something went wrong"
         })
 
-        res.clearCookie("resetToken", {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/reset-password'
-        })
+        delete data.confirmPassword
 
         res.status(200).json({
             success: true,
@@ -342,6 +344,7 @@ export = {
     login,
     logout,
     requestPasswordReset,
+    resetPage,
     resetPassword,
     refreshAccessToken
 }

@@ -17,25 +17,25 @@ const transporter = nodemailer_1.default.createTransport({
 });
 const sendEmailVerificationLink = async (userEmail) => {
     const verificationLink = `https://task-manager-api-2025.up.railway.app/api/verify-email`;
-    const vMailOptions = {
+    const mailOptions = {
         from: `Task manager API <${env_1.env.EMAIL_USER}>`,
         to: userEmail,
         subject: 'Verify your email to login',
         text: `Click the link below to reset your password:\n\n${verificationLink}`,
-        html: `<p>Click <a href="${verificationLink}">here</a> to reset your password. </p>`
+        html: `<p>Click <a href="${verificationLink}">here</a> to verify your email. </p>`
     };
-    await transporter.sendMail(vMailOptions);
+    await transporter.sendMail(mailOptions);
 };
 exports.sendEmailVerificationLink = sendEmailVerificationLink;
 const sendPasswordResetEmail = async (userEmail) => {
     const resetLink = `https://task-manager-api-2025.up.railway.app/api/reset-password`;
-    const rMailOptions = {
+    const mailOptions = {
         from: `Task manager API <${env_1.env.EMAIL_USER}>`,
         to: userEmail,
         subject: 'Password reset request.',
         text: `Click the link below to reset your password:\n\n${resetLink}`,
         html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
     };
-    await transporter.sendMail(rMailOptions);
+    await transporter.sendMail(mailOptions);
 };
 exports.sendPasswordResetEmail = sendPasswordResetEmail;

@@ -12,6 +12,7 @@ router.get('/verify-email', auth_controller_1.default.verifyUser);
 router.post('/login', auth_controller_1.default.login);
 router.post('/logout', is_authorized_1.default.check, auth_controller_1.default.logout);
 router.post('/forgot-password', auth_controller_1.default.requestPasswordReset);
+router.get('/reset-page', auth_controller_1.default.resetPage);
 router.post('/reset-password', auth_controller_1.default.resetPassword);
 router.post('/refresh-token', refreshTokenMiddleware_1.default, auth_controller_1.default.refreshAccessToken);
 module.exports = router;

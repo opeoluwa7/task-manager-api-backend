@@ -40,5 +40,13 @@ exports.resetPasswordSchema = zod_1.z.object({
         message: "Password must be a minimum of 8 characters long"
     }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
         message: "Password must include at least one letter, one number, and one special character"
+    }).trim(),
+    confirmPassword: zod_1.z.string().min(8, {
+        message: "Password must be a minimum of 8 characters long"
+    }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
+        message: "Password must include at least one letter, one number, and one special character"
     }).trim()
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"]
 });
