@@ -1,4 +1,5 @@
 import redis from "../utils/redis"
+import ReactDOMServer from "react-dom/server"
 import { encryptPassword, comparePasswords } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken, generateResetToken, generateVerificationToken, verifyResetToken, verifyVerificationToken } from "../utils/jwt";
 import userQueries from "../config/db_queries/user_queries";
@@ -6,6 +7,8 @@ import { sendEmailVerificationLink, sendPasswordResetEmail } from "../config/ema
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { loginSchema, registerSchema, forgotPasswordSchema, resetPasswordSchema } from "../schemas/user_schema";
+import ResetForm from "../component/reset_form";
+import React from "react";
 
 
 
@@ -229,13 +232,24 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
 const resetPage = async(req: Request, res: Response, next: NextFunction) => {
     try {
 
+        const form = ReactDOMServer.renderToString(React.createElement(ResetForm))
 
-        const html =`
-            <form method="POST" action="https://task-manager-api-2025.up.railway.app/api/reset-password" >
-                <input name="password" type="password" placeholder="Enter your new password" />
-                <input name="confirmPassword" type="password" placeholder="Confirm your new password" />
-                <input type="submit" />
-            </form>
+        const html = `
+            <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <title>Reset Password</title>
+                    <link href="css/style.css" rel="stylesheet" />
+                </head>
+                <body>
+                    <main>
+                    <h1>Reset your password</h1>
+                    <div id="root">${form}</div>
+                    </main>
+                </body>
+            </html>
         `
         res.send(html)
 

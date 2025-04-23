@@ -3,11 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const redis_1 = __importDefault(require("../utils/redis"));
+const server_1 = __importDefault(require("react-dom/server"));
 const bcrypt_1 = require("../utils/bcrypt");
 const jwt_1 = require("../utils/jwt");
 const user_queries_1 = __importDefault(require("../config/db_queries/user_queries"));
 const emailConfig_1 = require("../config/emailConfig");
 const user_schema_1 = require("../schemas/user_schema");
+const reset_form_1 = __importDefault(require("../component/reset_form"));
+const react_1 = __importDefault(require("react"));
 const register = async (req, res, next) => {
     try {
         const value = user_schema_1.registerSchema.safeParse(req.body);
@@ -184,12 +187,23 @@ const requestPasswordReset = async (req, res, next) => {
 };
 const resetPage = async (req, res, next) => {
     try {
+        const form = server_1.default.renderToString(react_1.default.createElement(reset_form_1.default));
         const html = `
-            <form method="POST" action="https://task-manager-api-2025.up.railway.app/api/reset-password" >
-                <input name="password" type="password" placeholder="Enter your new password" />
-                <input name="confirmPassword" type="password" placeholder="Confirm your new password" />
-                <input type="submit" />
-            </form>
+            <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <title>Reset Password</title>
+                    <link href="css/style.css" rel="stylesheet" />
+                </head>
+                <body>
+                    <main>
+                    <h1>Reset your password</h1>
+                    <div id="root">${form}</div>
+                    </main>
+                </body>
+            </html>
         `;
         res.send(html);
     }
