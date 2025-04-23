@@ -28,7 +28,7 @@ const sendEmailVerificationLink = async(userEmail: string) => {
 
 
 const sendPasswordResetEmail = async(userEmail: string) => {
-    const resetLink = `https://task-manager-api-2025.up.railway.app/api/reset-page`;
+    const resetLink = `https://task-manager-app-frontend-blue.vercel.app/reset-password`;
 
     const mailOptions = {
         from: `Task manager API <${env.EMAIL_USER}>`,
