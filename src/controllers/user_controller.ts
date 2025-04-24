@@ -4,6 +4,7 @@ import { encryptPassword } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 import { Request, Response, NextFunction } from "express";
 import redis from "../utils/redis";
+import ms from "ms";
 
 
 
@@ -86,26 +87,28 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
         })
 
         res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        path: "api/refresh-token"
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: "api/refresh-token"
         })
 
         const newAccessToken: string = generateAccessToken(user_id);
         const newRefreshToken: string = generateRefreshToken(user_id)
 
         res.cookie('accessToken', newAccessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none'
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: ms('10m')
         })
 
         res.cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        path: "api/refresh-token"
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: "api/refresh-token",
+            maxAge: ms('3d')
         })
 
         delete results.password;

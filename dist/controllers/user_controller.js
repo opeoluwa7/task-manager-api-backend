@@ -7,6 +7,7 @@ const user_schema_1 = require("../schemas/user_schema");
 const bcrypt_1 = require("../utils/bcrypt");
 const jwt_1 = require("../utils/jwt");
 const redis_1 = __importDefault(require("../utils/redis"));
+const ms_1 = __importDefault(require("ms"));
 const findUser = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
@@ -79,13 +80,15 @@ const updateUser = async (req, res, next) => {
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            maxAge: (0, ms_1.default)('10m')
         });
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            path: "api/refresh-token"
+            path: "api/refresh-token",
+            maxAge: (0, ms_1.default)('3d')
         });
         delete results.password;
         res.status(200).json({

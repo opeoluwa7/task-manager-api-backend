@@ -1,5 +1,5 @@
 import redis from "../utils/redis"
-
+import ms from "ms";
 import { encryptPassword, comparePasswords } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken, generateResetToken, generateVerificationToken, verifyResetToken, verifyVerificationToken } from "../utils/jwt";
 import userQueries from "../config/db_queries/user_queries";
@@ -105,6 +105,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
         const name = user.name;
+        const isVerified = user.isVerified;
 
         const match = await comparePasswords(password, storedHashedPassword);
         
@@ -134,13 +135,15 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            path: "/api/refresh-token"
+            path: "/api/refresh-token",
+            maxAge: ms('3d')
         })
 
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            maxAge: ms('10m')
         })
 
         res.status(201).json({
@@ -149,7 +152,8 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             user: {
                 user_id: user_id,
                 name,
-                email
+                email,
+                isVerified
             }
         })
 
@@ -202,9 +206,9 @@ const requestPasswordReset = async(req: Request, res: Response, next: NextFuncti
         const value = forgotPasswordSchema.safeParse(req.body);
                 
         if (!value.success) return res.status(400).json({
-                success: false,
-                error: value.error.format()
-                })        
+            success: false,
+            error: value.error.format()
+        })        
         
 
         const {email} = value.data;
@@ -295,7 +299,7 @@ const resetPassword = async(req: Request, res: Response, next: NextFunction) => 
             success: true,
             message: "Password reset successful!",
             result: `This user can now login with the new password`
-            }) 
+        }) 
   } catch (error) {
      next(error)
   }
@@ -317,7 +321,8 @@ const refreshAccessToken = async(req: Request, res: Response, next: NextFunction
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            maxAge: ms('10m')
         })
 
         return res.status(200).json({

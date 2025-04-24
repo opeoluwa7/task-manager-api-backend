@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const redis_1 = __importDefault(require("../utils/redis"));
+const ms_1 = __importDefault(require("ms"));
 const bcrypt_1 = require("../utils/bcrypt");
 const jwt_1 = require("../utils/jwt");
 const user_queries_1 = __importDefault(require("../config/db_queries/user_queries"));
@@ -84,6 +85,7 @@ const login = async (req, res, next) => {
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
         const name = user.name;
+        const isVerified = user.isVerified;
         const match = await (0, bcrypt_1.comparePasswords)(password, storedHashedPassword);
         if (!match)
             return res.status(400).json({
@@ -107,12 +109,14 @@ const login = async (req, res, next) => {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            path: "/api/refresh-token"
+            path: "/api/refresh-token",
+            maxAge: (0, ms_1.default)('3d')
         });
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            maxAge: (0, ms_1.default)('10m')
         });
         res.status(201).json({
             success: true,
@@ -120,7 +124,8 @@ const login = async (req, res, next) => {
             user: {
                 user_id: user_id,
                 name,
-                email
+                email,
+                isVerified
             }
         });
     }
@@ -245,7 +250,8 @@ const refreshAccessToken = async (req, res, next) => {
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            maxAge: (0, ms_1.default)('10m')
         });
         return res.status(200).json({
             success: true,
