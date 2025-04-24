@@ -1,5 +1,5 @@
 import redis from "../utils/redis"
-import ReactDOMServer from "react-dom/server"
+
 import { encryptPassword, comparePasswords } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken, generateResetToken, generateVerificationToken, verifyResetToken, verifyVerificationToken } from "../utils/jwt";
 import userQueries from "../config/db_queries/user_queries";
@@ -23,6 +23,13 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         const { name, email, password } = value.data;
+
+        const existingEmail = await userQueries.getUserWithEmail(email);
+
+        if (existingEmail) return res.status(400).json({
+            success: false,
+            error: "User with this email already exists"
+        })
 
         const hashedPassword = await encryptPassword(password);
 

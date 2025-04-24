@@ -18,6 +18,12 @@ const register = async (req, res, next) => {
             });
         }
         const { name, email, password } = value.data;
+        const existingEmail = await user_queries_1.default.getUserWithEmail(email);
+        if (existingEmail)
+            return res.status(400).json({
+                success: false,
+                error: "User with this email already exists"
+            });
         const hashedPassword = await (0, bcrypt_1.encryptPassword)(password);
         const verificationToken = (0, jwt_1.generateVerificationToken)(email);
         const expiresIn = 600;
