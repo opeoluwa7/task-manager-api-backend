@@ -105,6 +105,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
         const name = user.name;
+        const isVerified = user.is_verified;
 
         const match = await comparePasswords(password, storedHashedPassword);
         
@@ -145,8 +146,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             maxAge: ms('10m')
         })
         
-        console.log(user);
-        
         res.status(201).json({
             success: true,
             message: "User login successful!",
@@ -154,7 +153,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                 user_id: user_id,
                 name: name,
                 email: user.email,
-                isVerified: user.isVerified
+                isVerified: isVerified
             }
         })
 

@@ -85,6 +85,7 @@ const login = async (req, res, next) => {
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
         const name = user.name;
+        const isVerified = user.is_verified;
         const match = await (0, bcrypt_1.comparePasswords)(password, storedHashedPassword);
         if (!match)
             return res.status(400).json({
@@ -117,7 +118,6 @@ const login = async (req, res, next) => {
             sameSite: 'none',
             maxAge: (0, ms_1.default)('10m')
         });
-        console.log(user);
         res.status(201).json({
             success: true,
             message: "User login successful!",
@@ -125,7 +125,7 @@ const login = async (req, res, next) => {
                 user_id: user_id,
                 name: name,
                 email: user.email,
-                isVerified: user.isVerified
+                isVerified: isVerified
             }
         });
     }
