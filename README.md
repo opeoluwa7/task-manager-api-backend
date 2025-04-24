@@ -81,12 +81,14 @@ Here's a basic example of how to use the API.
 ## Project Structure
 
 ```
-dist
+dist/
 src/
-    |-- config #Config files(DB queries, pool, cloudinaryConfig, env.js)
+    |-- config #Config files(DB queries, pool, cloudinaryConfig, emailConfig, env.js)
     |-- controllers # Request handlers
     |-- middlewares # Auth and other middleware
     |-- routes # API routes
+    |-- schemas
+    |-- types
     |-- utils # jwt and other helpers
     index.ts
 README.md
