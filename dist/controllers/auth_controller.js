@@ -123,9 +123,9 @@ const login = async (req, res, next) => {
             message: "User login successful!",
             user: {
                 user_id: user_id,
-                name,
-                email,
-                isVerified
+                name: name,
+                email: email,
+                isVerified: isVerified
             }
         });
     }
