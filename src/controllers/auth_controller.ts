@@ -105,7 +105,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         const storedHashedPassword = user.password;
         const user_id = user.user_id;
         const name = user.name;
-        const isVerified = user.isVerified;
 
         const match = await comparePasswords(password, storedHashedPassword);
         
@@ -155,7 +154,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                 user_id: user_id,
                 name: name,
                 email: user.email,
-                isVerified: isVerified
+                isVerified: user.isVerified
             }
         })
 
