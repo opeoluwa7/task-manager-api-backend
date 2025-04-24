@@ -19,7 +19,7 @@ const createUser = async (name, email, password, isVerified) => {
 };
 const getUserWithEmail = async (email) => {
     try {
-        const results = await pool_1.default.query('SELECT user_id, email, password FROM users WHERE email = $1', [email]);
+        const results = await pool_1.default.query('SELECT * FROM users WHERE email = $1', [email]);
         return results.rows[0];
     }
     catch (error) {
