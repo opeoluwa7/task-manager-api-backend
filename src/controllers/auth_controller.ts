@@ -152,7 +152,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             user: {
                 user_id: user_id,
                 name: name,
-                email: email,
+                email: user.email,
                 isVerified: isVerified
             }
         })
