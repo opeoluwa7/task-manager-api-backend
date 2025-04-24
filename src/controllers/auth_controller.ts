@@ -145,7 +145,9 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             sameSite: 'none',
             maxAge: ms('10m')
         })
-
+        
+        console.log(user);
+        
         res.status(201).json({
             success: true,
             message: "User login successful!",
