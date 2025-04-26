@@ -47,7 +47,7 @@ const verifyUser = async (req, res, next) => {
         const token = await redis_1.default.get("verification-token");
         const verificationToken = (0, jwt_1.verifyVerificationToken)(token);
         if (!verificationToken)
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
                 error: "Invalid verification token. Please register"
             });

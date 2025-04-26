@@ -60,7 +60,7 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
 
         const verificationToken = verifyVerificationToken(token!);
 
-        if (!verificationToken) return res.status(401).json({
+        if (!verificationToken) return res.status(400).json({
             success: false,
             error: "Invalid verification token. Please register"
         })
