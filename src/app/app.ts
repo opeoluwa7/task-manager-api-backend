@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import AuthRoutes from "../routes/auth_routes";
-import UserRoutes from "../routes/user_routes";
-import TaskRoutes from "../routes/task_routes";
-import errorHandler from "../middlewares/error_handler";
+import AuthRoutes from "../routes/authRoutes";
+import UserRoutes from "../routes/userRoutes";
+import TaskRoutes from "../routes/taskRoutes";
+import errorHandler from "../middlewares/errorHandler";
 import createRateLimiter from "../middlewares/rateLimiterMiddleware";
 import unknownRoute from "../middlewares/unknownRouteMiddleware";
 

@@ -1,15 +1,15 @@
 import express from "express";
 
 const router = express.Router()
-import loginController from "../controllers/auth_controllers/login_controller";
-import registerController from "../controllers/auth_controllers/register_controller";
+import loginController from "../controllers/auth_controllers/loginController";
+import registerController from "../controllers/auth_controllers/registerController";
 import verifyUserController from "../controllers/auth_controllers/verifyUserController";
-import logoutController from "../controllers/auth_controllers/logout_controller";
+import logoutController from "../controllers/auth_controllers/logoutController";
 import requestPasswordResetController from "../controllers/auth_controllers/requestPasswordResetController";
 import resetPasswordController from "../controllers/auth_controllers/resetPasswordController";
 import refreshAccessTokenController from "../controllers/auth_controllers/refreshAccessTokenController";
 
-import isAuthorized from "../middlewares/is_authorized";
+import isAuthorized from "../middlewares/isAuthorized";
 import refreshTokenMiddlware from "../middlewares/refreshTokenMiddleware";
 
 

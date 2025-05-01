@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_schema_1 = require("../../schemas/user_schema");
+const userSchema_1 = require("../../schemas/userSchema");
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
@@ -11,7 +11,7 @@ const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-function
 const email_functions_1 = require("../../utils/helper_functions/email-functions");
 const registerController = async (req, res, next) => {
     try {
-        const value = user_schema_1.registerSchema.safeParse(req.body);
+        const value = userSchema_1.registerSchema.safeParse(req.body);
         if (!value.success) {
             return res.status(400).json({
                 success: false,

@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const task_schema_1 = require("../../schemas/task_schema");
+const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const updateUserTaskController = async (req, res, next) => {
     try {
-        const value = task_schema_1.updateTaskSchema.safeParse(req.body);
+        const value = taskSchema_1.updateTaskSchema.safeParse(req.body);
         if (!value.success) {
             return res.status(400).json({
                 success: false,

@@ -1,4 +1,4 @@
-import { resetPasswordSchema } from "../../schemas/user_schema";
+import { resetPasswordSchema } from "../../schemas/userSchema";
 import { matchPasswords, encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
 import userFn from "../../utils/helper_functions/user-functions"; 
 import { verifyResetTokenString } from "../../utils/helper_functions/token-functions";

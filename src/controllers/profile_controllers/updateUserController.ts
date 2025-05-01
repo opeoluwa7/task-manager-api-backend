@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { updateUserSchema } from "../../schemas/user_schema";
+import { updateUserSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
 import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";

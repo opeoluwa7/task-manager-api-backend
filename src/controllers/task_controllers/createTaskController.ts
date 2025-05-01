@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createTaskSchema } from "../../schemas/task_schema";
+import { createTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 
 

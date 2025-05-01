@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const auth_routes_1 = __importDefault(require("../routes/auth_routes"));
-const user_routes_1 = __importDefault(require("../routes/user_routes"));
-const task_routes_1 = __importDefault(require("../routes/task_routes"));
-const error_handler_1 = __importDefault(require("../middlewares/error_handler"));
+const authRoutes_1 = __importDefault(require("../routes/authRoutes"));
+const userRoutes_1 = __importDefault(require("../routes/userRoutes"));
+const taskRoutes_1 = __importDefault(require("../routes/taskRoutes"));
+const errorHandler_1 = __importDefault(require("../middlewares/errorHandler"));
 const rateLimiterMiddleware_1 = __importDefault(require("../middlewares/rateLimiterMiddleware"));
 const unknownRouteMiddleware_1 = __importDefault(require("../middlewares/unknownRouteMiddleware"));
 const rateLimit = (0, rateLimiterMiddleware_1.default)(60, 1000, "The server has received too many requests from this IP. Try again in one hour.");
@@ -27,10 +27,10 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(unknownRouteMiddleware_1.default);
 app.use("/api", rateLimit);
-app.use("/api", auth_routes_1.default);
-app.use("/api", user_routes_1.default);
-app.use("/api", task_routes_1.default);
-app.use(error_handler_1.default);
+app.use("/api", authRoutes_1.default);
+app.use("/api", userRoutes_1.default);
+app.use("/api", taskRoutes_1.default);
+app.use(errorHandler_1.default);
 app.use((req, res) => {
     res.status(404).json({
         success: false,

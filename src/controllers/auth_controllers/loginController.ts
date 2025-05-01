@@ -1,7 +1,7 @@
 import ms from "ms";
 require("cookie-parser")
 import { Request, Response, NextFunction } from "express";
-import { loginSchema } from "../../schemas/user_schema";
+import { loginSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import { matchPasswords } from "../../utils/helper_functions/bcrypt-functions";

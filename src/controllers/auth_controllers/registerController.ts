@@ -1,5 +1,5 @@
 
-import { registerSchema } from "../../schemas/user_schema";
+import { registerSchema } from "../../schemas/userSchema";
 import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
 import { Request, Response, NextFunction } from "express";
 import { generateVerificationTokenString } from "../../utils/helper_functions/token-functions";

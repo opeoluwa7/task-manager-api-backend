@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import db from "../../config/db_queries/task_queries";
 import { FiltersType } from "../../types/utils/FiltersType";
-import { queryTaskSchema } from "../../schemas/task_schema";
-
+import { queryTaskSchema } from "../../schemas/taskSchema";
+import taskFn from "../../utils/helper_functions/task-functions";
 
 
 const getAllTasksController = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,7 +27,7 @@ const getAllTasksController = async (req: Request, res: Response, next: NextFunc
         let limit = 20;
         let offset = 0;
 
-        const results = await db.getTasks(user_id, filters, limit, offset)
+        const results = await taskFn.getAllTasks(user_id, filters, limit, offset)
 
         if (!results) return res.status(500).json({
             success: false,

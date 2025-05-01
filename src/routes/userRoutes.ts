@@ -1,6 +1,6 @@
 import express from "express";
 
-import isAuthorized from "../middlewares/is_authorized";
+import isAuthorized from "../middlewares/isAuthorized";
 import findUserController from "../controllers/profile_controllers/findUserController";
 import updateUserController from "../controllers/profile_controllers/updateUserController";
 import deleteUserController from "../controllers/profile_controllers/deleteUserController";

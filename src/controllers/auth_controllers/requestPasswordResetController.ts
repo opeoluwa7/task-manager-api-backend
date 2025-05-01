@@ -1,4 +1,4 @@
-import { forgotPasswordSchema } from "../../schemas/user_schema";
+import { forgotPasswordSchema } from "../../schemas/userSchema";
 import { Request, Response, NextFunction } from "express";
 import userFn from "../../utils/helper_functions/user-functions";
 import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";

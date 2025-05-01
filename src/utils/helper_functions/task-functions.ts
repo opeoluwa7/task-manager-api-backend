@@ -1,4 +1,4 @@
-import taskQueries from "../../config/db_queries/task_queries";
+import taskQueries from "../../config/db_queries/taskQueries";
 
 import uploadQueries from "../../config/db_queries/uploadQueries";
 import { FiltersType } from "../../types/utils/FiltersType";

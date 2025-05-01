@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const is_authorized_1 = __importDefault(require("../middlewares/is_authorized"));
+const isAuthorized_1 = __importDefault(require("../middlewares/isAuthorized"));
 const getAllTasksController_1 = __importDefault(require("../controllers/task_controllers/getAllTasksController"));
 const getOneTaskController_1 = __importDefault(require("../controllers/task_controllers/getOneTaskController"));
 const createTaskController_1 = __importDefault(require("../controllers/task_controllers/createTaskController"));
@@ -14,11 +14,11 @@ const deleteTaskController_1 = __importDefault(require("../controllers/task_cont
 const uploadMiddleware_1 = __importDefault(require("../middlewares/uploadMiddleware"));
 const uploadTaskImageController_1 = __importDefault(require("../controllers/task_controllers/uploadTaskImageController"));
 const removeTaskImageController_1 = __importDefault(require("../controllers/task_controllers/removeTaskImageController"));
-router.get('/all-tasks', is_authorized_1.default.check, getAllTasksController_1.default);
-router.get('/task/:id', is_authorized_1.default.check, getOneTaskController_1.default);
-router.post('/create-task', is_authorized_1.default.check, createTaskController_1.default);
-router.patch('/update-task/:id', is_authorized_1.default.check, updateTaskController_1.default);
-router.delete('/delete-task/:id', is_authorized_1.default.check, deleteTaskController_1.default);
-router.post('/task/image/:id', [is_authorized_1.default.check, uploadMiddleware_1.default.single("image")], uploadTaskImageController_1.default);
-router.patch('/task/remove-image/:id', [is_authorized_1.default.check], removeTaskImageController_1.default);
+router.get('/all-tasks', isAuthorized_1.default.check, getAllTasksController_1.default);
+router.get('/task/:id', isAuthorized_1.default.check, getOneTaskController_1.default);
+router.post('/create-task', isAuthorized_1.default.check, createTaskController_1.default);
+router.patch('/update-task/:id', isAuthorized_1.default.check, updateTaskController_1.default);
+router.delete('/delete-task/:id', isAuthorized_1.default.check, deleteTaskController_1.default);
+router.post('/task/image/:id', [isAuthorized_1.default.check, uploadMiddleware_1.default.single("image")], uploadTaskImageController_1.default);
+router.patch('/task/remove-image/:id', [isAuthorized_1.default.check], removeTaskImageController_1.default);
 exports.default = router;

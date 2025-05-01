@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 
 
-import isAuthorized from "../middlewares/is_authorized";
+import isAuthorized from "../middlewares/isAuthorized";
 import getAllTasksController from "../controllers/task_controllers/getAllTasksController";
 import getOneTaskController from "../controllers/task_controllers/getOneTaskController";
 import createNewTaskController from "../controllers/task_controllers/createTaskController";

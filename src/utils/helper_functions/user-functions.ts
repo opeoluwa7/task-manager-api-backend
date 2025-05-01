@@ -1,4 +1,4 @@
-import userQueries from "../../config/db_queries/user_queries";
+import userQueries from "../../config/db_queries/userQueries";
 
 
 const createUser = async (name: string, email: string, password: string, isVerified: boolean) => {
