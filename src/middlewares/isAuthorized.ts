@@ -8,7 +8,7 @@ const isAuthorized = {
         try {
 
 
-            const accessToken = req.cookies['access-token'];
+            const accessToken = req.cookies['accessToken'];
 
             if (!accessToken) return res.status(401).json({
                 error: "No Access Token found. please login"

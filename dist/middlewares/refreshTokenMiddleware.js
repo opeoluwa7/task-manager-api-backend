@@ -5,7 +5,7 @@ const redis_functions_1 = require("../utils/helper_functions/redis-functions");
 const token_functions_1 = require("../utils/helper_functions/token-functions");
 const refreshTokenMiddlware = async (req, res, next) => {
     try {
-        const refreshToken = req.cookies['refresh-token'];
+        const refreshToken = req.cookies['refreshToken'];
         if (!refreshToken) {
             return res.status(401).json({
                 success: false,

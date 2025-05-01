@@ -6,7 +6,7 @@ const token_functions_1 = require("../utils/helper_functions/token-functions");
 const isAuthorized = {
     check: async (req, res, next) => {
         try {
-            const accessToken = req.cookies['access-token'];
+            const accessToken = req.cookies['accessToken'];
             if (!accessToken)
                 return res.status(401).json({
                     error: "No Access Token found. please login"
