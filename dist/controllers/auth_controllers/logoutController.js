@@ -4,21 +4,21 @@ require("cookie-parser");
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const logoutController = async (req, res, next) => {
     try {
-        const access_token = req.cookies['access-token'];
-        const refresh_token = req.cookies['refresh-token'];
-        if (!access_token)
+        const accessToken = req.cookies['accessToken'];
+        const refreshToken = req.cookies['refreshToken'];
+        if (!accessToken)
             return res.status(401).json({
                 success: false,
                 error: "Token not found. Please login again"
             });
-        await (0, redis_functions_1.blacklistToken)(access_token);
-        await (0, redis_functions_1.blacklistToken)(refresh_token);
-        res.clearCookie('access-token', {
+        await (0, redis_functions_1.blacklistToken)(accessToken);
+        await (0, redis_functions_1.blacklistToken)(refreshToken);
+        res.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
             sameSite: 'none'
         });
-        res.clearCookie('refresh-token', {
+        res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
