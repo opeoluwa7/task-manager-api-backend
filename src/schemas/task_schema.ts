@@ -15,3 +15,14 @@ export const updateTaskSchema = z.object({
         priority: z.string().toLowerCase().trim().optional(),
         deadline: z.coerce.date().optional()
 })
+
+export const queryTaskSchema = z.object({
+        status: z.string().refine(
+                (val) => ["pending", "in_progress", "completed"].includes(val),
+                { message: "Status must either be \"pending\", \"in_progress\", or \"completed\" " }
+        ).optional(),
+        priority: z.string().refine(
+        (val) => ["low", "medium", "high"].includes(val),
+        { message: "Priority must either be \"low\", \"medium\", or \"high\" "}
+        ).optional()
+})

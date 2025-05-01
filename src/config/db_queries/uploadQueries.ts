@@ -12,7 +12,7 @@ const uploadImageUrl = async(image_url: string) => {
     }
 }
 
-const updateImageUrl = async (image_url: string, user_id: Number, task_id: Number) => {
+const updateImageUrl = async (image_url: string, user_id: number, task_id: number) => {
     try {
         const results = await pool.query('UPDATE tasks SET image_url = COALESCE($1, image_url) WHERE user_id = $2 and task_id = $3 RETURNING *', [
             image_url,
@@ -26,7 +26,7 @@ const updateImageUrl = async (image_url: string, user_id: Number, task_id: Numbe
     }
 }
 
-const getImageUrl = async (user_id: Number, task_id: Number) => {
+const getImageUrl = async (user_id: number, task_id: number) => {
     try {
         const results = await pool.query('SELECT image_url FROM tasks WHERE user_id = $1 and task_id = $2', [
             user_id,
@@ -39,7 +39,7 @@ const getImageUrl = async (user_id: Number, task_id: Number) => {
     }
 }
 
-const removeImageUrl = async (user_id: Number, task_id: Number) => {
+const removeImageUrl = async (user_id: number, task_id: number) => {
     try {
         const results = await pool.query('UPDATE tasks SET image_url = NULL WHERE user_id = $1 and task_id = $2 RETURNING *', [
             user_id,

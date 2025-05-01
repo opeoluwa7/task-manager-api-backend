@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 require("cookie-parser");
-import {verifyAccessToken} from "../utils/jwt";
-import redis from "../utils/redis"
+import { getFromRedis } from "../utils/helper_functions/redis-functions"
+import { verifyAccessTokenString } from "../utils/helper_functions/token-functions";
 
 const isAuthorized = {
     check: async (req: Request, res: Response, next: NextFunction) => {
         try {
 
 
-            const access_token = req.cookies['accessToken'];
+            const accessToken = req.cookies['access-token'];
 
-            if (!access_token) return res.status(401).json({
+            if (!accessToken) return res.status(401).json({
                 error: "No Access Token found. please login"
             })
 
-            const isBlacklisted = await redis.get(access_token);
+            const isBlacklisted = await getFromRedis(accessToken);
 
             if (isBlacklisted) {
                 return res.status(401).json({
@@ -24,17 +24,16 @@ const isAuthorized = {
             }
 
 
-            const decoded = verifyAccessToken(access_token);
+            const decoded = verifyAccessTokenString(accessToken);
                 
             if (!decoded) {
                 return res.status(401).json({
                     success: false,
                     error: 'Invalid access token provided. Please login again'
                 });
-
             }
 
-            decoded.user_id = Number(decoded.user_id);
+            req.user!.user_id = decoded.user_id; 
 
             req.user = decoded;
 

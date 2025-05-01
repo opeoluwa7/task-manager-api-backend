@@ -1,14 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 
-function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
- 
-    console.error(err);
 
-    const statusCode = err.status || err.response?.status || 500;
+function errorHandler(err: unknown, req: Request, res: Response, next: NextFunction) {
+    
+    type errorType = {
+        response?: {
+            status?: number,
+            data?: {
+                error?: string
+            }
+        }
+    }
+    const error = err as errorType 
+
+    const statusCode =  error.response?.status || 500;
 
     res.status(statusCode).json({
         success: false,
-        message: err.message || "Something went wrong!!"
+        message: error.response?.data?.error || "Something went wrong!!"
     })
 
     

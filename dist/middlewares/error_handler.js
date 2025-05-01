@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function errorHandler(err, req, res, next) {
-    console.error(err);
-    const statusCode = err.status || err.response?.status || 500;
+    const error = err;
+    const statusCode = error.response?.status || 500;
     res.status(statusCode).json({
         success: false,
-        message: err.message || "Something went wrong!!"
+        message: error.response?.data?.error || "Something went wrong!!"
     });
 }
 exports.default = errorHandler;

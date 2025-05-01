@@ -1,21 +1,22 @@
-import jwt from "jsonwebtoken";
+
 require("cookie-parser");
-import redis from "../utils/redis";
+import { getFromRedis } from "../utils/helper_functions/redis-functions";
 import { Request, Response, NextFunction } from "express";
-import { verifyRefreshToken } from "../utils/jwt";
+
+import { verifyRefreshTokenString } from "../utils/helper_functions/token-functions";
 
 const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const refresh_token = req.cookies['refreshToken'];
+        const refreshToken = req.cookies['refresh-token'];
 
-        if (!refresh_token) {
+        if (!refreshToken) {
             return res.status(401).json({
                 success: false,
                 error: "No refresh token provided. Please login"
             })
         }
 
-        const blacklisted = await redis.get(refresh_token);
+        const blacklisted = await getFromRedis(refreshToken);
 
         if (blacklisted) {
             return res.status(401).json({
@@ -24,14 +25,14 @@ const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunct
             })
         }
 
-        const decoded = verifyRefreshToken(refresh_token);
+        const decoded = verifyRefreshTokenString(refreshToken);
 
         if (!decoded) return res.status(401).json({
             success: false,
             error: "Invalid refresh token provided. Please login again."
         })
 
-        decoded.user_id = Number(decoded.user_id)
+        req.user!.user_id = decoded.user_id;
 
         req.user = decoded;
         next()

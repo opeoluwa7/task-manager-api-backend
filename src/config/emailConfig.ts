@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmailVerificationLink = async(userEmail: string) => {
-    const verificationLink = `https://task-manager-api-2025.up.railway.app/api/verify-email`;
+    const verificationLink = `https://task-manager-app-frontend-blue.vercel.app/verify-account`;
 
     const mailOptions = {
         from: `Task manager API <${env.EMAIL_USER}>`,
@@ -27,7 +27,7 @@ const sendEmailVerificationLink = async(userEmail: string) => {
 }
 
 
-const sendPasswordResetEmail = async(userEmail: string) => {
+const sendPasswordResetEmailLink = async(userEmail: string) => {
     const resetLink = `https://task-manager-app-frontend-blue.vercel.app/reset-password`;
 
     const mailOptions = {
@@ -43,5 +43,5 @@ const sendPasswordResetEmail = async(userEmail: string) => {
 
 export  {
     sendEmailVerificationLink,
-    sendPasswordResetEmail
+    sendPasswordResetEmailLink
 }

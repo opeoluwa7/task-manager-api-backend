@@ -1,5 +1,4 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import redis from "./redis";
 import { env } from "../config/env";
 
 
@@ -13,10 +12,10 @@ const RESET_TOKEN_EXP = env.RESET_TOKEN_EXP;
 const VERIFICATION_TOKEN_SECRET = env.VERIFICATION_TOKEN_SECRET;
 const VERIFICATION_TOKEN_EXP = env.VERIFICATION_TOKEN_EXP;
 
-export const generateAccessToken = (user_id: Number) => {
+export const generateAccessToken = (user_id: number) => {
     
     type tokenPayload = {
-        user_id: Number
+        user_id: number
     } 
 
     const payload: tokenPayload = {
@@ -32,10 +31,10 @@ export const generateAccessToken = (user_id: Number) => {
     )
 }
 
-export const generateRefreshToken = (user_id: Number) => {
+export const generateRefreshToken = (user_id: number) => {
     
     type refreshTokenPayload = {
-        user_id: Number
+        user_id: number
     }
 
     const payload: refreshTokenPayload = {
@@ -51,10 +50,10 @@ export const generateRefreshToken = (user_id: Number) => {
     )
 }
 
-export const generateResetToken = (user_id: Number) => {
+export const generateResetToken = (user_id: number) => {
     
     type resetTokenPayload = {
-        user_id: Number
+        user_id: number
     }
 
     const payload: resetTokenPayload = {

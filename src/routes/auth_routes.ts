@@ -1,19 +1,24 @@
 import express from "express";
 
 const router = express.Router()
-
-import AuthController from "../controllers/auth_controller";
+import loginController from "../controllers/auth_controllers/login_controller";
+import registerController from "../controllers/auth_controllers/register_controller";
+import verifyUserController from "../controllers/auth_controllers/verifyUserController";
+import logoutController from "../controllers/auth_controllers/logout_controller";
+import requestPasswordResetController from "../controllers/auth_controllers/requestPasswordResetController";
+import resetPasswordController from "../controllers/auth_controllers/resetPasswordController";
+import refreshAccessTokenController from "../controllers/auth_controllers/refreshAccessTokenController";
 
 import isAuthorized from "../middlewares/is_authorized";
 import refreshTokenMiddlware from "../middlewares/refreshTokenMiddleware";
 
 
-router.post('/register', AuthController.register);
-router.get('/verify-email', AuthController.verifyUser);
-router.post('/login', AuthController.login);
-router.post('/logout', isAuthorized.check, AuthController.logout);
-router.post('/forgot-password', AuthController.requestPasswordReset);
-router.post('/reset-password', AuthController.resetPassword);
-router.post('/refresh-token', refreshTokenMiddlware, AuthController.refreshAccessToken)
+router.post('/register', registerController);
+router.get('/verify-email', verifyUserController);
+router.post('/login', loginController);
+router.post('/logout', isAuthorized.check, logoutController);
+router.post('/forgot-password', requestPasswordResetController);
+router.post('/reset-password', resetPasswordController);
+router.post('/refresh-token', refreshTokenMiddlware, refreshAccessTokenController)
 
 export = router
