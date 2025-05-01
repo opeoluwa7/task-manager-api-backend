@@ -5,7 +5,7 @@ import taskFn from "../../utils/helper_functions/task-functions";
 const uploadTaskImageController = async(req: Request, res: Response, next: NextFunction) => {
     try { 
 
-        cloudinary.uploader.upload(req.file?.path, async (err: Error, result: any) => {
+        cloudinary.uploader.upload(req.file?.path, async (err: any, result: any) => {
             if (err) {
                 return res.status(400).json({
                     success: false,
