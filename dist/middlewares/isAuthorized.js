@@ -25,7 +25,6 @@ const isAuthorized = {
                     error: 'Invalid access token provided. Please login again'
                 });
             }
-            req.user.user_id = decoded.user_id;
             req.user = decoded;
             next();
         }

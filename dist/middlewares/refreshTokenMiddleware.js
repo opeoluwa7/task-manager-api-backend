@@ -25,7 +25,6 @@ const refreshTokenMiddlware = async (req, res, next) => {
                 success: false,
                 error: "Invalid refresh token provided. Please login again."
             });
-        req.user.user_id = decoded.user_id;
         req.user = decoded;
         next();
     }
