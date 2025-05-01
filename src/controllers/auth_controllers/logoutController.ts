@@ -5,14 +5,8 @@ import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 
 const logoutController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const accessToken: string = req.cookies['accessToken'];
-        const refreshToken: string = req.cookies['refreshToken'];
-
-
-        if (!accessToken) return res.status(401).json({
-            success: false,
-            error: "Token not found. Please login again"
-        })
+        const accessToken = req.cookies['accessToken'];
+        const refreshToken = req.cookies['refreshToken'];
 
         await blacklistToken(accessToken)
         await blacklistToken(refreshToken);

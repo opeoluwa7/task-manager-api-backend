@@ -6,11 +6,6 @@ const logoutController = async (req, res, next) => {
     try {
         const accessToken = req.cookies['accessToken'];
         const refreshToken = req.cookies['refreshToken'];
-        if (!accessToken)
-            return res.status(401).json({
-                success: false,
-                error: "Token not found. Please login again"
-            });
         await (0, redis_functions_1.blacklistToken)(accessToken);
         await (0, redis_functions_1.blacklistToken)(refreshToken);
         res.clearCookie('accessToken', {
