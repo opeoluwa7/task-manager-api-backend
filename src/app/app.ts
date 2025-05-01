@@ -26,12 +26,12 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(unknownRoute);
+
 app.use("/api", rateLimit);
 app.use("/api", AuthRoutes);
 app.use("/api", UserRoutes);
 app.use("/api", TaskRoutes);
 
 app.use(errorHandler);
-
+app.use(unknownRoute);
 export default app
