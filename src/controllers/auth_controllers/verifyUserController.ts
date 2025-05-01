@@ -8,7 +8,7 @@ import userFn from "../../utils/helper_functions/user-functions";
 const verifyUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
            
-        const token = await getFromRedis("verification-token");
+        const token = await getFromRedis("verificationToken");
 
         const verificationToken = verifyVerificationTokenString(token)
 

@@ -43,20 +43,20 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
 
     const refreshToken = generateRefreshTokenString(user_id) 
 
-    res.clearCookie('refresh-token', {
+    res.clearCookie('refreshToken', {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
         path: '/api/refresh-token'
     })
 
-    res.clearCookie('access-token', {
+    res.clearCookie('accessToken', {
         httpOnly: true,
         secure: true,
         sameSite: 'none'
     })
 
-    res.cookie('refresh-token', refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
@@ -64,7 +64,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
         maxAge: ms('3d')
     })
 
-    res.cookie('access-token', accessToken, {
+    res.cookie('accessToken', accessToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'none',

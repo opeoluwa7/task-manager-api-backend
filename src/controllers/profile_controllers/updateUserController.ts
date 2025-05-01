@@ -41,8 +41,8 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             currentEmail = newEmail
 
 
-            const accessToken = req.cookies['access-token'];
-            const refreshToken = req.cookies['refresh-token'];
+            const accessToken = req.cookies['accessToken'];
+            const refreshToken = req.cookies['refreshToken'];
 
             await storeTempInRedis(accessToken, "blacklisted");
             await storeTempInRedis(refreshToken, "blacklisted")

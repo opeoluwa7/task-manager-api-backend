@@ -6,7 +6,7 @@ import ms from "ms";
 const refreshAccessTokenController = async(req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const token = req.cookies["refresh-token"];
+        const token = req.cookies["refreshToken"];
 
         const refreshToken = verifyRefreshTokenString(token)
 
@@ -15,13 +15,13 @@ const refreshAccessTokenController = async(req: Request, res: Response, next: Ne
         const newAccessToken = generateAccessTokenString(user_id);
 
 
-        res.clearCookie('access-token', {
+        res.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
             sameSite: 'none'
         });
 
-        res.cookie('access-token', newAccessToken, {
+        res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',

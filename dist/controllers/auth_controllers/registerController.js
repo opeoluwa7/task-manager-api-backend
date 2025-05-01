@@ -30,7 +30,7 @@ const registerController = async (req, res, next) => {
         await (0, redis_functions_1.storeTempInRedis)("name", name);
         await (0, redis_functions_1.storeTempInRedis)("email", email);
         await (0, redis_functions_1.storeTempInRedis)("password", hashedPassword);
-        await (0, redis_functions_1.storeTempInRedis)("verification-token", verificationToken);
+        await (0, redis_functions_1.storeTempInRedis)("verificationToken", verificationToken);
         await (0, email_functions_1.sendVerificationEmail)(email);
         res.status(200).json({
             success: true,
