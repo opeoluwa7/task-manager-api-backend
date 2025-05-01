@@ -3,21 +3,13 @@ import cloudinary from "../../config/cloudinaryConfig";
 import taskFn from "../../utils/helper_functions/task-functions";
 
 const uploadTaskImageController = async(req: Request, res: Response, next: NextFunction) => {
-    try {
+    try { 
 
-        const image = req.file?.path;
-
-        if (!image) return res.status(400).json({
-            success: false,
-            error: "Please provide an image"
-        })
-
-        cloudinary.uploader.upload(image, async (err: Error, result: any) => {
+        cloudinary.uploader.upload(req.file?.path, async (err: Error, result: any) => {
             if (err) {
                 return res.status(400).json({
                     success: false,
                     message: "Error uploading image",
-                    error: err.message
                 })
             }
 

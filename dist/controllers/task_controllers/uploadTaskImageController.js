@@ -7,18 +7,11 @@ const cloudinaryConfig_1 = __importDefault(require("../../config/cloudinaryConfi
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const uploadTaskImageController = async (req, res, next) => {
     try {
-        const image = req.file?.path;
-        if (!image)
-            return res.status(400).json({
-                success: false,
-                error: "Please provide an image"
-            });
-        cloudinaryConfig_1.default.uploader.upload(image, async (err, result) => {
+        cloudinaryConfig_1.default.uploader.upload(req.file?.path, async (err, result) => {
             if (err) {
                 return res.status(400).json({
                     success: false,
                     message: "Error uploading image",
-                    error: err.message
                 });
             }
             const imgUrl = result.url;
