@@ -34,11 +34,4 @@ app.use("/api", TaskRoutes);
 
 app.use(errorHandler);
 
-app.use((req: Request, res: Response) => {
-                res.status(404).json({
-                                success: false,
-                                error: "Route not found"
-                })
-})
-
 export default app

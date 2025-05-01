@@ -31,10 +31,4 @@ app.use("/api", authRoutes_1.default);
 app.use("/api", userRoutes_1.default);
 app.use("/api", taskRoutes_1.default);
 app.use(errorHandler_1.default);
-app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        error: "Route not found"
-    });
-});
 exports.default = app;
