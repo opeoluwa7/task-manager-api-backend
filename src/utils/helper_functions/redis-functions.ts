@@ -1,12 +1,12 @@
-//import { RedisKey } from "ioredis";
+
+import { RedisKey } from "ioredis";
 import redis from "../redis";
 
 
-const tenMins = 600;
 
 export const storeTempInRedis = async(key: string, value: string) => {
     try {
-        const storedValue = await redis.setex(key, tenMins, value);
+        const storedValue = await redis.setex(key, 600, value);
 
         return storedValue
     } catch (error) {
@@ -14,7 +14,7 @@ export const storeTempInRedis = async(key: string, value: string) => {
     }
 }
 
-export const blacklistToken = async (key: string) => {
+export const blacklistToken = async (key: RedisKey) => {
     try {
         const blacklist = await redis.setex(key, "3d", "blacklisted")
 
@@ -24,7 +24,7 @@ export const blacklistToken = async (key: string) => {
     }
 }
 
-export const getFromRedis = async(key: string): Promise<string> => {
+export const getFromRedis = async(key: string) => {
     try {
         const value = await redis.get(key);
 
