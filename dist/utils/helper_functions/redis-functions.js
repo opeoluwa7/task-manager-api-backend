@@ -17,7 +17,7 @@ const storeTempInRedis = async (key, value) => {
 exports.storeTempInRedis = storeTempInRedis;
 const blacklistToken = async (key) => {
     try {
-        const blacklist = await redis_1.default.setex(key, "3d", "blacklisted");
+        const blacklist = await redis_1.default.setex(key, 60, "blacklisted");
         return blacklist;
     }
     catch (error) {
