@@ -28,7 +28,7 @@ export const getFromRedis = async(key: string): Promise<string> => {
     try {
         const value = await redis.get(key);
 
-        if (!value) return new Error("No resource found").toString()
+        if (!value) return new Error("No resource found in redis").toString()
 
         return value
     } catch (error) {   

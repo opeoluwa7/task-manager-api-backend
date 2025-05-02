@@ -38,8 +38,8 @@ const updateUserController = async (req, res, next) => {
             currentEmail = newEmail;
             const accessToken = req.cookies['accessToken'];
             const refreshToken = req.cookies['refreshToken'];
-            await (0, redis_functions_1.storeTempInRedis)(accessToken, "blacklisted");
-            await (0, redis_functions_1.storeTempInRedis)(refreshToken, "blacklisted");
+            await (0, redis_functions_1.blacklistToken)(accessToken);
+            await (0, redis_functions_1.blacklistToken)(refreshToken);
             res.clearCookie('accessToken', {
                 httpOnly: true,
                 secure: true,

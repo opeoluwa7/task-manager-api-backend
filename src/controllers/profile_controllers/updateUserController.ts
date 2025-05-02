@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { updateUserSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
-import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
+import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import ms from "ms";
 
@@ -44,8 +44,8 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             const accessToken = req.cookies['accessToken'];
             const refreshToken = req.cookies['refreshToken'];
 
-            await storeTempInRedis(accessToken, "blacklisted");
-            await storeTempInRedis(refreshToken, "blacklisted")
+            await blacklistToken(accessToken);
+            await blacklistToken(refreshToken);
 
             res.clearCookie('accessToken', {
                 httpOnly: true,

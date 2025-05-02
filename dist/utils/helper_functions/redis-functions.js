@@ -31,7 +31,7 @@ const getFromRedis = async (key) => {
     try {
         const value = await redis_1.default.get(key);
         if (!value)
-            return new Error("No resource found").toString();
+            return new Error("No resource found in redis").toString();
         return value;
     }
     catch (error) {
