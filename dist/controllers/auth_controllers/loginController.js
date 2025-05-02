@@ -36,25 +36,25 @@ const loginController = async (req, res, next) => {
             });
         const accessToken = (0, token_functions_1.generateAccessTokenString)(user_id);
         const refreshToken = (0, token_functions_1.generateRefreshTokenString)(user_id);
-        res.clearCookie('refreshToken', {
+        res.clearCookie('refresh_token', {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             path: '/api/refresh-token'
         });
-        res.clearCookie('accessToken', {
+        res.clearCookie('access_token', {
             httpOnly: true,
             secure: true,
             sameSite: 'none'
         });
-        res.cookie('refreshToken', refreshToken, {
+        res.cookie('refresh_token', refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             path: "/api/refresh-token",
             maxAge: (0, ms_1.default)('3d')
         });
-        res.cookie('accessToken', accessToken, {
+        res.cookie('access_token', accessToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',

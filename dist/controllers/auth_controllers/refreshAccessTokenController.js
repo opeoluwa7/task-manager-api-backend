@@ -7,16 +7,16 @@ const token_functions_1 = require("../../utils/helper_functions/token-functions"
 const ms_1 = __importDefault(require("ms"));
 const refreshAccessTokenController = async (req, res, next) => {
     try {
-        const token = req.cookies["refreshToken"];
+        const token = req.cookies["refresh_token"];
         const refreshToken = (0, token_functions_1.verifyRefreshTokenString)(token);
         const user_id = refreshToken.user_id;
         const newAccessToken = (0, token_functions_1.generateAccessTokenString)(user_id);
-        res.clearCookie('accessToken', {
+        res.clearCookie('access_token', {
             httpOnly: true,
             secure: true,
             sameSite: 'none'
         });
-        res.cookie('accessToken', newAccessToken, {
+        res.cookie('access_token', newAccessToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',

@@ -29,7 +29,7 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
 
         const resetToken = generateResetTokenString(user_id);
 
-        await storeTempInRedis(resetToken, "resetToken")
+        await storeTempInRedis("reset:token", resetToken)
 
         await sendPasswordResetEmail(user.email);
 

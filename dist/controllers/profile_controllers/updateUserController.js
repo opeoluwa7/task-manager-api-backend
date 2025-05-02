@@ -36,16 +36,16 @@ const updateUserController = async (req, res, next) => {
         const currentPassword = user.password;
         if (newEmail && newEmail !== currentEmail) {
             currentEmail = newEmail;
-            const accessToken = req.cookies['accessToken'];
-            const refreshToken = req.cookies['refreshToken'];
+            const accessToken = req.cookies['access_token'];
+            const refreshToken = req.cookies['refresh_token'];
             await (0, redis_functions_1.blacklistToken)(accessToken);
             await (0, redis_functions_1.blacklistToken)(refreshToken);
-            res.clearCookie('accessToken', {
+            res.clearCookie('access_token', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
             });
-            res.clearCookie('refreshToken', {
+            res.clearCookie('refresh_token', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
@@ -53,13 +53,13 @@ const updateUserController = async (req, res, next) => {
             });
             const newAccessToken = (0, token_functions_1.generateAccessTokenString)(user_id);
             const newRefreshToken = (0, token_functions_1.generateRefreshTokenString)(user_id);
-            res.cookie('accessToken', newAccessToken, {
+            res.cookie('access_token', newAccessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
                 maxAge: (0, ms_1.default)('10m')
             });
-            res.cookie('refreshToken', newRefreshToken, {
+            res.cookie('refresh_token', newRefreshToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',

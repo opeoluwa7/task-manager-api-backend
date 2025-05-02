@@ -20,7 +20,7 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
 
         const { password } = value.data;
 
-        const resetToken = await getFromRedis("resetToken");
+        const resetToken = await getFromRedis("reset:token");
 
         if (!resetToken) return res.status(401).json({
             success: false,

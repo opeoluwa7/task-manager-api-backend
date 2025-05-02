@@ -36,7 +36,7 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
         await storeTempInRedis("name", name);
         await storeTempInRedis("email", email);
         await storeTempInRedis("password", hashedPassword);
-        await storeTempInRedis("verificationToken", verificationToken);
+        await storeTempInRedis("verification:token", verificationToken);
 
         await sendVerificationEmail(email);
 

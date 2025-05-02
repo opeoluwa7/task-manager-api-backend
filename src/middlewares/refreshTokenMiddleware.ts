@@ -7,7 +7,7 @@ import { verifyRefreshTokenString } from "../utils/helper_functions/token-functi
 
 const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const refreshToken = req.cookies['refreshToken'];
+        const refreshToken = req.cookies['refresh_token'];
 
         if (!refreshToken) {
             return res.status(401).json({

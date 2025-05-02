@@ -41,19 +41,19 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             currentEmail = newEmail
 
 
-            const accessToken = req.cookies['accessToken'];
-            const refreshToken = req.cookies['refreshToken'];
+            const accessToken = req.cookies['access_token'];
+            const refreshToken = req.cookies['refresh_token'];
 
             await blacklistToken(accessToken);
             await blacklistToken(refreshToken);
 
-            res.clearCookie('accessToken', {
+            res.clearCookie('access_token', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
             })
 
-            res.clearCookie('refreshToken', {
+            res.clearCookie('refresh_token', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
@@ -63,14 +63,14 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             const newAccessToken: string = generateAccessTokenString(user_id);
             const newRefreshToken: string = generateRefreshTokenString(user_id)
 
-            res.cookie('accessToken', newAccessToken, {
+            res.cookie('access_token', newAccessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
                 maxAge: ms('10m')
             })
 
-            res.cookie('refreshToken', newRefreshToken, {
+            res.cookie('refresh_token', newRefreshToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
