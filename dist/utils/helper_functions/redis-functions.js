@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFromRedis = exports.blacklistToken = exports.storeTempInRedis = void 0;
+exports.getFromRedis = exports.storeTempInRedis = void 0;
 const redis_1 = __importDefault(require("../redis"));
 const storeTempInRedis = async (key, value) => {
     try {
@@ -15,16 +15,6 @@ const storeTempInRedis = async (key, value) => {
     }
 };
 exports.storeTempInRedis = storeTempInRedis;
-const blacklistToken = async (key) => {
-    try {
-        const blacklist = await redis_1.default.setex(key, 60, "blacklisted");
-        return blacklist;
-    }
-    catch (error) {
-        throw error;
-    }
-};
-exports.blacklistToken = blacklistToken;
 const getFromRedis = async (key) => {
     try {
         const value = await redis_1.default.get(key);

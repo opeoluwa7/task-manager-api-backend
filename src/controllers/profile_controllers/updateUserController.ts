@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { updateUserSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
-import { blacklistToken } from "../../utils/helper_functions/redis-functions";
+
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import ms from "ms";
+import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
 
 const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -44,8 +45,8 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             const accessToken = req.cookies['access_token'];
             const refreshToken = req.cookies['refresh_token'];
 
-            await blacklistToken(accessToken);
-            await blacklistToken(refreshToken);
+            await storeTempInRedis(accessToken, "blacklisted");
+            await storeTempInRedis(refreshToken, "blacklisted")
 
             res.clearCookie('access_token', {
                 httpOnly: true,

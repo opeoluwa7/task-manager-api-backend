@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userSchema_1 = require("../../schemas/userSchema");
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
 const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-functions");
-const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const ms_1 = __importDefault(require("ms"));
+const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const updateUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
@@ -38,8 +38,8 @@ const updateUserController = async (req, res, next) => {
             currentEmail = newEmail;
             const accessToken = req.cookies['access_token'];
             const refreshToken = req.cookies['refresh_token'];
-            await (0, redis_functions_1.blacklistToken)(accessToken);
-            await (0, redis_functions_1.blacklistToken)(refreshToken);
+            await (0, redis_functions_1.storeTempInRedis)(accessToken, "blacklisted");
+            await (0, redis_functions_1.storeTempInRedis)(refreshToken, "blacklisted");
             res.clearCookie('access_token', {
                 httpOnly: true,
                 secure: true,

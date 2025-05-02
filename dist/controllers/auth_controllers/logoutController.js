@@ -6,8 +6,8 @@ const logoutController = async (req, res, next) => {
     try {
         const accessToken = req.cookies['access_token'];
         const refreshToken = req.cookies['refresh_token'];
-        await (0, redis_functions_1.blacklistToken)(accessToken);
-        await (0, redis_functions_1.blacklistToken)(refreshToken);
+        await (0, redis_functions_1.storeTempInRedis)(accessToken, "blacklisted");
+        await (0, redis_functions_1.storeTempInRedis)(refreshToken, "blacklisted");
         res.clearCookie('access_token', {
             httpOnly: true,
             secure: true,
