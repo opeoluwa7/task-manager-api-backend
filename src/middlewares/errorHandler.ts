@@ -6,7 +6,7 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
 
     res.status(500).json({
         success: false,
-        error: "Internal Server Error"
+        error: err.message
     })
 
     

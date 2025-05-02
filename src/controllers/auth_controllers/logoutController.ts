@@ -24,6 +24,7 @@ const logoutController = async (req: Request, res: Response, next: NextFunction)
             sameSite: 'none',
             path: "/api/refresh-token"
         })
+
         res.status(200).json({
             success: true,
             message: "User logged out successfully!"
