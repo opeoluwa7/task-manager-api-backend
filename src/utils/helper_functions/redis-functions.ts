@@ -1,9 +1,10 @@
 
+import  { RedisKey } from "ioredis";
 import redis from "../redis";
 
 
 
-export const storeTempInRedis = async(key: string, value: string) => {
+export const storeTempInRedis = async(key: RedisKey, value: string) => {
     try {
         const storedValue = await redis.setex(key, 600, value);
 
@@ -13,7 +14,7 @@ export const storeTempInRedis = async(key: string, value: string) => {
     }
 }
 
-export const getFromRedis = async(key: string) => {
+export const getFromRedis = async(key: RedisKey) => {
     try {
         const value = await redis.get(key);
 
