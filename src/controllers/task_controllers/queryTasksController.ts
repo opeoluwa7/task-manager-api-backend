@@ -9,9 +9,9 @@ const queryTasksController = async (req: Request, res: Response, next: NextFunct
 
         const query = req.query;
 
-        if (!query) return res.status(400).json({
+        if (Object.keys(query).length === 0) return res.status(400).json({
             success: false,
-            error: "No query found"
+            error: "Query cannot be empty. At least one is required"
         })
         
         const value = queryTaskSchema.safeParse(query);

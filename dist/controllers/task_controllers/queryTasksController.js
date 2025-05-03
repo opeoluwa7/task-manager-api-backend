@@ -8,10 +8,10 @@ const task_functions_1 = __importDefault(require("../../utils/helper_functions/t
 const queryTasksController = async (req, res, next) => {
     try {
         const query = req.query;
-        if (!query)
+        if (Object.keys(query).length === 0)
             return res.status(400).json({
                 success: false,
-                error: "No query found"
+                error: "Query cannot be empty. At least one is required"
             });
         const value = taskSchema_1.queryTaskSchema.safeParse(query);
         if (!value.success)
