@@ -10,7 +10,7 @@ const deleteUserController = async (req: Request, res: Response, next: NextFunct
         const result = await userFn.deleteUserInfo(user_id);
 
         if (!result) {
-            return res.status(500).json({
+            return res.status(404).json({
                 success: false,
                 message: "User not found"
             })
