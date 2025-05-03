@@ -19,27 +19,38 @@ const createTask = async (title, description, status, priority, deadline, user_i
         return null;
     }
 };
-const getTasks = async (user_id, filters, limit, offset) => {
+const getTasks = async (user_id, limit, offset) => {
     try {
-        let query = 'SELECT * FROM tasks WHERE user_id = $1 ';
+        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
         let values = [user_id];
-        let paramIndex = 2;
-        if (filters.status) {
-            query += ` AND status = $${paramIndex} `;
-            values.push(filters.status);
-            paramIndex++;
-        }
-        if (filters.priority) {
-            query += ` AND priority = $${paramIndex} `;
-            values.push(filters.priority);
-            paramIndex++;
-        }
-        query += `ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
         const results = await pool_1.default.query(query, values);
         return results.rows;
     }
     catch (error) {
         return null;
+    }
+};
+const queryTasks = async (user_id, filters, limit, offset) => {
+    try {
+        let query = 'SELECT * FROM tasks WHERE user_id = $1 ';
+        let values = [user_id];
+        let paramIndex = 2;
+        if (filters.status) {
+            query += `AND status = $${paramIndex} `;
+            values.push(filters.status);
+            paramIndex++;
+        }
+        if (filters.priority) {
+            query += `AND priority = $${paramIndex} `;
+            values.push(filters.priority);
+            paramIndex++;
+        }
+        query += ` ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
+        const results = await pool_1.default.query(query, values);
+        return results.rows;
+    }
+    catch (error) {
+        throw error;
     }
 };
 const getTaskById = async (user_id, task_id) => {
@@ -78,6 +89,7 @@ const deleteTask = async (task_id) => {
 module.exports = {
     createTask,
     getTasks,
+    queryTasks,
     getTaskById,
     updateTask,
     deleteTask

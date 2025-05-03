@@ -1,33 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { FiltersType } from "../../types/utils/FiltersType";
-import { queryTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 
 
 const getAllTasksController = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const value = queryTaskSchema.safeParse(req.query);
-
-        if (!value.success) return res.status(400).json({
-            success: false,
-            error: value.error.format()
-
-        })
 
         const user_id: number = req.user?.user_id;
 
-        const {status, priority} = value.data;
-
-        const filters: FiltersType = {
-            status,
-            priority
-        }
-
-        let limit = 20;
-        let offset = 0;
-
-        const results = await taskFn.getAllTasks(user_id, filters, limit, offset)
+       
+ 
+        const results = await taskFn.getAllTasks(user_id)
 
         if (!results) return res.status(500).json({
             success: false,

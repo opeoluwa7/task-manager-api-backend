@@ -12,11 +12,13 @@ import deleteUserTaskController from "../controllers/task_controllers/deleteTask
 import upload from "../middlewares/uploadMiddleware";
 import uploadTaskImageController from "../controllers/task_controllers/uploadTaskImageController";
 import removeTaskImageController from "../controllers/task_controllers/removeTaskImageController";
+import queryTasksController from "../controllers/task_controllers/queryTasksController";
 
 
 
 
 router.get('/all-tasks', isAuthorized.check, getAllTasksController);
+router.get('/query-tasks', isAuthorized.check, queryTasksController);
 router.get('/task/:id', isAuthorized.check, getOneTaskController);
 router.post('/create-task', isAuthorized.check, createNewTaskController);
 router.patch('/update-task/:id', isAuthorized.check, updateUserTaskController);

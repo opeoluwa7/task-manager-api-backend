@@ -14,7 +14,9 @@ const deleteTaskController_1 = __importDefault(require("../controllers/task_cont
 const uploadMiddleware_1 = __importDefault(require("../middlewares/uploadMiddleware"));
 const uploadTaskImageController_1 = __importDefault(require("../controllers/task_controllers/uploadTaskImageController"));
 const removeTaskImageController_1 = __importDefault(require("../controllers/task_controllers/removeTaskImageController"));
+const queryTasksController_1 = __importDefault(require("../controllers/task_controllers/queryTasksController"));
 router.get('/all-tasks', isAuthorized_1.default.check, getAllTasksController_1.default);
+router.get('/query-tasks', isAuthorized_1.default.check, queryTasksController_1.default);
 router.get('/task/:id', isAuthorized_1.default.check, getOneTaskController_1.default);
 router.post('/create-task', isAuthorized_1.default.check, createTaskController_1.default);
 router.patch('/update-task/:id', isAuthorized_1.default.check, updateTaskController_1.default);

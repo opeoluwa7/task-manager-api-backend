@@ -10,8 +10,14 @@ const createTask = async (title:  string, description: string, status: string, p
     return result
 }
 
-const getAllTasks = async (user_id: Number, filters: FiltersType, limit: number, offset: any) => {
-    const result = await taskQueries.getTasks(user_id, filters, limit, offset);
+const getAllTasks = async (user_id: number, limit = 20, offset = 0) => {
+    const result = await taskQueries.getTasks(user_id, limit, offset);
+
+    return result
+}
+
+const queryAllTasks = async (user_id: number, filters: FiltersType, limit = 20, offset = 0) => {
+    const result = await taskQueries.queryTasks(user_id, filters, limit, offset)
 
     return result
 }
@@ -55,6 +61,7 @@ const removeTaskImage = async (user_id: number, task_id: number) => {
 const taskFn = {
     createTask,
     getAllTasks,
+    queryAllTasks,
     getTaskById,
     updateTask,
     deleteTask,

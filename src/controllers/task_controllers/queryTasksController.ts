@@ -1,0 +1,50 @@
+import { NextFunction, Request, Response } from "express";
+import { queryTaskSchema } from "../../schemas/taskSchema";
+import taskFn from "../../utils/helper_functions/task-functions";
+
+
+
+const queryTasksController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const query = req.query;
+
+        if (!query) return res.status(400).json({
+            success: false,
+            error: "No query found"
+        })
+        
+        const value = queryTaskSchema.safeParse(query);
+
+        if (!value.success) return res.status(400).json({
+                success: false,
+                error: value.error.format()
+
+        })
+
+        const {status, priority} = value.data
+
+        const filters = {
+            status,
+            priority
+        }
+
+        const user_id = req.user?.user_id
+
+        const result = await taskFn.queryAllTasks(user_id, filters)
+
+        if (result.length === 0) return res.status(404).json({
+            success: false,
+            error: `No tasks found`
+        })
+
+        res.status(200).json({
+            success: true,
+            message: "All queried tasks"
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export default queryTasksController

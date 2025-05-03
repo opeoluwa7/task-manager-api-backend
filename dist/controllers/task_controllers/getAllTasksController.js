@@ -3,25 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const getAllTasksController = async (req, res, next) => {
     try {
-        const value = taskSchema_1.queryTaskSchema.safeParse(req.query);
-        if (!value.success)
-            return res.status(400).json({
-                success: false,
-                error: value.error.format()
-            });
         const user_id = req.user?.user_id;
-        const { status, priority } = value.data;
-        const filters = {
-            status,
-            priority
-        };
-        let limit = 20;
-        let offset = 0;
-        const results = await task_functions_1.default.getAllTasks(user_id, filters, limit, offset);
+        const results = await task_functions_1.default.getAllTasks(user_id);
         if (!results)
             return res.status(500).json({
                 success: false,

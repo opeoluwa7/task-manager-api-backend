@@ -22,33 +22,49 @@ const createTask = async (title: string, description: string, status: string, pr
 
 
 
-const getTasks = async (user_id: Number, filters: FiltersType, limit: number, offset: any) => {
+const getTasks = async (user_id: number, limit: number, offset: any) => {
     try {
 
-        let query = 'SELECT * FROM tasks WHERE user_id = $1 ';
-        let values: any[] = [user_id];
+        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
 
-        let paramIndex = 2;
-
-        if (filters.status) {
-            query += ` AND status = $${paramIndex} `;
-            values.push(filters.status)
-            paramIndex++
-        }
-
-        if (filters.priority) {
-            query += ` AND priority = $${paramIndex} `;
-            values.push(filters.priority)
-            paramIndex++
-        }
-
-        query += `ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
+        let values: number[] = [user_id]; 
 
         const results = await pool.query(query, values)
 
         return results.rows
     } catch (error) {
         return null
+    }
+}
+
+const queryTasks = async (user_id: number, filters: FiltersType, limit: number, offset: any) => {
+    try {
+        let query = 'SELECT * FROM tasks WHERE user_id = $1 ';
+
+        let values: (string | number)[] = [user_id];
+
+        let paramIndex = 2;
+
+        if (filters.status) {
+            query += `AND status = $${paramIndex} `;
+            values.push(filters.status)
+            paramIndex++
+        }
+
+        if (filters.priority) {
+            query += `AND priority = $${paramIndex} `;
+            values.push(filters.priority)
+            paramIndex++
+        }
+
+        query += ` ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`
+
+        const results = await pool.query(query, values)
+
+        return results.rows
+
+    } catch (error) {
+        throw error
     }
 }
 
@@ -94,6 +110,7 @@ const deleteTask = async (task_id: number) => {
 export = {
     createTask,
     getTasks,
+    queryTasks,
     getTaskById,
     updateTask,
     deleteTask
