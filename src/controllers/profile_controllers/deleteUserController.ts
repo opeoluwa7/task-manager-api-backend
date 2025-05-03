@@ -1,19 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
+import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import userFn from "../../utils/helper_functions/user-functions";
-
 
 
 const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id: number = req.user?.user_id;
 
-        await userFn.deleteUserInfo(user_id);
+        const result = await userFn.deleteUserInfo(user_id);
 
-        const stillExists = await userFn.checkUserWithId(user_id)
-
-        if (!stillExists) {
-            return res.status(404).json({
+        if (!result) {
+            return res.status(500).json({
                 success: false,
                 message: "User not found"
             })
@@ -22,8 +19,8 @@ const deleteUserController = async (req: Request, res: Response, next: NextFunct
         const access_token = req.cookies['accessToken'];
         const refresh_token = req.cookies['refreshToken'];
 
-        await storeTempInRedis(access_token, "blacklisted");
-        await storeTempInRedis(refresh_token, "blacklisted")
+        await blacklistToken(access_token);
+        await blacklistToken(refresh_token)
 
         res.clearCookie("access-token", {
             httpOnly: true,

@@ -8,18 +8,17 @@ const user_functions_1 = __importDefault(require("../../utils/helper_functions/u
 const deleteUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        await user_functions_1.default.deleteUserInfo(user_id);
-        const stillExists = await user_functions_1.default.checkUserWithId(user_id);
-        if (!stillExists) {
-            return res.status(404).json({
+        const result = await user_functions_1.default.deleteUserInfo(user_id);
+        if (!result) {
+            return res.status(500).json({
                 success: false,
                 message: "User not found"
             });
         }
         const access_token = req.cookies['accessToken'];
         const refresh_token = req.cookies['refreshToken'];
-        await (0, redis_functions_1.storeTempInRedis)(access_token, "blacklisted");
-        await (0, redis_functions_1.storeTempInRedis)(refresh_token, "blacklisted");
+        await (0, redis_functions_1.blacklistToken)(access_token);
+        await (0, redis_functions_1.blacklistToken)(refresh_token);
         res.clearCookie("access-token", {
             httpOnly: true,
             secure: false,
