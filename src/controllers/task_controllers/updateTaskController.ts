@@ -14,18 +14,18 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
             })
         }
 
-        const updatedTask = value.data
+        const { title, description, status, priority, deadline } = value.data
 
         const user_id: number = req.user?.user_id;
 
         const task_id: number = Number(req.params.id);
 
         const results = await taskFn.updateTask(
-            updatedTask.title!,
-            updatedTask.description!,
-            updatedTask.status!,
-            updatedTask.priority!,
-            updatedTask.deadline!,
+            title!,
+            description!,
+            status!,
+            priority!,
+            deadline!,
             user_id,
             task_id
         );

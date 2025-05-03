@@ -67,9 +67,6 @@ const updateUserController = async (req, res, next) => {
                 maxAge: (0, ms_1.default)('3d')
             });
         }
-        else {
-            return currentEmail;
-        }
         const password = newPassword && newPassword !== currentPassword ? await (0, bcrypt_functions_1.encryptedPassword)(newPassword) : currentPassword;
         const name = newName && newName !== currentName ? currentName = newName : currentName;
         const results = await user_functions_1.default.updateUserInfo(name, currentEmail, password, user_id);

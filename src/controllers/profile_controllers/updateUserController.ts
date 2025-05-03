@@ -79,8 +79,6 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
                 maxAge: ms('3d')
             })
 
-        } else {
-            return currentEmail
         }
 
         const password = newPassword && newPassword !== currentPassword ? await encryptedPassword(newPassword) : currentPassword;
