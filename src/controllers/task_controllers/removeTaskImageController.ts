@@ -12,14 +12,14 @@ const removeTaskImageController = async (req: Request, res: Response, next: Next
 
 
 
-        const result = await taskFn.removeTaskImage(user_id, task_id)
+        await taskFn.removeTaskImage(user_id, task_id)
 
-        if (result === null) return res.status(404).json({
+        const checkTask = await taskFn.checkImage(user_id, task_id);
+
+        if (!checkTask && checkTask === null) return res.status(404).json({
             success: false,
             error: "Image not found"
         })
-
-      
 
         res.status(200).json({
             success: true,

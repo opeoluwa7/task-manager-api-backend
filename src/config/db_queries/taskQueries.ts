@@ -4,7 +4,7 @@ import pool from "../db_pool/pool";
 const createTask = async (title: string, description: string, status: string, priority: string, deadline: Date, user_id: number) => {
 
     try {
-        const results = await pool.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
+        const result = await pool.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
             title,
             description,
             status,
@@ -13,7 +13,7 @@ const createTask = async (title: string, description: string, status: string, pr
             user_id
         ]);
 
-        return results.rows[0]
+        return result.rows[0]
     } catch (error) {
         return null
     }
@@ -29,9 +29,9 @@ const getTasks = async (user_id: number, limit: number, offset: any) => {
 
         let values: number[] = [user_id]; 
 
-        const results = await pool.query(query, values)
+        const result = await pool.query(query, values)
 
-        return results.rows
+        return result.rows
     } catch (error) {
         return null
     }
@@ -59,9 +59,9 @@ const queryTasks = async (user_id: number, filters: FiltersType, limit: number, 
 
         query += ` ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`
 
-        const results = await pool.query(query, values)
+        const result = await pool.query(query, values)
 
-        return results.rows
+        return result.rows
 
     } catch (error) {
         throw error
@@ -73,9 +73,9 @@ const getTaskById = async (user_id: number, task_id: number) => {
         const query = 'SELECT * FROM tasks WHERE user_id = $1 and task_id = $2';
         const values: Number[] = [user_id, task_id];
 
-        const results = await pool.query(query, values);
+        const result = await pool.query(query, values);
 
-        return results.rows[0]
+        return result.rows[0]
     } catch (error) {
         throw error
     }
@@ -86,9 +86,9 @@ const updateTask = async (title: string, description: string, status: string, pr
         const query = 'UPDATE tasks SET title = COALESCE($1, title), description = COALESCE($2, description), status = COALESCE($3, status), priority = COALESCE($4, priority), deadline = COALESCE($5, deadline) WHERE user_id = $6 and task_id = $7 RETURNING *';
         const values = [title, description, status, priority, deadline, user_id, task_id];
 
-        const results = await pool.query(query, values);
+        const result = await pool.query(query, values);
 
-        return results.rows[0]
+        return result.rows[0]
     } catch (error) {
         throw error
     }
@@ -99,9 +99,9 @@ const deleteTask = async (task_id: number) => {
         const query = 'DELETE FROM tasks WHERE task_id = $1 RETURNING *';
         const value = [task_id];
 
-        const results = await pool.query(query, value);
+        const result = await pool.query(query, value);
 
-        return results.rows
+        return result.rows
     } catch (error) {
         throw error
     }
