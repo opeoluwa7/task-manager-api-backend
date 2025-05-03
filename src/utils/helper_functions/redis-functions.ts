@@ -34,7 +34,7 @@ export const checkRedisBlacklist = async (key: string) => {
     }
 } 
 
-export const getFromRedis = async(key: RedisKey) => {
+export const getFromRedis = async(key: string) => {
     try {
         const value = await redis.get(key);
 
