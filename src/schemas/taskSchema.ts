@@ -21,7 +21,7 @@ export const createTaskSchema = z.object({
         ).optional(),
 
         deadline: z.coerce.date().optional()
-})
+}).strict()
 
 export const updateTaskSchema = z.object({
         title: z.string().trim().optional(),
@@ -39,7 +39,7 @@ export const updateTaskSchema = z.object({
         ).optional(),
 
         deadline: z.coerce.date().optional()
-})
+}).strict()
 
 export const queryTaskSchema = z.object({
         status: z.string().refine(
@@ -51,4 +51,4 @@ export const queryTaskSchema = z.object({
                 (val) => allowedPriority.includes(val),
                 { message: priorityError }
         ).optional()
-})
+}).strict()

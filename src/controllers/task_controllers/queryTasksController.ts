@@ -15,6 +15,8 @@ const queryTasksController = async (req: Request, res: Response, next: NextFunct
             success: false,
             error: "Query cannot be empty. At least one is required"
         })
+
+      
         
         const value = queryTaskSchema.safeParse(query);
 

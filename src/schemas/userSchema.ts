@@ -10,7 +10,7 @@ export const registerSchema = z.object({
         }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
                 message: "Password must include at least one letter, one number, and one special character"
         }).trim()
-})
+}).strict()
 
 export const updateUserSchema = z.object({
         name: z.string().trim().optional(),
@@ -22,7 +22,7 @@ export const updateUserSchema = z.object({
                 }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
                         message: "Password must include at least one letter, one number, and one special character"
                 }).trim().optional()
-})
+}).strict()
 
 export const loginSchema = z.object({
         email: z.string().email().toLowerCase().trim(),
@@ -35,7 +35,7 @@ export const loginSchema = z.object({
 
 export const forgotPasswordSchema = z.object({
         email: z.string().toLowerCase().trim()
-})
+}).strict()
 
 export const resetPasswordSchema = z.object({
         password: z.string().min(8, {
@@ -43,6 +43,6 @@ export const resetPasswordSchema = z.object({
         }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, { 
                 message: "Password must include at least one letter, one number, and one special character"
         }).trim() 
-})
+}).strict()
 
 
