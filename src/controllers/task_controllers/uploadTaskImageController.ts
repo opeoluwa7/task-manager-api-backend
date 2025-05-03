@@ -28,7 +28,7 @@ const uploadTaskImageController = async(req: Request, res: Response, next: NextF
 
             const results = await taskFn.updateTaskImage(imgUrl, user_id, task_id)
 
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: "File uploaded successfully!",
                 image: results
