@@ -22,13 +22,6 @@ const uploadTaskImageController = async(req: Request, res: Response, next: NextF
 
             const imgUrl: string = result.url;
 
-            const imageUpload = await taskFn.uploadTaskImage(imgUrl);
-
-            if (!imageUpload) return res.status(500).json({
-                success: false,
-                error: "Something went wrong"
-            })
-
             const user_id: number = req.user?.user_id;
 
             const task_id = Number(req.params.id)

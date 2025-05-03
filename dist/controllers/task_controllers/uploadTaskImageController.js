@@ -21,12 +21,6 @@ const uploadTaskImageController = async (req, res, next) => {
                 });
             }
             const imgUrl = result.url;
-            const imageUpload = await task_functions_1.default.uploadTaskImage(imgUrl);
-            if (!imageUpload)
-                return res.status(500).json({
-                    success: false,
-                    error: "Something went wrong"
-                });
             const user_id = req.user?.user_id;
             const task_id = Number(req.params.id);
             const results = await task_functions_1.default.updateTaskImage(imgUrl, user_id, task_id);

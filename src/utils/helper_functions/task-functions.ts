@@ -40,11 +40,7 @@ const deleteTask = async (task_id: number) => {
     return result
 }
 
-const uploadTaskImage = async (imgUrl: string) => {
-    const result = await uploadQueries.uploadImageUrl(imgUrl);
 
-    return result
-}
 
 const updateTaskImage = async (imgUrl: string, user_id: number, task_id: number) => {
     const result = await uploadQueries.updateImageUrl(imgUrl, user_id, task_id)
@@ -65,7 +61,7 @@ const taskFn = {
     getTaskById,
     updateTask,
     deleteTask,
-    uploadTaskImage,
+   
     updateTaskImage,
     removeTaskImage
 }

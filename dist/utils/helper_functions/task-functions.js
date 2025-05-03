@@ -29,10 +29,6 @@ const deleteTask = async (task_id) => {
     const result = await taskQueries_1.default.deleteTask(task_id);
     return result;
 };
-const uploadTaskImage = async (imgUrl) => {
-    const result = await uploadQueries_1.default.uploadImageUrl(imgUrl);
-    return result;
-};
 const updateTaskImage = async (imgUrl, user_id, task_id) => {
     const result = await uploadQueries_1.default.updateImageUrl(imgUrl, user_id, task_id);
     return result;
@@ -48,7 +44,6 @@ const taskFn = {
     getTaskById,
     updateTask,
     deleteTask,
-    uploadTaskImage,
     updateTaskImage,
     removeTaskImage
 };

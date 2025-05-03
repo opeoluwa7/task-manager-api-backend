@@ -1,16 +1,6 @@
 import pool from "../db_pool/pool";
 
-const uploadImageUrl = async(image_url: string) => {
-    try {
-        const result = await pool.query('INSERT INTO tasks (image_url) VALUES($1) RETURNING image_url', [
-            image_url
-        ]);
 
-        return result.rows[0];
-    } catch (error) {
-        throw error
-    }
-}
 
 
 
@@ -56,7 +46,7 @@ const removeImageUrl = async (user_id: number, task_id: number) => {
 
 
 export = {
-    uploadImageUrl,
+ 
     getImageUrl,
     updateImageUrl,
     removeImageUrl
