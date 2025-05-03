@@ -5,7 +5,7 @@ import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions
 
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import ms from "ms";
-import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
+import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 
 const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -45,8 +45,8 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             const accessToken = req.cookies['access_token'];
             const refreshToken = req.cookies['refresh_token'];
 
-            await storeTempInRedis(accessToken, "blacklisted");
-            await storeTempInRedis(refreshToken, "blacklisted")
+            await blacklistToken(accessToken);
+            await blacklistToken(refreshToken)
 
             res.clearCookie('access_token', {
                 httpOnly: true,

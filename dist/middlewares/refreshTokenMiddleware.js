@@ -12,7 +12,7 @@ const refreshTokenMiddlware = async (req, res, next) => {
                 error: "No refresh token provided. Please login"
             });
         }
-        const blacklisted = await (0, redis_functions_1.getFromRedis)(refreshToken);
+        const blacklisted = await (0, redis_functions_1.checkRedisBlacklist)(refreshToken);
         if (blacklisted) {
             return res.status(401).json({
                 success: false,

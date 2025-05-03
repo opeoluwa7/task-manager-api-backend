@@ -14,6 +14,26 @@ export const storeTempInRedis = async(key: RedisKey, value: string) => {
     }
 }
 
+export const blacklistToken = async (key: RedisKey) => {
+    try {
+        const result = await redis.setex(key, 60, "blacklist")
+
+        return result
+    } catch (error) {
+        throw error
+    }
+}
+
+export const checkRedisBlacklist = async (key: string) => {
+    try {
+        const result = await redis.get(key)
+
+        return result
+    } catch (error) {
+        throw error
+    }
+} 
+
 export const getFromRedis = async(key: RedisKey) => {
     try {
         const value = await redis.get(key);

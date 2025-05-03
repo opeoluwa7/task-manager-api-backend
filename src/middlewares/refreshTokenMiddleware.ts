@@ -1,6 +1,6 @@
 
 require("cookie-parser");
-import { getFromRedis } from "../utils/helper_functions/redis-functions";
+import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions";
 import { Request, Response, NextFunction } from "express";
 
 import { verifyRefreshTokenString } from "../utils/helper_functions/token-functions";
@@ -16,7 +16,7 @@ const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunct
             })
         }
 
-        const blacklisted = await getFromRedis(refreshToken);
+        const blacklisted = await checkRedisBlacklist(refreshToken);
 
         if (blacklisted) {
             return res.status(401).json({
