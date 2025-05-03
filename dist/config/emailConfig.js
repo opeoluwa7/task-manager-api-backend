@@ -16,7 +16,7 @@ const transporter = nodemailer_1.default.createTransport({
     }
 });
 const sendEmailVerificationLink = async (userEmail) => {
-    const verificationLink = `https://task-manager-app-frontend-blue.vercel.app/verify-account`;
+    const verificationLink = `https://task-manager-api-2025.up.railway.app/api/verify-email`;
     const mailOptions = {
         from: `Task manager API <${env_1.env.EMAIL_USER}>`,
         to: userEmail,
