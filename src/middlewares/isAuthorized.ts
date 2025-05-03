@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 require("cookie-parser");
-import { checkRedisBlacklist, getFromRedis } from "../utils/helper_functions/redis-functions"
+import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions"
 import { verifyAccessTokenString } from "../utils/helper_functions/token-functions";
 
 const isAuthorized = {
@@ -14,7 +14,7 @@ const isAuthorized = {
                 error: "No Access Token found. please login"
             })
 
-            const isBlacklisted = await getFromRedis(accessToken);
+            const isBlacklisted = await checkRedisBlacklist(accessToken);
 
             if (isBlacklisted) {
                 return res.status(401).json({

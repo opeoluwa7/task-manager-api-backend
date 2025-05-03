@@ -11,7 +11,7 @@ const isAuthorized = {
                 return res.status(401).json({
                     error: "No Access Token found. please login"
                 });
-            const isBlacklisted = await (0, redis_functions_1.getFromRedis)(accessToken);
+            const isBlacklisted = await (0, redis_functions_1.checkRedisBlacklist)(accessToken);
             if (isBlacklisted) {
                 return res.status(401).json({
                     success: false,
