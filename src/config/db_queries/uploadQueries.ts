@@ -12,17 +12,7 @@ const uploadImageUrl = async(image_url: string) => {
     }
 }
 
-const checkImageIfExists = async (user_id: number, task_id: number) => {
-    try {
-        const result = await pool.query('SELECT image_url FROM tasks WHERE user_id = $1 and task_id = $2', [
-            user_id, task_id
-        ])
 
-        return result.rows[0]
-    } catch (error) {
-        throw error
-    }
-}
 
 const updateImageUrl = async (image_url: string, user_id: number, task_id: number) => {
     try {
@@ -67,7 +57,6 @@ const removeImageUrl = async (user_id: number, task_id: number) => {
 
 export = {
     uploadImageUrl,
-    checkImageIfExists,
     getImageUrl,
     updateImageUrl,
     removeImageUrl

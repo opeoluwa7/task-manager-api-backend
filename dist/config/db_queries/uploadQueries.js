@@ -14,17 +14,6 @@ const uploadImageUrl = async (image_url) => {
         throw error;
     }
 };
-const checkImageIfExists = async (user_id, task_id) => {
-    try {
-        const result = await pool_1.default.query('SELECT image_url FROM tasks WHERE user_id = $1 and task_id = $2', [
-            user_id, task_id
-        ]);
-        return result.rows[0];
-    }
-    catch (error) {
-        throw error;
-    }
-};
 const updateImageUrl = async (image_url, user_id, task_id) => {
     try {
         const result = await pool_1.default.query('UPDATE tasks SET image_url = COALESCE($1, image_url) WHERE user_id = $2 and task_id = $3 RETURNING *', [
@@ -64,7 +53,6 @@ const removeImageUrl = async (user_id, task_id) => {
 };
 module.exports = {
     uploadImageUrl,
-    checkImageIfExists,
     getImageUrl,
     updateImageUrl,
     removeImageUrl

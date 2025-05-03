@@ -35,7 +35,7 @@ const uploadTaskImage = async (imgUrl) => {
 };
 const checkImage = async (user_id, task_id) => {
     try {
-        const result = await uploadQueries_1.default.checkImageIfExists(user_id, task_id);
+        const result = await uploadQueries_1.default.getImageUrl(user_id, task_id);
         return result;
     }
     catch (error) {
