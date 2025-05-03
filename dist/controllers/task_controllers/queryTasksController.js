@@ -8,7 +8,8 @@ const task_functions_1 = __importDefault(require("../../utils/helper_functions/t
 const queryTasksController = async (req, res, next) => {
     try {
         const query = req.query;
-        if (Object.keys(query).length === 0)
+        const queryArray = Object.entries(query);
+        if (queryArray.length === 0)
             return res.status(400).json({
                 success: false,
                 error: "Query cannot be empty. At least one is required"
