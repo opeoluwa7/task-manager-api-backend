@@ -8,12 +8,14 @@ const deleteUserController = async (req: Request, res: Response, next: NextFunct
     try {
         const user_id: number = req.user?.user_id;
 
-        const result = await userFn.deleteUserInfo(user_id);
+        await userFn.deleteUserInfo(user_id);
 
-        if (!result) {
-            return res.status(500).json({
+        const stillExists = await userFn.checkUserWithId(user_id)
+
+        if (!stillExists) {
+            return res.status(404).json({
                 success: false,
-                message: "Error deleting user. Try again"
+                message: "User not found"
             })
         }
 

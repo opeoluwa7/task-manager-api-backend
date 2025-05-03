@@ -8,11 +8,12 @@ const user_functions_1 = __importDefault(require("../../utils/helper_functions/u
 const deleteUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const result = await user_functions_1.default.deleteUserInfo(user_id);
-        if (!result) {
-            return res.status(500).json({
+        await user_functions_1.default.deleteUserInfo(user_id);
+        const stillExists = await user_functions_1.default.checkUserWithId(user_id);
+        if (!stillExists) {
+            return res.status(404).json({
                 success: false,
-                message: "Error deleting user. Try again"
+                message: "User not found"
             });
         }
         const access_token = req.cookies['accessToken'];
