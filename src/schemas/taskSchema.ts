@@ -2,8 +2,8 @@ import { z } from "zod";
 
 const allowedStatus = ["pending", "in_progress", "completed"];
 const allowedPriority = ["low", "medium", "high"];
-const statusError = "Priority must either be " + "pending, " + "in_progress, or " + "completed" 
-const priorityError = "Priority must either be " + "pending, " + "medium or , " + "high" 
+const statusError = "status must either be " + "pending, " + "in_progress, or " + "completed" 
+const priorityError = "priority must either be " + "pending, " + "medium or , " + "high" 
 
 export const createTaskSchema = z.object({
         title: z.string().trim(),

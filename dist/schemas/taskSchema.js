@@ -4,8 +4,8 @@ exports.queryTaskSchema = exports.updateTaskSchema = exports.createTaskSchema = 
 const zod_1 = require("zod");
 const allowedStatus = ["pending", "in_progress", "completed"];
 const allowedPriority = ["low", "medium", "high"];
-const statusError = "Priority must either be " + "pending, " + "in_progress, or " + "completed";
-const priorityError = "Priority must either be " + "pending, " + "medium or , " + "high";
+const statusError = "status must either be " + "pending, " + "in_progress, or " + "completed";
+const priorityError = "priority must either be " + "pending, " + "medium or , " + "high";
 exports.createTaskSchema = zod_1.z.object({
     title: zod_1.z.string().trim(),
     description: zod_1.z.string().trim().optional(),
