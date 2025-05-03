@@ -71,6 +71,8 @@ const updateUserController = async (req, res, next) => {
         const name = newName && newName !== currentName ? currentName = newName : currentName;
         const results = await user_functions_1.default.updateUserInfo(name, currentEmail, password, user_id);
         delete results.password;
+        delete results.isVerified;
+        delete results.created_at;
         res.status(200).json({
             success: true,
             updatedUser: results

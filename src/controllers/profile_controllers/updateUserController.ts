@@ -90,6 +90,8 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
         const results = await userFn.updateUserInfo(name, currentEmail, password, user_id);
 
         delete results.password;
+        delete results.isVerified;
+        delete results.created_at;
 
         res.status(200).json({ 
             success: true,
