@@ -33,15 +33,6 @@ const uploadTaskImage = async (imgUrl) => {
     const result = await uploadQueries_1.default.uploadImageUrl(imgUrl);
     return result;
 };
-const checkImage = async (user_id, task_id) => {
-    try {
-        const result = await uploadQueries_1.default.getImageUrl(user_id, task_id);
-        return result;
-    }
-    catch (error) {
-        throw error;
-    }
-};
 const updateTaskImage = async (imgUrl, user_id, task_id) => {
     const result = await uploadQueries_1.default.updateImageUrl(imgUrl, user_id, task_id);
     return result;
@@ -57,7 +48,6 @@ const taskFn = {
     getTaskById,
     updateTask,
     deleteTask,
-    checkImage,
     uploadTaskImage,
     updateTaskImage,
     removeTaskImage
