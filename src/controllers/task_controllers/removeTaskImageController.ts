@@ -18,7 +18,7 @@ const removeTaskImageController = async (req: Request, res: Response, next: Next
         res.status(200).json({
             success: true,
             message: "Image removed successfully!",
-            task: task
+            body: task
         })
     } catch (error) {
         next(error)

@@ -16,7 +16,7 @@ const getOneTaskController = async (req: Request, res: Response, next: NextFunct
         res.status(200).json({
             success: true,
             message: "Task",
-            Task: results
+            body: results
         })
     } catch (error) {
         next(error)

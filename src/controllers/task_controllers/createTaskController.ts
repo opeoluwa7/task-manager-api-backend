@@ -32,7 +32,7 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
         res.status(201).json({
             success: true,
             message: "Task created successfully",
-            task: results
+            body: results
         })
     } catch (error) {
         next(error)

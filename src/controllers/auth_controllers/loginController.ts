@@ -71,7 +71,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     res.status(200).json({
         success: true,
         message: "User login successful!",
-        user: {
+        body: {
             user_id: user_id,
             name: name,
             email: user.email,

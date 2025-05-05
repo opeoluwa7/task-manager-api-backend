@@ -32,7 +32,7 @@ const queryTasksController = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "All queried tasks",
-            tasks: result
+            body: result
         });
     }
     catch (error) {

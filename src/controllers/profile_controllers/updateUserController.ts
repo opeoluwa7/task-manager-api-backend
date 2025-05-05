@@ -92,7 +92,7 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
 
         res.status(200).json({ 
             success: true,
-            updatedUser: results
+            body: results
         });
     } catch (error) {
         next(error)

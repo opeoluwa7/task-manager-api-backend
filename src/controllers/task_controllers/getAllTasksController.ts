@@ -25,7 +25,7 @@ const getAllTasksController = async (req: Request, res: Response, next: NextFunc
         res.status(200).json({
             success: true,
             message: "All tasks",
-            tasks: results
+            body: results
         });
     } catch (error) {
     next(error)

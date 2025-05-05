@@ -42,8 +42,7 @@ const resetPasswordController = async (req, res, next) => {
             });
         res.status(200).json({
             success: true,
-            message: "Password reset successful!",
-            result: `This user can now login with the new password`
+            message: "Password reset successful!"
         });
     }
     catch (error) {

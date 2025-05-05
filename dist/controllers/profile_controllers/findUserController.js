@@ -14,7 +14,7 @@ const findUserController = async (req, res, next) => {
             });
         res.status(200).json({
             success: true,
-            user: {
+            body: {
                 user_id: user.user_id,
                 name: user.name,
                 email: user.email

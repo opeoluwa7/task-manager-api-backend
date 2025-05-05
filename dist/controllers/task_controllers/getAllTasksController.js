@@ -20,7 +20,7 @@ const getAllTasksController = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "All tasks",
-            tasks: results
+            body: results
         });
     }
     catch (error) {

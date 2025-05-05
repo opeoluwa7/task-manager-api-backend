@@ -30,7 +30,7 @@ const updateUserTaskController = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "Task updated succesfully!",
-            updatedTask: results
+            body: results
         });
     }
     catch (error) {

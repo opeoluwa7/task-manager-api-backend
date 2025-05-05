@@ -40,7 +40,7 @@ const queryTasksController = async (req: Request, res: Response, next: NextFunct
         res.status(200).json({
             success: true,
             message: "All queried tasks",
-            tasks: result
+            body: result
         })
     } catch (error) {
         next(error)

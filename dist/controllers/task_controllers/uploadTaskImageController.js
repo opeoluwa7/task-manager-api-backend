@@ -25,7 +25,7 @@ const uploadTaskImageController = async (req, res, next) => {
             res.status(201).json({
                 success: true,
                 message: "File uploaded successfully!",
-                image: results
+                body: results
             });
         });
     }

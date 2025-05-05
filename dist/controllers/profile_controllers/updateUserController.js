@@ -72,7 +72,7 @@ const updateUserController = async (req, res, next) => {
         delete results.created_at;
         res.status(200).json({
             success: true,
-            updatedUser: results
+            body: results
         });
     }
     catch (error) {

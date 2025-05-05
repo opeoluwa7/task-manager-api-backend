@@ -29,7 +29,7 @@ const uploadTaskImageController = async(req: Request, res: Response, next: NextF
             res.status(201).json({
                 success: true,
                 message: "File uploaded successfully!",
-                image: results
+                body: results
             })
         })
     } catch (err) {
