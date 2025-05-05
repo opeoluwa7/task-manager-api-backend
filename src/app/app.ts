@@ -8,8 +8,10 @@ import errorHandler from "../middlewares/errorHandler";
 import createRateLimiter from "../middlewares/rateLimiterMiddleware";
 import unknownRoute from "../middlewares/unknownRouteMiddleware";
 
+//API RATE LIMIT
 const rateLimit = createRateLimiter(60, 1000, "The server has received too many requests from this IP. Try again in one hour.")
 
+//API CORS CONFIG
 const corsOptions = {
                 origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:5173'],
                 credentials: true,
