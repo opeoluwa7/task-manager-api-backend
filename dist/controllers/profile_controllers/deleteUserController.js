@@ -11,7 +11,6 @@ const deleteUserController = async (req, res, next) => {
         const result = await user_functions_1.default.deleteUserInfo(user_id);
         if (!result) {
             return res.status(404).json({
-                success: false,
                 message: "User not found"
             });
         }

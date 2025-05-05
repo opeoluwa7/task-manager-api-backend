@@ -12,17 +12,13 @@ const queryTasksController = async (req: Request, res: Response, next: NextFunct
         const queryArray = Object.entries(query)
 
         if (queryArray.length === 0) return res.status(400).json({
-            success: false,
             error: "Query cannot be empty. At least one is required"
         })
 
-      
-        
         const value = queryTaskSchema.safeParse(query);
 
         if (!value.success) return res.status(400).json({
-                success: false,
-                error: value.error.format()
+            error: value.error.format()
 
         })
 
@@ -38,7 +34,6 @@ const queryTasksController = async (req: Request, res: Response, next: NextFunct
         const result = await taskFn.queryAllTasks(user_id, filters)
 
         if (result.length === 0) return res.status(404).json({
-            success: false,
             error: `No tasks found`
         })
 

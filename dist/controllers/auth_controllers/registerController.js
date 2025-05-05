@@ -14,7 +14,6 @@ const registerController = async (req, res, next) => {
         const value = userSchema_1.registerSchema.safeParse(req.body);
         if (!value.success) {
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         }
@@ -22,7 +21,6 @@ const registerController = async (req, res, next) => {
         const existingUser = await user_functions_1.default.checkUserWithEmail(email);
         if (existingUser)
             return res.status(400).json({
-                success: false,
                 error: "User with this email already exists"
             });
         const hashedPassword = await (0, bcrypt_functions_1.encryptedPassword)(password);
@@ -32,7 +30,7 @@ const registerController = async (req, res, next) => {
         await (0, redis_functions_1.storeTempInRedis)("password", hashedPassword);
         await (0, redis_functions_1.storeTempInRedis)("verification:token", verificationToken);
         await (0, email_functions_1.sendVerificationEmail)(email);
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "An Email Verification link has been sent to you. Please verify"
         });

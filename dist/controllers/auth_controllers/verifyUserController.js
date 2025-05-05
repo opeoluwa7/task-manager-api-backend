@@ -12,7 +12,6 @@ const verifyUserController = async (req, res, next) => {
         const verificationToken = (0, token_functions_1.verifyVerificationTokenString)(token);
         if (!verificationToken)
             return res.status(400).json({
-                success: false,
                 error: "Invalid verification token. Please register"
             });
         const name = await (0, redis_functions_1.getFromRedis)("name");
@@ -22,7 +21,6 @@ const verifyUserController = async (req, res, next) => {
         const results = await user_functions_1.default.createUser(name, email, password, isVerified);
         if (!results)
             return res.status(500).json({
-                success: false,
                 error: "Error creating user"
             });
         res.status(200).send("<h1> User verified successfully!. You can now login </h1>");

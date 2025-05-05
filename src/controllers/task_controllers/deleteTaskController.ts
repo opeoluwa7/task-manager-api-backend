@@ -12,7 +12,6 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
 
         if (!task) {
             return res.status(404).json({ 
-                success: false,
                 error: "Task not found in the database!" 
             })
         }
@@ -21,7 +20,6 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
 
         if(!result) {
             return res.status(500).json({
-                success: false,
                 error: "Error deleting task. Something went wrong"
             })
         }

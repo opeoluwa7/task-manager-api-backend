@@ -14,7 +14,6 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
 
         if (!value.success) {
             return res.status(400).json({
-            success: false,
             error: value.error.format()
             })
         }
@@ -24,7 +23,6 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
         const existingUser = await userFn.checkUserWithEmail(email);
 
         if (existingUser) return res.status(400).json({
-            success: false,
             error: "User with this email already exists"
         })
 
@@ -40,7 +38,7 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
 
         await sendVerificationEmail(email);
 
-        res.status(200).json({
+        res.status(201).json({
             success: true,
             message: "An Email Verification link has been sent to you. Please verify"
         })

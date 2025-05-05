@@ -10,7 +10,6 @@ const createNewTaskController = async (req, res, next) => {
         const value = taskSchema_1.createTaskSchema.safeParse(req.body);
         if (!value.success)
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         const task = value.data;
@@ -18,7 +17,6 @@ const createNewTaskController = async (req, res, next) => {
         const results = await task_functions_1.default.createTask(task.title, task.description, task.status, task.priority, task.deadline, user_id);
         if (!results)
             return res.status(500).json({
-                success: false,
                 error: "Error creating task"
             });
         res.status(201).json({

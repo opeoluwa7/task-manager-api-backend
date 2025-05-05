@@ -11,7 +11,6 @@ const deleteUserController = async (req: Request, res: Response, next: NextFunct
 
         if (!result) {
             return res.status(404).json({
-                success: false,
                 message: "User not found"
             })
         }

@@ -11,13 +11,11 @@ const queryTasksController = async (req, res, next) => {
         const queryArray = Object.entries(query);
         if (queryArray.length === 0)
             return res.status(400).json({
-                success: false,
                 error: "Query cannot be empty. At least one is required"
             });
         const value = taskSchema_1.queryTaskSchema.safeParse(query);
         if (!value.success)
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         const { status, priority } = value.data;
@@ -29,7 +27,6 @@ const queryTasksController = async (req, res, next) => {
         const result = await task_functions_1.default.queryAllTasks(user_id, filters);
         if (result.length === 0)
             return res.status(404).json({
-                success: false,
                 error: `No tasks found`
             });
         res.status(200).json({

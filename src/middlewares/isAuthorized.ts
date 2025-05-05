@@ -18,7 +18,6 @@ const isAuthorized = {
 
             if (isBlacklisted) {
                 return res.status(401).json({
-                    success: false,
                     error: "Token is blacklisted. Please login again"
                 })
             }
@@ -28,7 +27,6 @@ const isAuthorized = {
                 
             if (!decoded) {
                 return res.status(401).json({
-                    success: false,
                     error: 'Invalid access token provided. Please login again'
                 });
             }

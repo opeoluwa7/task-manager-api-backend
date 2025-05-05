@@ -5,7 +5,6 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
 
 
     res.status(500).json({
-        success: false,
         error: err.message
     })
 

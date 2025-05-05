@@ -14,7 +14,6 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
         const value = updateUserSchema.safeParse(req.body)
 
         if (!value.success) return res.status(400).json({
-            success: false,
             error: value.error.format()
         })
 
@@ -24,12 +23,10 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
         const existingEmail = await userFn.checkUserWithEmail(newEmail!);
 
         if (existingEmail) return res.status(400).json({
-            success: false,
             error: "This email is not available. Try another one."
         })
 
         if (!user) return res.status(404).json({
-            success: false,
             error: "User not found"
         })
 

@@ -28,7 +28,7 @@ const refreshAccessTokenController = async(req: Request, res: Response, next: Ne
             maxAge: ms('10m')
         })
 
-        return res.status(200).json({
+        return res.status(201).json({
             success: true,
             message: "Token refreshed successfully"
         })

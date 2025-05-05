@@ -11,14 +11,12 @@ const deleteUserTaskController = async (req, res, next) => {
         let task = await task_functions_1.default.getTaskById(user_id, task_id);
         if (!task) {
             return res.status(404).json({
-                success: false,
                 error: "Task not found in the database!"
             });
         }
         const result = await task_functions_1.default.deleteTask(task.task_id);
         if (!result) {
             return res.status(500).json({
-                success: false,
                 error: "Error deleting task. Something went wrong"
             });
         }

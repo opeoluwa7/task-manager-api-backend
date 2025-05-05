@@ -13,7 +13,6 @@ const verifyUserController = async (req: Request, res: Response, next: NextFunct
         const verificationToken = verifyVerificationTokenString(token)
 
         if (!verificationToken) return res.status(400).json({
-            success: false,
             error: "Invalid verification token. Please register"
         })
 
@@ -25,7 +24,6 @@ const verifyUserController = async (req: Request, res: Response, next: NextFunct
         const results = await userFn.createUser(name, email, password, isVerified)
 
         if (!results) return res.status(500).json({
-            success: false,
             error: "Error creating user"
         })
 

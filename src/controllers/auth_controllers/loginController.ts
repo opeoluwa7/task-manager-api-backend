@@ -13,7 +13,6 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     const value = loginSchema.safeParse(req.body);
 
     if (!value.success) return res.status(400).json({
-        success: false,
         error: value.error.format()
     })
 
@@ -22,7 +21,6 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     const user = await userFn.checkUserWithEmail(email);
 
     if (!user) return res.status(404).json({ 
-        success: false,
         error: "User not found. Please register or confirm your details" 
     })
 
@@ -35,7 +33,6 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     const match = await matchPasswords(password, storedHashedPassword)
 
     if (!match) return res.status(400).json({ 
-        success: false,
         error: "Passwords don\'t match" 
     })
 
@@ -71,7 +68,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
         maxAge: ms('10m')
     })
 
-    res.status(201).json({
+    res.status(200).json({
         success: true,
         message: "User login successful!",
         user: {

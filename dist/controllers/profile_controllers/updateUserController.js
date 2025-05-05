@@ -15,7 +15,6 @@ const updateUserController = async (req, res, next) => {
         const value = userSchema_1.updateUserSchema.safeParse(req.body);
         if (!value.success)
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         const { email: newEmail, password: newPassword, name: newName } = value.data;
@@ -23,12 +22,10 @@ const updateUserController = async (req, res, next) => {
         const existingEmail = await user_functions_1.default.checkUserWithEmail(newEmail);
         if (existingEmail)
             return res.status(400).json({
-                success: false,
                 error: "This email is not available. Try another one."
             });
         if (!user)
             return res.status(404).json({
-                success: false,
                 error: "User not found"
             });
         let currentEmail = user.email;

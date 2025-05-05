@@ -14,7 +14,6 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
         const value = resetPasswordSchema.safeParse(req.body);
 
         if (!value.success) return res.status(400).json({
-            success: false,
             error: value.error.format()
         })
 
@@ -23,7 +22,6 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
         const resetToken = await getFromRedis("reset:token");
 
         if (!resetToken) return res.status(401).json({
-            success: false,
             error: "No reset token provided. Go back to forgot password"
         })
 
@@ -40,7 +38,6 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
         const match = await matchPasswords(password, storedHashedPassword);
 
         if (match) return res.status(400).json({
-            success: false,
             error: "Passwords must not match. change it for better security."
         })
 

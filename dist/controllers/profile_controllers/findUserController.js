@@ -10,7 +10,6 @@ const findUserController = async (req, res, next) => {
         const user = await user_functions_1.default.checkUserWithId(user_id);
         if (!user)
             return res.status(404).json({
-                success: false,
                 error: "User not found"
             });
         res.status(200).json({

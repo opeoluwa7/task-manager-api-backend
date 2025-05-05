@@ -13,14 +13,12 @@ const resetPasswordController = async (req, res, next) => {
         const value = userSchema_1.resetPasswordSchema.safeParse(req.body);
         if (!value.success)
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         const { password } = value.data;
         const resetToken = await (0, redis_functions_1.getFromRedis)("reset:token");
         if (!resetToken)
             return res.status(401).json({
-                success: false,
                 error: "No reset token provided. Go back to forgot password"
             });
         const verified = (0, token_functions_1.verifyResetTokenString)(resetToken);
@@ -33,7 +31,6 @@ const resetPasswordController = async (req, res, next) => {
         const match = await (0, bcrypt_functions_1.matchPasswords)(password, storedHashedPassword);
         if (match)
             return res.status(400).json({
-                success: false,
                 error: "Passwords must not match. change it for better security."
             });
         const hashedPassword = await (0, bcrypt_functions_1.encryptedPassword)(password);

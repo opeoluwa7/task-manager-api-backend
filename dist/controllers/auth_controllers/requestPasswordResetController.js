@@ -13,14 +13,12 @@ const requestPasswordResetController = async (req, res, next) => {
         const value = userSchema_1.forgotPasswordSchema.safeParse(req.body);
         if (!value.success)
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         const { email } = value.data;
         const user = await user_functions_1.default.checkUserWithEmail(email);
         if (!user)
             return res.status(404).json({
-                success: false,
                 error: "User not found"
             });
         const user_id = user.user_id;

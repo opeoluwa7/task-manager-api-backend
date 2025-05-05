@@ -10,7 +10,6 @@ const findUserController = async (req: Request, res: Response, next: NextFunctio
         const user = await userFn.checkUserWithId(user_id);
 
         if (!user) return res.status(404).json({
-            success: false,
             error: "User not found"
         })
 

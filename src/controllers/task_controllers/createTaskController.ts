@@ -9,7 +9,6 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
         const value = createTaskSchema.safeParse(req.body)
 
         if (!value.success) return res.status(400).json({
-            success: false,
             error: value.error.format()
         })
 
@@ -27,7 +26,6 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
         );
 
         if (!results) return res.status(500).json({
-            success: false,
             error: "Error creating task"
         })
 

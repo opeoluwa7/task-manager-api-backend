@@ -14,14 +14,12 @@ const loginController = async (req, res, next) => {
         const value = userSchema_1.loginSchema.safeParse(req.body);
         if (!value.success)
             return res.status(400).json({
-                success: false,
                 error: value.error.format()
             });
         const { email, password } = value.data;
         const user = await user_functions_1.default.checkUserWithEmail(email);
         if (!user)
             return res.status(404).json({
-                success: false,
                 error: "User not found. Please register or confirm your details"
             });
         const storedHashedPassword = user.password;
@@ -31,7 +29,6 @@ const loginController = async (req, res, next) => {
         const match = await (0, bcrypt_functions_1.matchPasswords)(password, storedHashedPassword);
         if (!match)
             return res.status(400).json({
-                success: false,
                 error: "Passwords don\'t match"
             });
         const accessToken = (0, token_functions_1.generateAccessTokenString)(user_id);
@@ -60,7 +57,7 @@ const loginController = async (req, res, next) => {
             sameSite: 'none',
             maxAge: (0, ms_1.default)('10m')
         });
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: "User login successful!",
             user: {

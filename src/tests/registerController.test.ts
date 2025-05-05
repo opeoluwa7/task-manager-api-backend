@@ -1,27 +1,29 @@
 /*
-import registerController from "../controllers/auth_controllers/register_controller";
+import registerController from "../controllers/auth_controllers/registerController";
 import request from "supertest";
 import app from "../app/app";
 import { Request } from "express";
+import { mock } from "node:test";
 
+const mockRequest = {
+        name: "John",
+        email: "something",
+        password: "ivvbtvuytf"
+}
 
+const mockResponse = {
+        status: jest.fn(),
+        json: jest.fn()
+}
+
+const next = jest.fn()
 
 describe("Register Controller", () => {
-        const request = {
-                body: {
-                        name: "Ayinde",
-                        email: "email@mail.com", 
-                        password: "password1!"
-                }
-        } as Request
+        it('Validates if values are correct', () => {
+                registerController(mockRequest, mockResponse, next)
 
-        const response = {
-                status: jest.fn((x) => x),
-                json: jest.fn((x) => x)
-        }
-
-        const next = jest.fn()
-        test('POST /login should return a status code 200', async () => {
-                await registerController(request, response, next)
+                expect(mockResponse.status).toHaveBeenCalled();
+                expect(mockResponse.json).toHaveBeenCalled()
         })
-})*/
+})
+*/

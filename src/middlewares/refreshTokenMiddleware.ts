@@ -11,7 +11,6 @@ const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunct
 
         if (!refreshToken) {
             return res.status(401).json({
-                success: false,
                 error: "No refresh token provided. Please login"
             })
         }
@@ -20,7 +19,6 @@ const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunct
 
         if (blacklisted) {
             return res.status(401).json({
-                success: false,
                 error: "Token is blacklisted. Please login again"
             })
         }
@@ -28,7 +26,6 @@ const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunct
         const decoded = verifyRefreshTokenString(refreshToken);
 
         if (!decoded) return res.status(401).json({
-            success: false,
             error: "Invalid refresh token provided. Please login again."
         })
         

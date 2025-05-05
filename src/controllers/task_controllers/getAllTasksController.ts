@@ -13,14 +13,12 @@ const getAllTasksController = async (req: Request, res: Response, next: NextFunc
         const results = await taskFn.getAllTasks(user_id)
 
         if (!results) return res.status(500).json({
-            success: false,
             error: "Internal Server Error"
         })
 
         if (results.length === 0) {
             return res.status(404).json({
-            success: false,
-            error: "No tasks found!"
+                error: "No tasks found!"
         });
         }
 

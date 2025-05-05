@@ -12,7 +12,6 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
         const value = forgotPasswordSchema.safeParse(req.body);
 
         if (!value.success) return res.status(400).json({
-            success: false,
             error: value.error.format()
         })        
 
@@ -21,7 +20,6 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
         const user = await userFn.checkUserWithEmail(email);
 
         if (!user) return res.status(404).json({
-            success: false,
             error: "User not found"
         });
 
