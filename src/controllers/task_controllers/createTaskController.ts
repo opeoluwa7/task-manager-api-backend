@@ -16,6 +16,8 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
 
         const user_id: number = req.user?.user_id;
 
+      
+
         const results = await taskFn.createTask(
             task.title,
             task.description!,

@@ -20,7 +20,7 @@ export const createTaskSchema = z.object({
                 { message: priorityError }
         ).optional(),
 
-        deadline: z.string().date().optional()
+        deadline: z.string().transform((str) => new Date(str)).optional()
 }).strict()
 
 export const taskIdSchema = z.object({
@@ -42,7 +42,7 @@ export const updateTaskSchema = z.object({
                 { message: priorityError }
         ).optional(),
 
-        deadline: z.string().date().optional()
+        deadline: z.string().transform((val) => new Date(val)).optional()
 }).strict()
 
 export const queryTaskSchema = z.object({
