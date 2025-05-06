@@ -7,7 +7,7 @@ const getOneTaskController = async (req: Request, res: Response, next: NextFunct
         const user_id: number = req.user?.user_id;
 
       
-        const value = taskIdSchema.safeParse(req.params.id)
+        const value = taskIdSchema.safeParse(req.params)
 
         if (!value.success) return res.status(400).json({
             error: value.error.format()

@@ -8,7 +8,7 @@ const taskSchema_1 = require("../../schemas/taskSchema");
 const getOneTaskController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const value = taskSchema_1.taskIdSchema.safeParse(req.params.id);
+        const value = taskSchema_1.taskIdSchema.safeParse(req.params);
         if (!value.success)
             return res.status(400).json({
                 error: value.error.format()

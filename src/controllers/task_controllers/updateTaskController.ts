@@ -17,7 +17,7 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
 
         const user_id: number = req.user?.user_id;
 
-        const id_value = taskIdSchema.safeParse(req.params.id)
+        const id_value = taskIdSchema.safeParse(req.params)
 
         if (!id_value.success) return res.status(400).json({
             error: id_value.error.format()

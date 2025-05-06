@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const cloudinaryConfig_1 = __importDefault(require("../../config/cloudinaryConfig"));
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
+const taskSchema_1 = require("../../schemas/taskSchema");
 const uploadTaskImageController = async (req, res, next) => {
     try {
         const file = req.file;
@@ -20,7 +21,13 @@ const uploadTaskImageController = async (req, res, next) => {
             }
             const imgUrl = result.url;
             const user_id = req.user?.user_id;
-            const task_id = Number(req.params.id);
+            const value = taskSchema_1.taskIdSchema.safeParse(req.params);
+            if (!value.success)
+                return res.status(400).json({
+                    error: value.error.format()
+                });
+            const { id } = value.data;
+            const task_id = Number(id);
             if (!task_id)
                 return res.status(404).json({
                     error: "Task id not found"

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import cloudinary from "../../config/cloudinaryConfig";
 import taskFn from "../../utils/helper_functions/task-functions";
+import { taskIdSchema } from "../../schemas/taskSchema";
 
 const uploadTaskImageController = async(req: Request, res: Response, next: NextFunction) => {
     try { 
@@ -22,7 +23,16 @@ const uploadTaskImageController = async(req: Request, res: Response, next: NextF
 
             const user_id: number = req.user?.user_id;
 
-            const task_id = Number(req.params.id);
+           
+            const value = taskIdSchema.safeParse(req.params)
+
+            if (!value.success) return res.status(400).json({
+                error: value.error.format()
+            })
+
+            const {id} = value.data
+
+            const task_id = Number(id);
 
             if (!task_id) return res.status(404).json({
                 error: "Task id not found"
