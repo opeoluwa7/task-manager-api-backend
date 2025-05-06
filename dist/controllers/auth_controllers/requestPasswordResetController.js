@@ -25,7 +25,7 @@ const requestPasswordResetController = async (req, res, next) => {
         const resetToken = (0, token_functions_1.generateResetTokenString)(user_id);
         await (0, redis_functions_1.storeTempInRedis)("reset:token", resetToken);
         await (0, email_functions_1.sendPasswordResetEmail)(user.email);
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: "Your password reset email has been sent to you."
         });

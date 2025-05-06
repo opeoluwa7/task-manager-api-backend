@@ -27,7 +27,7 @@ const verifyUserController = async (req: Request, res: Response, next: NextFunct
             error: "Error creating user"
         })
 
-        res.status(200).send("<h1> User verified successfully!. You can now login </h1>")
+        res.status(201).send("<h1> User verified successfully!. You can now login </h1>")
     } catch (error) {
         next(error)
     }

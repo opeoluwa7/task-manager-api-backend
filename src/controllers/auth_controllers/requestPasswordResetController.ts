@@ -32,7 +32,7 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
         await sendPasswordResetEmail(user.email);
 
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: "Your password reset email has been sent to you."
         })

@@ -38,7 +38,7 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
 
         await sendVerificationEmail(email);
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: "An Email Verification link has been sent to you. Please verify"
         })
