@@ -10,7 +10,7 @@ const queryTasksController = async (req, res, next) => {
         const query = req.query;
         const queryArray = Object.entries(query);
         if (queryArray.length === 0)
-            return res.status(400).json({
+            return res.status(404).json({
                 error: "Query cannot be empty. At least one is required"
             });
         const value = taskSchema_1.queryTaskSchema.safeParse(query);

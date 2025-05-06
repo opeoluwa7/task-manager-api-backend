@@ -7,6 +7,10 @@ const getOneTaskController = async (req: Request, res: Response, next: NextFunct
 
         const task_id: number = Number(req.params.id);
 
+        if (!task_id) return res.status(404).json({
+            error: "Task id not found in request"
+        })
+
         const results = await taskFn.getTaskById(user_id, task_id)
 
         if (!results) return res.status(404).json({

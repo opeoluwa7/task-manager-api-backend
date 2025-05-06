@@ -11,7 +11,7 @@ const queryTasksController = async (req: Request, res: Response, next: NextFunct
 
         const queryArray = Object.entries(query)
 
-        if (queryArray.length === 0) return res.status(400).json({
+        if (queryArray.length === 0) return res.status(404).json({
             error: "Query cannot be empty. At least one is required"
         })
 

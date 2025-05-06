@@ -16,6 +16,10 @@ const updateUserTaskController = async (req, res, next) => {
         const { title, description, status, priority, deadline } = value.data;
         const user_id = req.user?.user_id;
         const task_id = Number(req.params.id);
+        if (!task_id)
+            return res.status(404).json({
+                error: "Task id not found in request"
+            });
         const results = await task_functions_1.default.updateTask(title, description, status, priority, deadline, user_id, task_id);
         const afterUpdateTask = await task_functions_1.default.getTaskById(user_id, task_id);
         if (!afterUpdateTask)
