@@ -11,7 +11,7 @@ exports.createTaskSchema = zod_1.z.object({
     description: zod_1.z.string().trim().optional(),
     status: zod_1.z.string().refine((val) => allowedStatus.includes(val), { message: statusError }).optional(),
     priority: zod_1.z.string().refine((val) => allowedPriority.includes(val), { message: priorityError }).optional(),
-    deadline: zod_1.z.string().transform((str) => new Date(str)).optional()
+    deadline: zod_1.z.string().date("Must be a valid datestring (YYYY-MM-DD)").optional()
 }).strict();
 exports.taskIdSchema = zod_1.z.object({
     id: zod_1.z.string()
@@ -21,7 +21,7 @@ exports.updateTaskSchema = zod_1.z.object({
     description: zod_1.z.string().trim().optional(),
     status: zod_1.z.string().refine((val) => allowedStatus.includes(val), { message: statusError }).optional(),
     priority: zod_1.z.string().refine((val) => allowedPriority.includes(val), { message: priorityError }).optional(),
-    deadline: zod_1.z.string().transform((val) => new Date(val)).optional()
+    deadline: zod_1.z.string().date("Must be a valid datestring (YYYY-MM-DD)").optional()
 }).strict();
 exports.queryTaskSchema = zod_1.z.object({
     status: zod_1.z.string().refine((val) => allowedStatus.includes(val), { message: statusError }).optional(),

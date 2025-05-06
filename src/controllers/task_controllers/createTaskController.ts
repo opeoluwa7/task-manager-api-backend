@@ -16,14 +16,14 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
 
         const user_id: number = req.user?.user_id;
 
-      
+        const deadline = new Date(task.deadline!);
 
         const results = await taskFn.createTask(
             task.title,
             task.description!,
             task.status!,
             task.priority!,
-            task.deadline!,
+            deadline,
             user_id
         );
 

@@ -35,12 +35,14 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
             error: "Task id must be a number"
         })
 
+        const task_deadline = new Date(deadline!)
+
         const results = await taskFn.updateTask(
             title!,
             description!,
             status!,
             priority!,
-            deadline!,
+            task_deadline,
             user_id,
             task_id
         );

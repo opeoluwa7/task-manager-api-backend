@@ -14,7 +14,8 @@ const createNewTaskController = async (req, res, next) => {
             });
         const task = value.data;
         const user_id = req.user?.user_id;
-        const results = await task_functions_1.default.createTask(task.title, task.description, task.status, task.priority, task.deadline, user_id);
+        const deadline = new Date(task.deadline);
+        const results = await task_functions_1.default.createTask(task.title, task.description, task.status, task.priority, deadline, user_id);
         if (!results)
             return res.status(500).json({
                 error: "Error creating task"

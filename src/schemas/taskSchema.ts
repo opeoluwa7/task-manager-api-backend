@@ -20,7 +20,7 @@ export const createTaskSchema = z.object({
                 { message: priorityError }
         ).optional(),
 
-        deadline: z.string().transform((str) => new Date(str)).optional()
+        deadline: z.string().date("Must be a valid datestring (YYYY-MM-DD)").optional()
 }).strict()
 
 export const taskIdSchema = z.object({
@@ -42,7 +42,7 @@ export const updateTaskSchema = z.object({
                 { message: priorityError }
         ).optional(),
 
-        deadline: z.string().transform((val) => new Date(val)).optional()
+        deadline: z.string().date("Must be a valid datestring (YYYY-MM-DD)").optional()
 }).strict()
 
 export const queryTaskSchema = z.object({

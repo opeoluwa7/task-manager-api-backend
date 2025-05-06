@@ -30,7 +30,8 @@ const updateUserTaskController = async (req, res, next) => {
             return res.status(400).json({
                 error: "Task id must be a number"
             });
-        const results = await task_functions_1.default.updateTask(title, description, status, priority, deadline, user_id, task_id);
+        const task_deadline = new Date(deadline);
+        const results = await task_functions_1.default.updateTask(title, description, status, priority, task_deadline, user_id, task_id);
         const afterUpdateTask = await task_functions_1.default.getTaskById(user_id, task_id);
         if (!afterUpdateTask)
             return res.status(404).json({
