@@ -7,10 +7,11 @@ const task_functions_1 = __importDefault(require("../../utils/helper_functions/t
 const deleteUserTaskController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const task_id = Number(req.params.id);
-        if (!task_id)
-            return res.status(404).json({
-                error: "Task id not found in request"
+        const id = req.params.id;
+        const task_id = Number(id);
+        if (!id || isNaN(task_id))
+            return res.status(401).json({
+                error: "Task id is required and must be a number"
             });
         let task = await task_functions_1.default.getTaskById(user_id, task_id);
         if (!task) {
