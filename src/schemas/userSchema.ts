@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const registerSchema = z.object({
         name: z.string().trim(),
-        email: z.string().toLowerCase().email({
+        email: z.string().email({
                 message: "Enter a valid email address"
-        }).trim(),
+        }).toLowerCase().trim(),
         password: z.string().min(8, {
                 message: "Password must be a minimum of 8 characters long"
         }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
@@ -34,7 +34,9 @@ export const loginSchema = z.object({
 })
 
 export const forgotPasswordSchema = z.object({
-        email: z.string().toLowerCase().trim()
+        email: z.string().email({
+                message: "Enter a valid email"
+        }).toLowerCase().trim()
 }).strict()
 
 export const resetPasswordSchema = z.object({

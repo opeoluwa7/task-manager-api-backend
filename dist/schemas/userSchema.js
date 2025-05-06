@@ -4,9 +4,9 @@ exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.loginSchema
 const zod_1 = require("zod");
 exports.registerSchema = zod_1.z.object({
     name: zod_1.z.string().trim(),
-    email: zod_1.z.string().toLowerCase().email({
+    email: zod_1.z.string().email({
         message: "Enter a valid email address"
-    }).trim(),
+    }).toLowerCase().trim(),
     password: zod_1.z.string().min(8, {
         message: "Password must be a minimum of 8 characters long"
     }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
@@ -33,7 +33,9 @@ exports.loginSchema = zod_1.z.object({
     }).trim()
 });
 exports.forgotPasswordSchema = zod_1.z.object({
-    email: zod_1.z.string().toLowerCase().trim()
+    email: zod_1.z.string().email({
+        message: "Enter a valid email"
+    }).toLowerCase().trim()
 }).strict();
 exports.resetPasswordSchema = zod_1.z.object({
     password: zod_1.z.string().min(8, {
