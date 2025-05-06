@@ -22,13 +22,9 @@ const updateUserTaskController = async (req, res, next) => {
             });
         const { id } = id_value.data;
         const task_id = Number(id);
-        if (!task_id)
+        if (!task_id || isNaN(task_id))
             return res.status(404).json({
-                error: "Task id not found"
-            });
-        if (isNaN(task_id))
-            return res.status(400).json({
-                error: "Task id must be a number"
+                error: "Task id is required and must be a number"
             });
         const task_deadline = new Date(deadline);
         const results = await task_functions_1.default.updateTask(title, description, status, priority, task_deadline, user_id, task_id);

@@ -16,14 +16,9 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
 
         const task_id = Number(id);
 
-        if (!task_id) return res.status(404).json({
-            error: "Task id not found"
+        if (!task_id || isNaN(task_id)) return res.status(404).json({
+            error: "Task id is required and must be a number"
         })
-
-        if (isNaN(task_id)) return res.status(400).json({
-            error: "Task id must be a number"
-        })
-
 
         let task = await taskFn.getTaskById(user_id, task_id);
 
