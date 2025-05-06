@@ -20,7 +20,9 @@ export const createTaskSchema = z.object({
                 { message: priorityError }
         ).optional(),
 
-        deadline: z.coerce.date().optional()
+        deadline: z.coerce.date({
+                message: "MM/YYYY/DD or MM-YYYY-DD or YYYY-MM-DD or DD/MM/YYYY. Any date format only"
+        }).optional()
 }).strict()
 
 export const updateTaskSchema = z.object({

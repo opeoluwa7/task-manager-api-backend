@@ -11,7 +11,9 @@ exports.createTaskSchema = zod_1.z.object({
     description: zod_1.z.string().trim().optional(),
     status: zod_1.z.string().refine((val) => allowedStatus.includes(val), { message: statusError }).optional(),
     priority: zod_1.z.string().refine((val) => allowedPriority.includes(val), { message: priorityError }).optional(),
-    deadline: zod_1.z.coerce.date().optional()
+    deadline: zod_1.z.coerce.date({
+        message: "MM/YYYY/DD or MM-YYYY-DD or YYYY-MM-DD or DD/MM/YYYY. Any date format only"
+    }).optional()
 }).strict();
 exports.updateTaskSchema = zod_1.z.object({
     title: zod_1.z.string().trim().optional(),
