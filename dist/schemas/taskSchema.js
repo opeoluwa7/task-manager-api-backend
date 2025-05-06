@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryTaskSchema = exports.updateTaskSchema = exports.createTaskSchema = void 0;
+exports.queryTaskSchema = exports.updateTaskSchema = exports.taskIdSchema = exports.createTaskSchema = void 0;
 const zod_1 = require("zod");
 const allowedStatus = ["pending", "in_progress", "completed"];
 const allowedPriority = ["low", "medium", "high"];
@@ -12,6 +12,9 @@ exports.createTaskSchema = zod_1.z.object({
     status: zod_1.z.string().refine((val) => allowedStatus.includes(val), { message: statusError }).optional(),
     priority: zod_1.z.string().refine((val) => allowedPriority.includes(val), { message: priorityError }).optional(),
     deadline: zod_1.z.coerce.date().optional()
+}).strict();
+exports.taskIdSchema = zod_1.z.object({
+    id: zod_1.z.string()
 }).strict();
 exports.updateTaskSchema = zod_1.z.object({
     title: zod_1.z.string().trim().optional(),

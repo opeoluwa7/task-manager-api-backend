@@ -1,16 +1,27 @@
 import { NextFunction, Request, Response } from "express";
 import taskFn from "../../utils/helper_functions/task-functions";
+import { taskIdSchema } from "../../schemas/taskSchema";
 
 const deleteUserTaskController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id: number = req.user?.user_id;
 
-        const id = req.params.id
+        const value = taskIdSchema.safeParse(req.params.id)
+
+        if (!value.success) return res.status(400).json({
+            error: value.error.format()
+        })
+
+        const {id} = value.data
 
         const task_id = Number(id);
 
+        if (!task_id) return res.status(404).json({
+            error: "Task id not found"
+        })
+
         if (isNaN(task_id)) return res.status(400).json({
-            error: "Task id is must be a number"
+            error: "Task id must be a number"
         })
 
 

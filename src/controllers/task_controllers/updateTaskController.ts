@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { updateTaskSchema } from "../../schemas/taskSchema";
+import { taskIdSchema, updateTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 
 
@@ -17,11 +17,22 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
 
         const user_id: number = req.user?.user_id;
 
-        const task_id: number = Number(req.params.id);
+        const id_value = taskIdSchema.safeParse(req.params.id)
+
+        if (!id_value.success) return res.status(400).json({
+            error: id_value.error.format()
+        })
+
+        const {id} = id_value.data
+
+        const task_id = Number(id);
+
+        if (!task_id) return res.status(404).json({
+            error: "Task id not found"
+        })
 
         if (isNaN(task_id)) return res.status(400).json({
             error: "Task id must be a number"
-
         })
 
         const results = await taskFn.updateTask(

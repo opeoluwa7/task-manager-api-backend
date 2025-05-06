@@ -15,7 +15,17 @@ const updateUserTaskController = async (req, res, next) => {
         }
         const { title, description, status, priority, deadline } = value.data;
         const user_id = req.user?.user_id;
-        const task_id = Number(req.params.id);
+        const id_value = taskSchema_1.taskIdSchema.safeParse(req.params.id);
+        if (!id_value.success)
+            return res.status(400).json({
+                error: id_value.error.format()
+            });
+        const { id } = id_value.data;
+        const task_id = Number(id);
+        if (!task_id)
+            return res.status(404).json({
+                error: "Task id not found"
+            });
         if (isNaN(task_id))
             return res.status(400).json({
                 error: "Task id must be a number"

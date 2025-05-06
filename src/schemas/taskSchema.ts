@@ -23,6 +23,10 @@ export const createTaskSchema = z.object({
         deadline: z.coerce.date().optional()
 }).strict()
 
+export const taskIdSchema = z.object({
+        id: z.string()
+}).strict()
+
 export const updateTaskSchema = z.object({
         title: z.string().trim().optional(),
 
