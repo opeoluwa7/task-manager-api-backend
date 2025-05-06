@@ -9,7 +9,8 @@ const deleteUserTaskController = async (req, res, next) => {
         const user_id = req.user?.user_id;
         const id = req.params.id;
         const task_id = Number(id);
-        if (!id || isNaN(task_id))
+        const arr = Object.entries(id);
+        if (arr.length === 0 || isNaN(task_id))
             return res.status(401).json({
                 error: "Task id is required and must be a number"
             });
