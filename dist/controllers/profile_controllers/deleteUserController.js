@@ -14,18 +14,18 @@ const deleteUserController = async (req, res, next) => {
                 message: "User not found"
             });
         }
-        const accessToken = req.cookies['access-token'];
-        const refreshToken = req.cookies['refresh-token'];
+        const accessToken = req.cookies['access_token'];
+        const refreshToken = req.cookies['refresh_token'];
         await (0, redis_functions_1.blacklistToken)(accessToken);
         await (0, redis_functions_1.blacklistToken)(refreshToken);
         res.clearCookie("access-token", {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
         });
         res.clearCookie("refresh-token", {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none',
             path: '/api/refresh-token'
         });
