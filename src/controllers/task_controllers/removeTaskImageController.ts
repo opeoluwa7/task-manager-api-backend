@@ -24,7 +24,17 @@ const removeTaskImageController = async (req: Request, res: Response, next: Next
             error: "Task id is required and must be a number"
         })
 
+        const existingTask = await taskFn.getTaskById(user_id, task_id);
+
+        if (!existingTask) return res.status(404).json({
+            error: "Task not found"
+        })
+
         const task = await taskFn.removeTaskImage(user_id, task_id)
+
+        if (task.image_url === null || task.image_url === "null") return res.status(404).json({
+            error: "No image found"
+        }) 
 
           
         res.status(200).json({
