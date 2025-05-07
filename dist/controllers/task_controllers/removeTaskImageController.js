@@ -25,10 +25,6 @@ const removeTaskImageController = async (req, res, next) => {
                 error: "Task not found"
             });
         const task = await task_functions_1.default.removeTaskImage(user_id, task_id);
-        if (task.image_url !== null || task.image_url !== "null")
-            return res.status(404).json({
-                error: "Image not found"
-            });
         res.status(200).json({
             success: true,
             message: "Image removed successfully!",
