@@ -27,7 +27,7 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
 
         const task_id = Number(id);
 
-        if (!task_id || isNaN(task_id)) return res.status(404).json({
+        if (!task_id || isNaN(task_id)) return res.status(400).json({
             error: "Task id is required and must be a number"
         })
 
