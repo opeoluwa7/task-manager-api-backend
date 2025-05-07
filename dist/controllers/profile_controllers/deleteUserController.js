@@ -18,12 +18,12 @@ const deleteUserController = async (req, res, next) => {
         const refreshToken = req.cookies['refresh_token'];
         await (0, redis_functions_1.blacklistToken)(accessToken);
         await (0, redis_functions_1.blacklistToken)(refreshToken);
-        res.clearCookie("access-token", {
+        res.clearCookie("access_token", {
             httpOnly: true,
             secure: true,
             sameSite: 'none'
         });
-        res.clearCookie("refresh-token", {
+        res.clearCookie("refresh_token", {
             httpOnly: true,
             secure: true,
             sameSite: 'none',

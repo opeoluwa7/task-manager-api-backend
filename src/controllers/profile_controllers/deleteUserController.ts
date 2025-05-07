@@ -21,13 +21,13 @@ const deleteUserController = async (req: Request, res: Response, next: NextFunct
         await blacklistToken(accessToken);
         await blacklistToken(refreshToken)
 
-        res.clearCookie("access-token", {
+        res.clearCookie("access_token", {
             httpOnly: true,
             secure: true,
             sameSite: 'none'
         });
 
-        res.clearCookie("refresh-token", {
+        res.clearCookie("refresh_token", {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
