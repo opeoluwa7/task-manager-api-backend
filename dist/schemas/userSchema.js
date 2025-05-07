@@ -31,7 +31,7 @@ exports.loginSchema = zod_1.z.object({
     }).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
         message: "Password must include at least one letter, one number, and one special character"
     }).trim()
-});
+}).strict();
 exports.forgotPasswordSchema = zod_1.z.object({
     email: zod_1.z.string().email({
         message: "Enter a valid email"
