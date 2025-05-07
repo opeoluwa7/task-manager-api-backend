@@ -32,6 +32,11 @@ const uploadTaskImageController = async (req, res, next) => {
                 return res.status(400).json({
                     error: "Task id is required and must be a number"
                 });
+            const existingTask = await task_functions_1.default.getTaskById(user_id, task_id);
+            if (!existingTask)
+                return res.status(404).json({
+                    error: "Task not found"
+                });
             const results = await task_functions_1.default.updateTaskImage(imgUrl, user_id, task_id);
             res.status(201).json({
                 success: true,
