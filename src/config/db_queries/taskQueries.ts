@@ -1,16 +1,17 @@
+import createTaskType from "../../types/utils/CreateTaskType";
 import { FiltersType } from "../../types/utils/FiltersType";
 import pool from "../db_pool/pool";
 
-const createTask = async (title: string, description: string, status: string, priority: string, deadline: Date, user_id: number) => {
+const createTask = async (task: createTaskType) => {
 
     try {
         const result = await pool.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
-            title,
-            description,
-            status,
-            priority,
-            deadline,
-            user_id
+            task.title,
+            task.description,
+            task.status,
+            task.priority,
+            task.deadline,
+            task.user_id
         ]);
 
         return result.rows[0]

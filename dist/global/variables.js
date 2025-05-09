@@ -1,8 +1,10 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 let title;
 let description;
-let status;
+let taskStatus;
 let priority;
 let deadline;
 let user_id;
-var taskVar = [title, description, status, priority, deadline, user_id];
+var taskArray = [title, description, taskStatus, priority, deadline, user_id];
+exports.default = taskArray;

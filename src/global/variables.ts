@@ -1,9 +1,11 @@
 let title: string;
 let description: string;
-let status: string;
+let taskStatus: string;
 let priority: string;
 let deadline: Date;
-let user_id: number
+let user_id: number;
 
 
-var taskVar: any[] = [title, description, status, priority, deadline, user_id]
+var taskArray: any[] = [title!, description!, taskStatus!, priority!, deadline!, user_id!]
+
+export default taskArray

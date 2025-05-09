@@ -3,15 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const pool_1 = __importDefault(require("../db_pool/pool"));
-const createTask = async (title, description, status, priority, deadline, user_id) => {
+const createTask = async (task) => {
     try {
         const result = await pool_1.default.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
-            title,
-            description,
-            status,
-            priority,
-            deadline,
-            user_id
+            task.title,
+            task.description,
+            task.status,
+            task.priority,
+            task.deadline,
+            task.user_id
         ]);
         return result.rows[0];
     }

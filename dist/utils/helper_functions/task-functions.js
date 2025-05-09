@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const taskQueries_1 = __importDefault(require("../../config/db_queries/taskQueries"));
 const uploadQueries_1 = __importDefault(require("../../config/db_queries/uploadQueries"));
-const createTask = async (title, description, status, priority, deadline, user_id) => {
-    const result = await taskQueries_1.default.createTask(title, description, status, priority, deadline, user_id);
+const createTask = async (task) => {
+    const result = await taskQueries_1.default.createTask(task);
     return result;
 };
 const getAllTasks = async (user_id, limit = 20, offset = 0) => {

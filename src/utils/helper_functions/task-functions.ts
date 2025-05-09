@@ -1,11 +1,12 @@
 import taskQueries from "../../config/db_queries/taskQueries";
 
 import uploadQueries from "../../config/db_queries/uploadQueries";
+import createTaskType from "../../types/utils/CreateTaskType";
 import { FiltersType } from "../../types/utils/FiltersType";
 
 
-const createTask = async (title:  string, description: string, status: string, priority: string, deadline: Date, user_id: number) => {
-    const result = await taskQueries.createTask(title, description, status, priority, deadline, user_id);
+const createTask = async (task: createTaskType) => {
+    const result = await taskQueries.createTask(task);
 
     return result
 }
