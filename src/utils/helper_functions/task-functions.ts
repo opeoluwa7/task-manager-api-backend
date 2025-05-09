@@ -1,7 +1,8 @@
 import taskQueries from "../../config/db_queries/taskQueries";
 
 import uploadQueries from "../../config/db_queries/uploadQueries";
-import createTaskType from "../../types/utils/CreateTaskType";
+import createTaskType from "../../types/taskTypes/CreateTaskType";
+import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
 import { FiltersType } from "../../types/utils/FiltersType";
 
 
@@ -11,8 +12,8 @@ const createTask = async (task: createTaskType) => {
     return result
 }
 
-const getAllTasks = async (user_id: number, limit = 20, offset = 0) => {
-    const result = await taskQueries.getTasks(user_id, limit, offset);
+const getAllTasks = async (task: GetAllTasksType) => {
+    const result = await taskQueries.getTasks(task);
 
     return result
 }

@@ -1,4 +1,5 @@
-import createTaskType from "../../types/utils/CreateTaskType";
+import createTaskType from "../../types/taskTypes/CreateTaskType";
+import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
 import { FiltersType } from "../../types/utils/FiltersType";
 import pool from "../db_pool/pool";
 
@@ -23,12 +24,12 @@ const createTask = async (task: createTaskType) => {
 
 
 
-const getTasks = async (user_id: number, limit: number, offset: any) => {
+const getTasks = async (task: GetAllTasksType) => {
     try {
 
-        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
+        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${task.limit} OFFSET ${task.offset}`;
 
-        let values: number[] = [user_id]; 
+        let values: number[] = [task.user_id]; 
 
         const result = await pool.query(query, values)
 

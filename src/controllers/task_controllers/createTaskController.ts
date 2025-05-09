@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
-import createTaskType from "../../types/utils/CreateTaskType";
+import createTaskType from "../../types/taskTypes/CreateTaskType";
 
 
 
@@ -20,17 +20,15 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
         const deadline = new Date(data.deadline!);
 
         const task: createTaskType = {
-            title: data.title!,
-            description: data.description!,
-            status: data.status!,
-            priority: data.priority!,
+            title: data.title,
+            description: data.description,
+            status: data.status,
+            priority: data.priority,
             deadline: deadline,
             user_id: user_id
         }
 
-        const results = await taskFn.createTask(
-            task
-        );
+        const results = await taskFn.createTask(task);
 
         if (!results) return res.status(500).json({
             error: "Error creating task"

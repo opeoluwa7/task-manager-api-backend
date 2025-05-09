@@ -7,7 +7,15 @@ const task_functions_1 = __importDefault(require("../../utils/helper_functions/t
 const getAllTasksController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const results = await task_functions_1.default.getAllTasks(user_id);
+        const limit = 20;
+        let page;
+        const offset = 0;
+        let task = {
+            user_id: user_id,
+            limit: limit,
+            offset: offset
+        };
+        const results = await task_functions_1.default.getAllTasks(task);
         if (!results)
             return res.status(500).json({
                 error: "Internal Server Error"

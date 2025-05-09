@@ -19,10 +19,10 @@ const createTask = async (task) => {
         return null;
     }
 };
-const getTasks = async (user_id, limit, offset) => {
+const getTasks = async (task) => {
     try {
-        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
-        let values = [user_id];
+        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${task.limit} OFFSET ${task.offset}`;
+        let values = [task.user_id];
         const result = await pool_1.default.query(query, values);
         return result.rows;
     }

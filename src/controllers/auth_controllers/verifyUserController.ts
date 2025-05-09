@@ -21,11 +21,15 @@ const verifyUserController = async (req: Request, res: Response, next: NextFunct
         const password = await getFromRedis("password");
         const isVerified: boolean = true; 
 
-        const results = await userFn.createUser(name, email, password, isVerified)
+        try {
+            const results = await userFn.createUser(name, email, password, isVerified)
 
-        if (!results) return res.status(500).json({
-            error: "Error creating user"
-        })
+            if (!results) return res.status(500).json({
+                error: "Error creating user"
+            })
+        } catch (error) {
+            next(error)
+        }
 
         res.status(201).send("<h1> User verified successfully!. You can now login </h1>")
     } catch (error) {

@@ -9,8 +9,8 @@ const createTask = async (task) => {
     const result = await taskQueries_1.default.createTask(task);
     return result;
 };
-const getAllTasks = async (user_id, limit = 20, offset = 0) => {
-    const result = await taskQueries_1.default.getTasks(user_id, limit, offset);
+const getAllTasks = async (task) => {
+    const result = await taskQueries_1.default.getTasks(task);
     return result;
 };
 const queryAllTasks = async (user_id, filters, limit = 20, offset = 0) => {
