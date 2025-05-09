@@ -8,7 +8,10 @@ const user_functions_1 = __importDefault(require("../../utils/helper_functions/u
 const deleteUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const result = await user_functions_1.default.deleteUserInfo(user_id);
+        const user = {
+            user_id: user_id
+        };
+        const result = await user_functions_1.default.deleteUserInfo(user);
         if (!result) {
             return res.status(404).json({
                 message: "User not found"

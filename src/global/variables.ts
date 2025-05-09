@@ -1,11 +1,13 @@
-let title: string;
-let description: string;
-let taskStatus: string;
-let priority: string;
-let deadline: Date;
-let user_id: number;
+require("cookie-parser")
+
+import { Request } from "express";
+
+var limit: number = 20;
+var offset: number = 0;
 
 
-var taskArray: any[] = [title!, description!, taskStatus!, priority!, deadline!, user_id!]
 
-export default taskArray
+export const variables = {
+        limit,
+        offset
+}

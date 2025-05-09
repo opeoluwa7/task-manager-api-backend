@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import taskFn from "../../utils/helper_functions/task-functions";
 import { taskIdSchema } from "../../schemas/taskSchema";
+import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
+import DeleteTaskType from "../../types/taskTypes/DeleteTaskType";
 
 const deleteUserTaskController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -20,7 +22,12 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
             error: "Task id is required and must be a number"
         })
 
-        let task = await taskFn.getTaskById(user_id, task_id);
+        let checkTask: GetOneTaskType = {
+            user_id: user_id,
+            task_id: task_id
+        }
+
+        let task = await taskFn.getTaskById(checkTask);
 
         if (!task) {
             return res.status(404).json({ 
@@ -28,7 +35,11 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
             })
         }
 
-        const result = await taskFn.deleteTask(task.task_id);
+        let deletedTask: DeleteTaskType = {
+            task_id: task_id
+        }
+
+        const result = await taskFn.deleteTask(deletedTask);
 
         if(!result) {
             return res.status(500).json({

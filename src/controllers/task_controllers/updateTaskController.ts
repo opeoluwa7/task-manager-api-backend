@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { taskIdSchema, updateTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
+import UpdateTaskType from "../../types/taskTypes/UpdateTaskType";
+import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 
 
 const updateUserTaskController = async (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +15,7 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
             })
         }
 
-        const { title, description, status, priority, deadline } = value.data
+        const data = value.data
 
         const user_id: number = req.user?.user_id;
 
@@ -31,24 +33,30 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
             error: "Task id is required and must be a number"
         })
 
-        const task_deadline = new Date(deadline!)
+        const task_deadline = new Date(data.deadline!);
 
-        const results = await taskFn.updateTask(
-            title!,
-            description!,
-            status!,
-            priority!,
-            task_deadline,
-            user_id,
-            task_id
-        );
+        const task: GetOneTaskType = {
+            user_id: user_id,
+            task_id: task_id
+        }
 
-        const afterUpdateTask = await taskFn.getTaskById(user_id, task_id);
+        const checkTask = await taskFn.getTaskById(task);
 
-        if (!afterUpdateTask) return res.status(404).json({
+        if (!checkTask) return res.status(404).json({
             error: "Task not found in the database."
         })
 
+        let updatedTask: UpdateTaskType = {
+            title: data.title,
+            description: data.description,
+            status: data.status,
+            priority: data.priority,
+            deadline: task_deadline,
+            user_id: user_id,
+            task_id: task_id
+        }
+
+        const results = await taskFn.updateTask(updatedTask);
 
         if (!results) {
             return res.status(500).json({

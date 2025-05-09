@@ -1,32 +1,37 @@
 import userQueries from "../../config/db_queries/userQueries";
+import CheckUserWithIdType from "../../types/userTypes/CheckUserWithIdType";
+import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
+import CreateUserType from "../../types/userTypes/CreateUserType";
+import DeleteUserType from "../../types/userTypes/DeleteUserType";
+import UpdateUserType from "../../types/userTypes/UpdateUserType";
 
 
-const createUser = async (name: string, email: string, password: string, isVerified: boolean) => {
-    const result =  await userQueries.createUser(name, email, password, isVerified);
-
-    return result
-}
-
-const checkUserWithEmail = async (email: string) => {
-    const result = await userQueries.getUserWithEmail(email);
-
-    return result
-}
-
-const checkUserWithId = async (user_id: number) => {
-    const result = await userQueries.getUserWithId(user_id)
+const createUser = async (data: CreateUserType) => {
+    const result =  await userQueries.createUser(data);
 
     return result
 }
 
-const updateUserInfo = async (name: string, email: string, password: string, user_id: number) => {
-    const result = await userQueries.updateUser(name, email, password, user_id)
+const checkUserWithEmail = async (data: CheckUserWithEmailType) => {
+    const result = await userQueries.getUserWithEmail(data);
 
     return result
 }
 
-const deleteUserInfo = async (user_id: number) => {
-    const result =  await userQueries.deleteUser(user_id);
+const checkUserWithId = async (data: CheckUserWithIdType) => {
+    const result = await userQueries.getUserWithId(data)
+
+    return result
+}
+
+const updateUserInfo = async (data: UpdateUserType) => {
+    const result = await userQueries.updateUser(data)
+
+    return result
+}
+
+const deleteUserInfo = async (data: DeleteUserType) => {
+    const result =  await userQueries.deleteUser(data);
 
     return result
 }

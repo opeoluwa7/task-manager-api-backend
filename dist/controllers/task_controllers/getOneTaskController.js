@@ -19,7 +19,11 @@ const getOneTaskController = async (req, res, next) => {
             return res.status(400).json({
                 error: "Task id is required and must be a number"
             });
-        const results = await task_functions_1.default.getTaskById(user_id, task_id);
+        const task = {
+            user_id: user_id,
+            task_id: task_id
+        };
+        const results = await task_functions_1.default.getTaskById(task);
         if (!results)
             return res.status(404).json({
                 error: "Task not found"

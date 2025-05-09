@@ -4,7 +4,7 @@ type createTaskType = {
     status?: string,
     priority?: string,
     deadline?: Date,
-    user_id?: number
+    user_id: number
 }
 
 export default createTaskType

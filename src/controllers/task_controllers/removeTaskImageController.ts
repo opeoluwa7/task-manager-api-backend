@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import taskFn from "../../utils/helper_functions/task-functions"; 
 import { taskIdSchema } from "../../schemas/taskSchema";
+import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
+import RemoveImageType from "../../types/taskTypes/RemoveImageType";
 
 
 
@@ -24,7 +26,12 @@ const removeTaskImageController = async (req: Request, res: Response, next: Next
             error: "Task id is required and must be a number"
         })
 
-        const existingTask = await taskFn.getTaskById(user_id, task_id);
+        const checkTask: GetOneTaskType = {
+            user_id: user_id,
+            task_id: task_id
+        }
+
+        const existingTask = await taskFn.getTaskById(checkTask);
 
         if (!existingTask) return res.status(404).json({
             error: "Task not found"
@@ -34,12 +41,17 @@ const removeTaskImageController = async (req: Request, res: Response, next: Next
             error: "Image not found"
         })
 
-        const task = await taskFn.removeTaskImage(user_id, task_id);
+        const image: RemoveImageType = {
+            user_id: user_id,
+            task_id: task_id
+        }
+
+        const result = await taskFn.removeTaskImage(image);
         
         res.status(200).json({
             success: true,
             message: "Image removed successfully!",
-            body: task
+            body: result
         })
     } catch (error) {
         next(error)

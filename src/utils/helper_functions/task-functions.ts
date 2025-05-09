@@ -2,56 +2,62 @@ import taskQueries from "../../config/db_queries/taskQueries";
 
 import uploadQueries from "../../config/db_queries/uploadQueries";
 import createTaskType from "../../types/taskTypes/CreateTaskType";
+import DeleteTaskType from "../../types/taskTypes/DeleteTaskType";
 import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
+import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
+import QueryTasksType from "../../types/taskTypes/QueryTasksType";
+import RemoveImageType from "../../types/taskTypes/RemoveImageType";
+import UpdateImageType from "../../types/taskTypes/UpdateImageType";
+import UpdateTaskType from "../../types/taskTypes/UpdateTaskType";
 import { FiltersType } from "../../types/utils/FiltersType";
 
 
-const createTask = async (task: createTaskType) => {
-    const result = await taskQueries.createTask(task);
+const createTask = async (data: createTaskType) => {
+    const result = await taskQueries.createTask(data);
 
     return result
 }
 
-const getAllTasks = async (task: GetAllTasksType) => {
-    const result = await taskQueries.getTasks(task);
+const getAllTasks = async (data: GetAllTasksType) => {
+    const result = await taskQueries.getTasks(data);
 
     return result
 }
 
-const queryAllTasks = async (user_id: number, filters: FiltersType, limit = 20, offset = 0) => {
-    const result = await taskQueries.queryTasks(user_id, filters, limit, offset)
+const queryAllTasks = async (data: QueryTasksType) => {
+    const result = await taskQueries.queryTasks(data)
 
     return result
 }
 
-const getTaskById = async (user_id: number, task_id: number) => {
-    const result = await taskQueries.getTaskById(user_id, task_id);
+const getTaskById = async (data: GetOneTaskType) => {
+    const result = await taskQueries.getTaskById(data);
 
     return result
 }
 
-const updateTask = async (title:  string, description: string, status: string, priority: string, deadline: Date, user_id: number, task_id: number) => {
-    const result = await taskQueries.updateTask(title, description, status, priority, deadline, user_id, task_id)
+const updateTask = async (data: UpdateTaskType) => {
+    const result = await taskQueries.updateTask(data)
 
     return result
 }
 
-const deleteTask = async (task_id: number) => {
-    const result = await taskQueries.deleteTask(task_id)
+const deleteTask = async (data: DeleteTaskType) => {
+    const result = await taskQueries.deleteTask(data)
 
     return result
 }
 
 
 
-const updateTaskImage = async (imgUrl: string, user_id: number, task_id: number) => {
-    const result = await uploadQueries.updateImageUrl(imgUrl, user_id, task_id)
+const updateTaskImage = async (data: UpdateImageType) => {
+    const result = await uploadQueries.updateImageUrl(data)
 
     return result
 }
 
-const removeTaskImage = async (user_id: number, task_id: number) => {
-    const result = await uploadQueries.removeImageUrl(user_id, task_id)
+const removeTaskImage = async (data: RemoveImageType) => {
+    const result = await uploadQueries.removeImageUrl(data)
 
     return result
 }

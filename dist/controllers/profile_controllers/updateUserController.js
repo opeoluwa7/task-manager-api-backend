@@ -17,22 +17,28 @@ const updateUserController = async (req, res, next) => {
             return res.status(400).json({
                 error: value.error.format()
             });
-        const { email: newEmail, password: newPassword, name: newName } = value.data;
-        const user = await user_functions_1.default.checkUserWithId(user_id);
-        const existingEmail = await user_functions_1.default.checkUserWithEmail(newEmail);
+        const { email, password, name } = value.data;
+        const checkUserId = {
+            user_id: user_id
+        };
+        const checkUserEmail = {
+            email: email
+        };
+        const result = await user_functions_1.default.checkUserWithId(checkUserId);
+        const existingEmail = await user_functions_1.default.checkUserWithEmail(checkUserEmail);
         if (existingEmail)
             return res.status(400).json({
                 error: "This email is not available. Try another one."
             });
-        if (!user)
+        if (!result)
             return res.status(404).json({
                 error: "User not found"
             });
-        let currentEmail = user.email;
-        let currentName = user.name;
-        const currentPassword = user.password;
-        if (newEmail && newEmail !== currentEmail) {
-            currentEmail = newEmail;
+        let defaultEmail = result.email;
+        let defaultName = result.name;
+        let defaultPassword = result.password;
+        if (email && email !== defaultEmail) {
+            defaultEmail = email;
             const accessToken = req.cookies['access_token'];
             const refreshToken = req.cookies['refresh_token'];
             await (0, redis_functions_1.blacklistToken)(accessToken);
@@ -64,9 +70,15 @@ const updateUserController = async (req, res, next) => {
                 maxAge: (0, ms_1.default)('3d')
             });
         }
-        const password = newPassword && newPassword !== currentPassword ? await (0, bcrypt_functions_1.encryptedPassword)(newPassword) : currentPassword;
-        const name = newName && newName !== currentName ? currentName = newName : currentName;
-        const results = await user_functions_1.default.updateUserInfo(name, currentEmail, password, user_id);
+        const newPassword = password && password !== defaultPassword ? await (0, bcrypt_functions_1.encryptedPassword)(password) : defaultPassword;
+        const newName = name && name !== defaultName ? defaultName = name : defaultName;
+        const user = {
+            name: newName,
+            email: defaultEmail,
+            password: newPassword,
+            user_id: user_id
+        };
+        const results = await user_functions_1.default.updateUserInfo(user);
         delete results.password;
         delete results.isVerified;
         delete results.created_at;

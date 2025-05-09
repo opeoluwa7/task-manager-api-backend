@@ -6,6 +6,9 @@ import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import ms from "ms";
 import { blacklistToken } from "../../utils/helper_functions/redis-functions";
+import CheckUserWithIdType from "../../types/userTypes/CheckUserWithIdType";
+import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
+import UpdateUserType from "../../types/userTypes/UpdateUserType";
 
 const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -17,26 +20,34 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             error: value.error.format()
         })
 
-        const { email: newEmail, password: newPassword, name: newName } = value.data;
+        const { email, password, name } = value.data;
 
-        const user = await userFn.checkUserWithId(user_id);
-        const existingEmail = await userFn.checkUserWithEmail(newEmail!);
+        const checkUserId: CheckUserWithIdType = {
+            user_id: user_id
+        }
+
+        const checkUserEmail: CheckUserWithEmailType = {
+            email: email
+        }
+
+        const result = await userFn.checkUserWithId(checkUserId);
+        const existingEmail = await userFn.checkUserWithEmail(checkUserEmail);
 
         if (existingEmail) return res.status(400).json({
             error: "This email is not available. Try another one."
         })
 
-        if (!user) return res.status(404).json({
+        if (!result) return res.status(404).json({
             error: "User not found"
         })
 
-        let currentEmail: string = user.email;
-        let currentName: string = user.name;
-        const currentPassword: string = user.password;
+        let defaultEmail: string = result.email;
+        let defaultName: string = result.name;
+        let defaultPassword: string = result.password;
 
-        if (newEmail && newEmail !== currentEmail) {
+        if (email && email !== defaultEmail) {
 
-            currentEmail = newEmail
+            defaultEmail = email
 
 
             const accessToken = req.cookies['access_token'];
@@ -78,13 +89,21 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
 
         }
 
-        const password = newPassword && newPassword !== currentPassword ? await encryptedPassword(newPassword) : currentPassword;
+        const newPassword = password && password !== defaultPassword ? await encryptedPassword(password) : defaultPassword;
 
-        const name =  newName && newName !== currentName ? currentName = newName : currentName 
+        const newName =  name && name !== defaultName ? defaultName = name : defaultName 
+
+
+        const user: UpdateUserType = {
+            name: newName,
+            email: defaultEmail,
+            password: newPassword,
+            user_id: user_id
+        }
 
 
 
-        const results = await userFn.updateUserInfo(name, currentEmail, password, user_id);
+        const results = await userFn.updateUserInfo(user);
 
         delete results.password;
         delete results.isVerified;

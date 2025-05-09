@@ -18,8 +18,14 @@ const verifyUserController = async (req, res, next) => {
         const email = await (0, redis_functions_1.getFromRedis)("email");
         const password = await (0, redis_functions_1.getFromRedis)("password");
         const isVerified = true;
+        const user = {
+            name: name,
+            email: email,
+            password: password,
+            isVerified: isVerified
+        };
         try {
-            const results = await user_functions_1.default.createUser(name, email, password, isVerified);
+            const results = await user_functions_1.default.createUser(user);
             if (!results)
                 return res.status(500).json({
                     error: "Error creating user"

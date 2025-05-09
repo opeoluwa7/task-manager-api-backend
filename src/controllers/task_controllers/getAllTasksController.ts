@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import taskFn from "../../utils/helper_functions/task-functions";
 import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
+import { variables } from "../../global/variables";
 
 
 const getAllTasksController = async (req: Request, res: Response, next: NextFunction) => {
@@ -8,14 +9,12 @@ const getAllTasksController = async (req: Request, res: Response, next: NextFunc
 
 
         const user_id: number = req.user?.user_id;
-        const limit = 20;
-        let page;
-        const offset = 0;
+
 
         let task: GetAllTasksType = {
             user_id: user_id,
-            limit: limit,
-            offset: offset
+            limit: variables.limit,
+            offset: variables.offset
         }
        
  

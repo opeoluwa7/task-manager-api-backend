@@ -7,17 +7,20 @@ const user_functions_1 = __importDefault(require("../../utils/helper_functions/u
 const findUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const user = await user_functions_1.default.checkUserWithId(user_id);
-        if (!user)
+        const user = {
+            user_id: user_id
+        };
+        const result = await user_functions_1.default.checkUserWithId(user);
+        if (!result)
             return res.status(404).json({
                 error: "User not found"
             });
         res.status(200).json({
             success: true,
             body: {
-                user_id: user.user_id,
-                name: user.name,
-                email: user.email
+                user_id: result.user_id,
+                name: result.name,
+                email: result.email
             }
         });
     }

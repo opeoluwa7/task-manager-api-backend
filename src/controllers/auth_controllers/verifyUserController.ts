@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { getFromRedis } from "../../utils/helper_functions/redis-functions";
 import { verifyVerificationTokenString } from "../../utils/helper_functions/token-functions";
 import userFn from "../../utils/helper_functions/user-functions";
+import CreateUserType from "../../types/userTypes/CreateUserType";
 
 
 
@@ -21,8 +22,15 @@ const verifyUserController = async (req: Request, res: Response, next: NextFunct
         const password = await getFromRedis("password");
         const isVerified: boolean = true; 
 
+        const user: CreateUserType = {
+            name: name,
+            email: email,
+            password: password,
+            isVerified: isVerified
+        }
+
         try {
-            const results = await userFn.createUser(name, email, password, isVerified)
+            const results = await userFn.createUser(user)
 
             if (!results) return res.status(500).json({
                 error: "Error creating user"

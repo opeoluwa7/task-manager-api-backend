@@ -19,7 +19,11 @@ const removeTaskImageController = async (req, res, next) => {
             return res.status(400).json({
                 error: "Task id is required and must be a number"
             });
-        const existingTask = await task_functions_1.default.getTaskById(user_id, task_id);
+        const checkTask = {
+            user_id: user_id,
+            task_id: task_id
+        };
+        const existingTask = await task_functions_1.default.getTaskById(checkTask);
         if (!existingTask)
             return res.status(404).json({
                 error: "Task not found"
@@ -28,11 +32,15 @@ const removeTaskImageController = async (req, res, next) => {
             return res.status(404).json({
                 error: "Image not found"
             });
-        const task = await task_functions_1.default.removeTaskImage(user_id, task_id);
+        const image = {
+            user_id: user_id,
+            task_id: task_id
+        };
+        const result = await task_functions_1.default.removeTaskImage(image);
         res.status(200).json({
             success: true,
             message: "Image removed successfully!",
-            body: task
+            body: result
         });
     }
     catch (error) {

@@ -13,7 +13,7 @@ const updateUserTaskController = async (req, res, next) => {
                 error: value.error.format()
             });
         }
-        const { title, description, status, priority, deadline } = value.data;
+        const data = value.data;
         const user_id = req.user?.user_id;
         const id_value = taskSchema_1.taskIdSchema.safeParse(req.params);
         if (!id_value.success)
@@ -26,13 +26,26 @@ const updateUserTaskController = async (req, res, next) => {
             return res.status(400).json({
                 error: "Task id is required and must be a number"
             });
-        const task_deadline = new Date(deadline);
-        const results = await task_functions_1.default.updateTask(title, description, status, priority, task_deadline, user_id, task_id);
-        const afterUpdateTask = await task_functions_1.default.getTaskById(user_id, task_id);
-        if (!afterUpdateTask)
+        const task_deadline = new Date(data.deadline);
+        const task = {
+            user_id: user_id,
+            task_id: task_id
+        };
+        const checkTask = await task_functions_1.default.getTaskById(task);
+        if (!checkTask)
             return res.status(404).json({
                 error: "Task not found in the database."
             });
+        let updatedTask = {
+            title: data.title,
+            description: data.description,
+            status: data.status,
+            priority: data.priority,
+            deadline: task_deadline,
+            user_id: user_id,
+            task_id: task_id
+        };
+        const results = await task_functions_1.default.updateTask(updatedTask);
         if (!results) {
             return res.status(500).json({
                 error: "Error updating task. Something went wrong, try again"

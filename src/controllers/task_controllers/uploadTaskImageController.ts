@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import cloudinary from "../../config/cloudinaryConfig";
 import taskFn from "../../utils/helper_functions/task-functions";
 import { taskIdSchema } from "../../schemas/taskSchema";
+import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
+import UpdateImageType from "../../types/taskTypes/UpdateImageType";
 
 const uploadTaskImageController = async(req: Request, res: Response, next: NextFunction) => {
     try { 
@@ -38,13 +40,24 @@ const uploadTaskImageController = async(req: Request, res: Response, next: NextF
                 error: "Task id is required and must be a number"
             })
 
-            const existingTask = await taskFn.getTaskById(user_id, task_id);
+            const task: GetOneTaskType = {
+                user_id: user_id,
+                task_id: task_id
+            }
+
+            const existingTask = await taskFn.getTaskById(task);
 
             if (!existingTask) return res.status(404).json({
                 error: "Task not found"
             })
 
-            const results = await taskFn.updateTaskImage(imgUrl, user_id, task_id)
+            const image: UpdateImageType = {
+                image_url: imgUrl,
+                user_id: user_id,
+                task_id: task_id
+            }
+
+            const results = await taskFn.updateTaskImage(image)
 
             res.status(201).json({
                 success: true,

@@ -4,24 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const userQueries_1 = __importDefault(require("../../config/db_queries/userQueries"));
-const createUser = async (name, email, password, isVerified) => {
-    const result = await userQueries_1.default.createUser(name, email, password, isVerified);
+const createUser = async (data) => {
+    const result = await userQueries_1.default.createUser(data);
     return result;
 };
-const checkUserWithEmail = async (email) => {
-    const result = await userQueries_1.default.getUserWithEmail(email);
+const checkUserWithEmail = async (data) => {
+    const result = await userQueries_1.default.getUserWithEmail(data);
     return result;
 };
-const checkUserWithId = async (user_id) => {
-    const result = await userQueries_1.default.getUserWithId(user_id);
+const checkUserWithId = async (data) => {
+    const result = await userQueries_1.default.getUserWithId(data);
     return result;
 };
-const updateUserInfo = async (name, email, password, user_id) => {
-    const result = await userQueries_1.default.updateUser(name, email, password, user_id);
+const updateUserInfo = async (data) => {
+    const result = await userQueries_1.default.updateUser(data);
     return result;
 };
-const deleteUserInfo = async (user_id) => {
-    const result = await userQueries_1.default.deleteUser(user_id);
+const deleteUserInfo = async (data) => {
+    const result = await userQueries_1.default.deleteUser(data);
     return result;
 };
 const userFn = {

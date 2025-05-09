@@ -4,16 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
+const variables_1 = require("../../global/variables");
 const getAllTasksController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
-        const limit = 20;
-        let page;
-        const offset = 0;
         let task = {
             user_id: user_id,
-            limit: limit,
-            offset: offset
+            limit: variables_1.variables.limit,
+            offset: variables_1.variables.offset
         };
         const results = await task_functions_1.default.getAllTasks(task);
         if (!results)

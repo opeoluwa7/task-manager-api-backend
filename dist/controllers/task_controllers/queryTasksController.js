@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
+const variables_1 = require("../../global/variables");
 const queryTasksController = async (req, res, next) => {
     try {
         const query = req.query;
@@ -24,7 +25,13 @@ const queryTasksController = async (req, res, next) => {
             priority
         };
         const user_id = req.user?.user_id;
-        const result = await task_functions_1.default.queryAllTasks(user_id, filters);
+        const task = {
+            user_id: user_id,
+            filters: filters,
+            limit: variables_1.variables.limit,
+            offset: variables_1.variables.offset
+        };
+        const result = await task_functions_1.default.queryAllTasks(task);
         if (result.length === 0)
             return res.status(404).json({
                 error: `No tasks found`

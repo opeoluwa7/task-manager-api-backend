@@ -1,13 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import userFn from "../../utils/helper_functions/user-functions";
+import DeleteUserType from "../../types/userTypes/DeleteUserType";
 
 
 const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id: number = req.user?.user_id;
 
-        const result = await userFn.deleteUserInfo(user_id);
+        const user: DeleteUserType = {
+            user_id: user_id
+        }
+
+        const result = await userFn.deleteUserInfo(user);
 
         if (!result) {
             return res.status(404).json({

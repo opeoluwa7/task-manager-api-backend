@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let title;
-let description;
-let taskStatus;
-let priority;
-let deadline;
-let user_id;
-var taskArray = [title, description, taskStatus, priority, deadline, user_id];
-exports.default = taskArray;
+exports.variables = void 0;
+require("cookie-parser");
+var limit = 20;
+var offset = 0;
+exports.variables = {
+    limit,
+    offset
+};

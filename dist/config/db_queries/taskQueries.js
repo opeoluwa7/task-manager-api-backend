@@ -3,38 +3,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const pool_1 = __importDefault(require("../db_pool/pool"));
-const createTask = async (task) => {
+const createTask = async (data) => {
     try {
         const result = await pool_1.default.query('INSERT INTO tasks (title, description, status, priority, deadline, user_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING *', [
-            task.title,
-            task.description,
-            task.status,
-            task.priority,
-            task.deadline,
-            task.user_id
+            data.title,
+            data.description,
+            data.status,
+            data.priority,
+            data.deadline,
+            data.user_id
         ]);
         return result.rows[0];
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
-const getTasks = async (task) => {
+const getTasks = async (data) => {
     try {
-        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${task.limit} OFFSET ${task.offset}`;
-        let values = [task.user_id];
+        let query = `SELECT * FROM tasks WHERE user_id = $1 ORDER BY created_at ASC LIMIT ${data.limit} OFFSET ${data.offset}`;
+        let values = [data.user_id];
         const result = await pool_1.default.query(query, values);
         return result.rows;
     }
     catch (error) {
-        return null;
+        throw error;
     }
 };
-const queryTasks = async (user_id, filters, limit, offset) => {
+const queryTasks = async (data) => {
     try {
         let query = 'SELECT * FROM tasks WHERE user_id = $1 ';
-        let values = [user_id];
+        let values = [data.user_id];
         let paramIndex = 2;
+        let filters = data.filters;
         if (filters.status) {
             query += `AND status = $${paramIndex} `;
             values.push(filters.status);
@@ -45,7 +46,7 @@ const queryTasks = async (user_id, filters, limit, offset) => {
             values.push(filters.priority);
             paramIndex++;
         }
-        query += ` ORDER BY created_at ASC LIMIT ${limit} OFFSET ${offset}`;
+        query += ` ORDER BY created_at ASC LIMIT ${data.limit} OFFSET ${data.offset}`;
         const result = await pool_1.default.query(query, values);
         return result.rows;
     }
@@ -53,10 +54,10 @@ const queryTasks = async (user_id, filters, limit, offset) => {
         throw error;
     }
 };
-const getTaskById = async (user_id, task_id) => {
+const getTaskById = async (data) => {
     try {
         const query = 'SELECT * FROM tasks WHERE user_id = $1 and task_id = $2';
-        const values = [user_id, task_id];
+        const values = [data.user_id, data.task_id];
         const result = await pool_1.default.query(query, values);
         return result.rows[0];
     }
@@ -64,10 +65,10 @@ const getTaskById = async (user_id, task_id) => {
         throw error;
     }
 };
-const updateTask = async (title, description, status, priority, deadline, user_id, task_id) => {
+const updateTask = async (data) => {
     try {
         const query = 'UPDATE tasks SET title = COALESCE($1, title), description = COALESCE($2, description), status = COALESCE($3, status), priority = COALESCE($4, priority), deadline = COALESCE($5, deadline) WHERE user_id = $6 and task_id = $7 RETURNING *';
-        const values = [title, description, status, priority, deadline, user_id, task_id];
+        const values = [data.title, data.description, data.status, data.priority, data.deadline, data.user_id, data.task_id];
         const result = await pool_1.default.query(query, values);
         return result.rows[0];
     }
@@ -75,10 +76,10 @@ const updateTask = async (title, description, status, priority, deadline, user_i
         throw error;
     }
 };
-const deleteTask = async (task_id) => {
+const deleteTask = async (data) => {
     try {
         const query = 'DELETE FROM tasks WHERE task_id = $1 RETURNING *';
-        const value = [task_id];
+        const value = [data.task_id];
         const result = await pool_1.default.query(query, value);
         return result.rows;
     }
