@@ -6,6 +6,7 @@ import { generateVerificationTokenString } from "../../utils/helper_functions/to
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
 import { sendVerificationEmail } from "../../utils/helper_functions/email-functions";
+import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 
 
 const registerController = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +21,11 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
 
         const { name, email, password } = value.data;
 
-        const existingUser = await userFn.checkUserWithEmail(email);
+        const user: CheckUserWithEmailType = {
+            email: email
+        }
+
+        const existingUser = await userFn.checkUserWithEmail(user);
 
         if (existingUser) return res.status(400).json({
             error: "User with this email already exists"

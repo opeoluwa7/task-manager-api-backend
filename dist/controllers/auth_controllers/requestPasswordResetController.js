@@ -16,15 +16,18 @@ const requestPasswordResetController = async (req, res, next) => {
                 error: value.error.format()
             });
         const { email } = value.data;
-        const user = await user_functions_1.default.checkUserWithEmail(email);
-        if (!user)
+        const user = {
+            email: email
+        };
+        const result = await user_functions_1.default.checkUserWithEmail(user);
+        if (!result)
             return res.status(404).json({
                 error: "User not found"
             });
-        const user_id = user.user_id;
+        const user_id = result.user_id;
         const resetToken = (0, token_functions_1.generateResetTokenString)(user_id);
         await (0, redis_functions_1.storeTempInRedis)("reset:token", resetToken);
-        await (0, email_functions_1.sendPasswordResetEmail)(user.email);
+        await (0, email_functions_1.sendPasswordResetEmail)(result.email);
         res.status(200).json({
             success: true,
             message: "Your password reset email has been sent to you."

@@ -34,7 +34,13 @@ const resetPasswordController = async (req, res, next) => {
                 error: "Passwords must not match. change it for better security."
             });
         const hashedPassword = await (0, bcrypt_functions_1.encryptedPassword)(password);
-        const results = await user_functions_1.default.updateUserInfo(user.name, user.email, hashedPassword, user.user_id);
+        const updatePassword = {
+            name: user.name,
+            email: user.email,
+            password: hashedPassword,
+            user_id: user.user_id
+        };
+        const results = await user_functions_1.default.updateUserInfo(updatePassword);
         if (!results)
             return res.status(500).json({
                 success: false,

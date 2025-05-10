@@ -18,7 +18,10 @@ const registerController = async (req, res, next) => {
             });
         }
         const { name, email, password } = value.data;
-        const existingUser = await user_functions_1.default.checkUserWithEmail(email);
+        const user = {
+            email: email
+        };
+        const existingUser = await user_functions_1.default.checkUserWithEmail(user);
         if (existingUser)
             return res.status(400).json({
                 error: "User with this email already exists"

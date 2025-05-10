@@ -4,6 +4,7 @@ import userFn from "../../utils/helper_functions/user-functions";
 import { verifyResetTokenString } from "../../utils/helper_functions/token-functions";
 import { getFromRedis } from "../../utils/helper_functions/redis-functions";
 import { Request, Response, NextFunction } from "express";
+import UpdateUserType from "../../types/userTypes/UpdateUserType";
 
 
 
@@ -43,12 +44,14 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
 
         const hashedPassword = await encryptedPassword(password);
 
-        const results = await userFn.updateUserInfo(
-            user.name,
-            user.email,
-            hashedPassword,
-            user.user_id
-        );
+        const updatePassword: UpdateUserType = {
+            name: user.name,
+            email: user.email,
+            password: hashedPassword,
+            user_id: user.user_id
+        }
+
+        const results = await userFn.updateUserInfo(updatePassword);
 
         if (!results) return res.status(500).json({
             success: false,

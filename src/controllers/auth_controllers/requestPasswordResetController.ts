@@ -4,6 +4,7 @@ import userFn from "../../utils/helper_functions/user-functions";
 import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
 import { sendPasswordResetEmail} from "../../utils/helper_functions/email-functions";
 import { generateResetTokenString } from "../../utils/helper_functions/token-functions";
+import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 
 
 const requestPasswordResetController = async(req: Request, res: Response, next: NextFunction) => {
@@ -17,19 +18,24 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
 
         const { email } = value.data;
 
-        const user = await userFn.checkUserWithEmail(email);
+        const user: CheckUserWithEmailType = {
+            email: email
 
-        if (!user) return res.status(404).json({
+        }
+
+        const result = await userFn.checkUserWithEmail(user);
+
+        if (!result) return res.status(404).json({
             error: "User not found"
         });
 
-        const user_id = user.user_id; 
+        const user_id = result.user_id; 
 
         const resetToken = generateResetTokenString(user_id);
 
         await storeTempInRedis("reset:token", resetToken)
 
-        await sendPasswordResetEmail(user.email);
+        await sendPasswordResetEmail(result.email);
 
 
         res.status(200).json({

@@ -17,15 +17,18 @@ const loginController = async (req, res, next) => {
                 error: value.error.format()
             });
         const { email, password } = value.data;
-        const user = await user_functions_1.default.checkUserWithEmail(email);
-        if (!user)
+        const user = {
+            email: email
+        };
+        const result = await user_functions_1.default.checkUserWithEmail(user);
+        if (!result)
             return res.status(404).json({
                 error: "User not found. Please register or confirm your details"
             });
-        const storedHashedPassword = user.password;
-        const user_id = user.user_id;
-        const name = user.name;
-        const isVerified = user.is_verified;
+        const storedHashedPassword = result.password;
+        const user_id = result.user_id;
+        const name = result.name;
+        const isVerified = result.is_verified;
         const match = await (0, bcrypt_functions_1.matchPasswords)(password, storedHashedPassword);
         if (!match)
             return res.status(400).json({
@@ -63,7 +66,7 @@ const loginController = async (req, res, next) => {
             body: {
                 user_id: user_id,
                 name: name,
-                email: user.email,
+                email: result.email,
                 isVerified: isVerified
             }
         });
