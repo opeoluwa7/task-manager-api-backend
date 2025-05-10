@@ -11,7 +11,7 @@ const uploadTaskImageController = async(req: Request, res: Response, next: NextF
         const file = req.file;
 
         if (!file) return res.status(400).json({
-            error: "Please provide an image and make sure your key is image"
+            error: "Please provide an image path and make sure your key is image"
         })
 
         cloudinary.uploader.upload(file.path, async (err: Error, result: any) => {

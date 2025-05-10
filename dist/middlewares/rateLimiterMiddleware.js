@@ -8,7 +8,7 @@ const createRateLimiter = (minutes, maxRequests, message) => {
     return (0, express_rate_limit_1.default)({
         windowMs: minutes * 60 * 1000, //this converts minutes to milliseconds
         max: maxRequests,
-        message: message || "Too many requests, please try again later."
+        message: message
     });
 };
 exports.default = createRateLimiter;
