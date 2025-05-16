@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import userFn from "../../utils/helper_functions/user-functions";
 import DeleteUserType from "../../types/userTypes/DeleteUserType";
+import { accessCookie, refreshCookie } from "../../global/variables";
 
 
 const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,18 +27,9 @@ const deleteUserController = async (req: Request, res: Response, next: NextFunct
         await blacklistToken(accessToken);
         await blacklistToken(refreshToken)
 
-        res.clearCookie("access_token", {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        });
+        res.clearCookie("access_token", accessCookie);
 
-        res.clearCookie("refresh_token", {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/refresh-token'
-        });
+        res.clearCookie("refresh_token", refreshCookie);
 
         res.status(200).json({ 
             success: true,

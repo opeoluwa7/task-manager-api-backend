@@ -26,8 +26,7 @@ const resetPasswordController = async (req, res, next) => {
             return res.status(401).json({
                 error: "Invalid reset token. go back to forgot password"
             });
-        const user = await user_functions_1.default.checkUserWithId(verified.user_id);
-        const storedHashedPassword = user.password;
+        const { name, email, password: storedHashedPassword, user_id } = await user_functions_1.default.checkUserWithId(verified.user_id);
         const match = await (0, bcrypt_functions_1.matchPasswords)(password, storedHashedPassword);
         if (match)
             return res.status(400).json({
@@ -35,10 +34,10 @@ const resetPasswordController = async (req, res, next) => {
             });
         const hashedPassword = await (0, bcrypt_functions_1.encryptedPassword)(password);
         const updatePassword = {
-            name: user.name,
-            email: user.email,
+            name: name,
+            email: email,
             password: hashedPassword,
-            user_id: user.user_id
+            user_id: user_id
         };
         const results = await user_functions_1.default.updateUserInfo(updatePassword);
         if (!results)

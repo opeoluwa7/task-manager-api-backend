@@ -1,4 +1,3 @@
-import ms from "ms";
 require("cookie-parser")
 import { Request, Response, NextFunction } from "express";
 import { loginSchema } from "../../schemas/userSchema";
@@ -6,6 +5,7 @@ import userFn from "../../utils/helper_functions/user-functions";
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import { matchPasswords } from "../../utils/helper_functions/bcrypt-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
+import { accessCookie, refreshCookie } from "../../global/variables";
 
 
 const loginController = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,18 +23,14 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
             email: email
         }
 
-        const result = await userFn.checkUserWithEmail(user);
+        let result = await userFn.checkUserWithEmail(user);
 
         if (!result) return res.status(404).json({ 
             error: "User not found. Please register or confirm your details" 
         })
-
-        const storedHashedPassword = result.password;
-        const user_id = result.user_id;
-        const name = result.name;
-        const isVerified = result.is_verified;
-
         
+        const { password: storedHashedPassword, user_id, name, is_verified} = result
+ 
         const match = await matchPasswords(password, storedHashedPassword)
 
         if (!match) return res.status(400).json({ 
@@ -44,33 +40,13 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
         const accessToken = generateAccessTokenString(user_id);
         const refreshToken = generateRefreshTokenString(user_id) 
 
-        res.clearCookie('refresh_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/refresh-token'
-        })
+        res.clearCookie('refresh_token', refreshCookie)
 
-        res.clearCookie('access_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        })
+        res.clearCookie('access_token', accessCookie)
 
-        res.cookie('refresh_token', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token",
-            maxAge: ms('3d')
-        })
+        res.cookie('refresh_token', refreshToken, refreshCookie)
 
-        res.cookie('access_token', accessToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: ms('10m')
-        })
+        res.cookie('access_token', accessToken, accessCookie)
 
         res.status(200).json({
             success: true,
@@ -79,7 +55,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
                 user_id: user_id,
                 name: name,
                 email: result.email,
-                isVerified: isVerified
+                is_verified: is_verified
             }
         })
 

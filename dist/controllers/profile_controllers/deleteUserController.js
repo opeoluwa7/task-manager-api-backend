@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
+const variables_1 = require("../../global/variables");
 const deleteUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
@@ -21,17 +22,8 @@ const deleteUserController = async (req, res, next) => {
         const refreshToken = req.cookies['refresh_token'];
         await (0, redis_functions_1.blacklistToken)(accessToken);
         await (0, redis_functions_1.blacklistToken)(refreshToken);
-        res.clearCookie("access_token", {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        });
-        res.clearCookie("refresh_token", {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/refresh-token'
-        });
+        res.clearCookie("access_token", variables_1.accessCookie);
+        res.clearCookie("refresh_token", variables_1.refreshCookie);
         res.status(200).json({
             success: true,
             message: "User deleted successfully"

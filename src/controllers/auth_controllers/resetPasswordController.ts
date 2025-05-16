@@ -32,9 +32,7 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
             error: "Invalid reset token. go back to forgot password"
         })
 
-        const user = await userFn.checkUserWithId(verified.user_id);
-
-        const storedHashedPassword = user.password;
+        const { name, email, password: storedHashedPassword, user_id } = await userFn.checkUserWithId(verified.user_id);
 
         const match = await matchPasswords(password, storedHashedPassword);
 
@@ -45,10 +43,10 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
         const hashedPassword = await encryptedPassword(password);
 
         const updatePassword: UpdateUserType = {
-            name: user.name,
-            email: user.email,
+            name: name,
+            email: email,
             password: hashedPassword,
-            user_id: user.user_id
+            user_id: user_id
         }
 
         const results = await userFn.updateUserInfo(updatePassword);

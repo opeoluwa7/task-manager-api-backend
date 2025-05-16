@@ -2,13 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { updateUserSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
-
 import { generateAccessTokenString, generateRefreshTokenString } from "../../utils/helper_functions/token-functions";
-import ms from "ms";
 import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import CheckUserWithIdType from "../../types/userTypes/CheckUserWithIdType";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import UpdateUserType from "../../types/userTypes/UpdateUserType";
+import { accessCookie, refreshCookie } from "../../global/variables";
 
 const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -30,7 +29,8 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             email: email
         }
 
-        const result = await userFn.checkUserWithId(checkUserId);
+        let result = await userFn.checkUserWithId(checkUserId);
+
         const existingEmail = await userFn.checkUserWithEmail(checkUserEmail);
 
         if (existingEmail) return res.status(400).json({
@@ -41,14 +41,13 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             error: "User not found"
         })
 
-        let defaultEmail: string = result.email;
-        let defaultName: string = result.name;
-        let defaultPassword: string = result.password;
+        let { name: defaultName, email: defaultEmail, password: defaultPassword } = result
+
+
 
         if (email && email !== defaultEmail) {
 
             defaultEmail = email
-
 
             const accessToken = req.cookies['access_token'];
             const refreshToken = req.cookies['refresh_token'];
@@ -56,36 +55,16 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
             await blacklistToken(accessToken);
             await blacklistToken(refreshToken)
 
-            res.clearCookie('access_token', {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none'
-            })
+            res.clearCookie('access_token', accessCookie)
 
-            res.clearCookie('refresh_token', {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                path: "api/refresh-token"
-            })
+            res.clearCookie('refresh_token', refreshCookie)
 
             const newAccessToken: string = generateAccessTokenString(user_id);
             const newRefreshToken: string = generateRefreshTokenString(user_id)
 
-            res.cookie('access_token', newAccessToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                maxAge: ms('10m')
-            })
+            res.cookie('access_token', newAccessToken, accessCookie)
 
-            res.cookie('refresh_token', newRefreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                path: "api/refresh-token",
-                maxAge: ms('3d')
-            })
+            res.cookie('refresh_token', newRefreshToken, refreshCookie)
 
         }
 

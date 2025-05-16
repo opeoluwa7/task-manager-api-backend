@@ -1,6 +1,7 @@
 require("cookie-parser")
 import { Response, Request, NextFunction } from "express";
 import { blacklistToken } from "../../utils/helper_functions/redis-functions";
+import { accessCookie, refreshCookie } from "../../global/variables";
 
 
 
@@ -13,18 +14,9 @@ const logoutController = async (req: Request, res: Response, next: NextFunction)
         await blacklistToken(refreshToken)
 
 
-        res.clearCookie('access_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        })
+        res.clearCookie('access_token', accessCookie)
 
-        res.clearCookie('refresh_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token"
-        })
+        res.clearCookie('refresh_token', refreshCookie)
 
         res.status(200).json({
             success: true,

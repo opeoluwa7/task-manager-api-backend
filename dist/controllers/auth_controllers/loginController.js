@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ms_1 = __importDefault(require("ms"));
 require("cookie-parser");
 const userSchema_1 = require("../../schemas/userSchema");
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-functions");
+const variables_1 = require("../../global/variables");
 const loginController = async (req, res, next) => {
     try {
         const value = userSchema_1.loginSchema.safeParse(req.body);
@@ -20,15 +20,12 @@ const loginController = async (req, res, next) => {
         const user = {
             email: email
         };
-        const result = await user_functions_1.default.checkUserWithEmail(user);
+        let result = await user_functions_1.default.checkUserWithEmail(user);
         if (!result)
             return res.status(404).json({
                 error: "User not found. Please register or confirm your details"
             });
-        const storedHashedPassword = result.password;
-        const user_id = result.user_id;
-        const name = result.name;
-        const isVerified = result.is_verified;
+        const { password: storedHashedPassword, user_id, name, is_verified } = result;
         const match = await (0, bcrypt_functions_1.matchPasswords)(password, storedHashedPassword);
         if (!match)
             return res.status(400).json({
@@ -36,30 +33,10 @@ const loginController = async (req, res, next) => {
             });
         const accessToken = (0, token_functions_1.generateAccessTokenString)(user_id);
         const refreshToken = (0, token_functions_1.generateRefreshTokenString)(user_id);
-        res.clearCookie('refresh_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/api/refresh-token'
-        });
-        res.clearCookie('access_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        });
-        res.cookie('refresh_token', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: "/api/refresh-token",
-            maxAge: (0, ms_1.default)('3d')
-        });
-        res.cookie('access_token', accessToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: (0, ms_1.default)('10m')
-        });
+        res.clearCookie('refresh_token', variables_1.refreshCookie);
+        res.clearCookie('access_token', variables_1.accessCookie);
+        res.cookie('refresh_token', refreshToken, variables_1.refreshCookie);
+        res.cookie('access_token', accessToken, variables_1.accessCookie);
         res.status(200).json({
             success: true,
             message: "User login successful!",
@@ -67,7 +44,7 @@ const loginController = async (req, res, next) => {
                 user_id: user_id,
                 name: name,
                 email: result.email,
-                isVerified: isVerified
+                is_verified: is_verified
             }
         });
     }
