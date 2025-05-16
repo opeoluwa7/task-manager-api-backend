@@ -7,12 +7,12 @@ import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import { Express } from "../../types/express/types";
 
 
-const requestPasswordResetController = async(express: Express) => {
+const requestPasswordResetController = async({req, res, next}: Express) => {
 
     try {
-        const value = forgotPasswordSchema.safeParse(express.req.body);
+        const value = forgotPasswordSchema.safeParse(req.body);
 
-        if (!value.success) return express.res.status(400).json({
+        if (!value.success) return res.status(400).json({
             error: value.error.format()
         })        
 
@@ -25,7 +25,7 @@ const requestPasswordResetController = async(express: Express) => {
 
         const result = await userFn.checkUserWithEmail(user);
 
-        if (!result) return express.res.status(404).json({
+        if (!result) return res.status(404).json({
             error: "User not found"
         });
 
@@ -38,13 +38,13 @@ const requestPasswordResetController = async(express: Express) => {
         await sendPasswordResetEmail(result.email);
 
 
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "Your password reset email has been sent to you."
         })
 
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

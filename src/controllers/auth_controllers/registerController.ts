@@ -9,12 +9,12 @@ import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import { Express } from "../../types/express/types";
 
 
-const registerController = async (express: Express) => {
+const registerController = async ({req, res, next}: Express) => {
     try {
-        const value = registerSchema.safeParse(express.req.body);
+        const value = registerSchema.safeParse(req.body);
 
         if (!value.success) {
-            return express.res.status(400).json({
+            return res.status(400).json({
             error: value.error.format()
             })
         }
@@ -27,7 +27,7 @@ const registerController = async (express: Express) => {
 
         const existingUser = await userFn.checkUserWithEmail(user);
 
-        if (existingUser) return express.res.status(400).json({
+        if (existingUser) return res.status(400).json({
             error: "User with this email already exists"
         })
 
@@ -43,13 +43,13 @@ const registerController = async (express: Express) => {
 
         await sendVerificationEmail(email);
 
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "An Email Verification link has been sent to you. Please verify"
         })
 
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

@@ -7,20 +7,20 @@ import { variables } from "../../global/variables";
 
 
 
-const queryTasksController = async (express: Express) => {
+const queryTasksController = async ({req, res, next}: Express) => {
     try {
 
-        const query = express.req.query;
+        const query = req.query;
 
         const queryArray = Object.entries(query)
 
-        if (queryArray.length === 0) return express.res.status(404).json({
+        if (queryArray.length === 0) return res.status(404).json({
             error: "Query cannot be empty. At least one is required"
         })
 
         const value = queryTaskSchema.safeParse(query);
 
-        if (!value.success) return express.res.status(400).json({
+        if (!value.success) return res.status(400).json({
             error: value.error.format()
 
         })
@@ -32,7 +32,7 @@ const queryTasksController = async (express: Express) => {
             priority
         }
 
-        const user_id = express.req.user?.user_id;
+        const user_id = req.user?.user_id;
 
         const task: QueryTasksType = {
             user_id: user_id,
@@ -43,17 +43,17 @@ const queryTasksController = async (express: Express) => {
 
         const result = await taskFn.queryAllTasks(task)
 
-        if (result.length === 0) return express.res.status(404).json({
-            error: `No tasks found`
+        if (result.length === 0) return res.status(404).json({
+            error: 'No tasks found'
         })
 
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "All queried tasks",
             body: result
         })
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

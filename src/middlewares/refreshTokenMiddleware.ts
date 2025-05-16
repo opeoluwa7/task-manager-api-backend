@@ -5,12 +5,12 @@ import { Express } from "../types/express/types";
 
 import { verifyRefreshTokenString } from "../utils/helper_functions/token-functions";
 
-const refreshTokenMiddlware = async(express: Express) => {
+const refreshTokenMiddlware = async ({req, res, next}: Express) => {
     try {
-        const refreshToken = express.req.cookies['refresh_token'];
+        const refreshToken = req.cookies['refresh_token'];
 
         if (!refreshToken) {
-            return express.res.status(401).json({
+            return res.status(401).json({
                 error: "No refresh token provided. Please login"
             })
         }
@@ -18,23 +18,23 @@ const refreshTokenMiddlware = async(express: Express) => {
         const blacklisted = await checkRedisBlacklist(refreshToken);
 
         if (blacklisted) {
-            return express.res.status(401).json({
+            return res.status(401).json({
                 error: "Token is blacklisted. Please login again"
             })
         }
 
         const decoded = verifyRefreshTokenString(refreshToken);
 
-        if (!decoded) return express.res.status(401).json({
+        if (!decoded) return res.status(401).json({
             error: "Invalid refresh token provided. Please login again."
         })
         
 
-        express.req.user = decoded;
+        req.user = decoded;
 
-        express.next()
+        next()
     } catch(error) {
-        express.next(error)
+        next(error)
     }
 }
 

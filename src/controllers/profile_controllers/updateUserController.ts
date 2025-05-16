@@ -9,13 +9,13 @@ import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import UpdateUserType from "../../types/userTypes/UpdateUserType";
 import { accessCookie, refreshCookie } from "../../global/variables";
 
-const updateUserController = async (express: Express) => {
+const updateUserController = async ({req, res, next}: Express) => {
     try {
-        const user_id: number = express.req.user?.user_id;
+        const user_id: number = req.user?.user_id;
 
-        const value = updateUserSchema.safeParse(express.req.body)
+        const value = updateUserSchema.safeParse(req.body)
 
-        if (!value.success) return express.res.status(400).json({
+        if (!value.success) return res.status(400).json({
             error: value.error.format()
         })
 
@@ -33,38 +33,36 @@ const updateUserController = async (express: Express) => {
 
         const existingEmail = await userFn.checkUserWithEmail(checkUserEmail);
 
-        if (existingEmail) return express.res.status(400).json({
+        if (existingEmail) return res.status(400).json({
             error: "This email is not available. Try another one."
         })
 
-        if (!result) return express.res.status(404).json({
+        if (!result) return res.status(404).json({
             error: "User not found"
         })
 
         let { name: defaultName, email: defaultEmail, password: defaultPassword } = result
 
-
-
         if (email && email !== defaultEmail) {
 
             defaultEmail = email
 
-            const accessToken = express.req.cookies['access_token'];
-            const refreshToken = express.req.cookies['refresh_token'];
+            const accessToken = req.cookies['access_token'];
+            const refreshToken = req.cookies['refresh_token'];
 
             await blacklistToken(accessToken);
             await blacklistToken(refreshToken)
 
-            express.res.clearCookie('access_token', accessCookie)
+            res.clearCookie('access_token', accessCookie)
 
-            express.res.clearCookie('refresh_token', refreshCookie)
+            res.clearCookie('refresh_token', refreshCookie)
 
             const newAccessToken: string = generateAccessTokenString(user_id);
             const newRefreshToken: string = generateRefreshTokenString(user_id)
 
-            express.res.cookie('access_token', newAccessToken, accessCookie)
+            res.cookie('access_token', newAccessToken, accessCookie)
 
-            express.res.cookie('refresh_token', newRefreshToken, refreshCookie)
+            res.cookie('refresh_token', newRefreshToken, refreshCookie)
 
         }
 
@@ -88,12 +86,12 @@ const updateUserController = async (express: Express) => {
         delete results.isVerified;
         delete results.created_at;
 
-        express.res.status(200).json({ 
+        res.status(200).json({ 
             success: true,
             body: results
         });
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

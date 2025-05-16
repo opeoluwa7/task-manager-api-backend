@@ -5,14 +5,14 @@ import CreateUserType from "../../types/userTypes/CreateUserType";
 import { Express } from "../../types/express/types";
 
 
-const verifyUserController = async (express: Express) => {
+const verifyUserController = async ({req, res, next}: Express) => {
     try {
            
         const token = await getFromRedis("verification:token");
 
         const verificationToken = verifyVerificationTokenString(token)
 
-        if (!verificationToken) return express.res.status(400).json({
+        if (!verificationToken) return res.status(400).json({
             error: "Invalid verification token. Please register"
         })
 
@@ -30,13 +30,13 @@ const verifyUserController = async (express: Express) => {
 
         const results = await userFn.createUser(user)
 
-        if (!results) return express.res.status(500).json({
+        if (!results) return res.status(500).json({
             error: "Error creating user"
         })
 
-        express.res.status(201).send("<h1> User verified successfully!. You can now login </h1>")
+        res.status(201).send("<h1> User verified successfully!. You can now login </h1>")
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

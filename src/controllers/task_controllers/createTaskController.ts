@@ -5,17 +5,17 @@ import createTaskType from "../../types/taskTypes/CreateTaskType";
 
 
 
-const createNewTaskController = async (express: Express) => {
+const createNewTaskController = async ({req, res, next}: Express) => {
     try {
-        const value = createTaskSchema.safeParse(express.req.body)
+        const value = createTaskSchema.safeParse(req.body)
 
-        if (!value.success) return express.res.status(400).json({
+        if (!value.success) return res.status(400).json({
             error: value.error.format()
         })
 
         const data = value.data;
 
-        const user_id: number = express.req.user?.user_id;
+        const user_id: number = req.user?.user_id;
 
         const deadline = new Date(data.deadline!);
 
@@ -30,17 +30,17 @@ const createNewTaskController = async (express: Express) => {
 
         const results = await taskFn.createTask(task);
 
-        if (!results) return express.res.status(500).json({
+        if (!results) return res.status(500).json({
             error: "Error creating task"
         })
 
-        express.res.status(201).json({
+        res.status(201).json({
             success: true,
             message: "Task created successfully",
             body: results
         })
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

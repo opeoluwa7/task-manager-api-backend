@@ -5,9 +5,9 @@ import { accessCookie, refreshCookie } from "../../global/variables";
 import { Express } from "../../types/express/types";
 
 
-const deleteUserController = async (express: Express) => {
+const deleteUserController = async ({req, res, next}: Express) => {
     try {
-        const user_id: number = express.req.user?.user_id;
+        const user_id: number = req.user?.user_id;
 
         const user: DeleteUserType = {
             user_id: user_id
@@ -16,27 +16,27 @@ const deleteUserController = async (express: Express) => {
         const result = await userFn.deleteUserInfo(user);
 
         if (!result) {
-            return express.res.status(404).json({
+            return res.status(404).json({
                 message: "User not found"
             })
         }
 
-        const accessToken = express.req.cookies['access_token'];
-        const refreshToken = express.req.cookies['refresh_token'];
+        const accessToken = req.cookies['access_token'];
+        const refreshToken = req.cookies['refresh_token'];
 
         await blacklistToken(accessToken);
         await blacklistToken(refreshToken)
 
-        express.res.clearCookie("access_token", accessCookie);
+        res.clearCookie("access_token", accessCookie);
 
-        express.res.clearCookie("refresh_token", refreshCookie);
+        res.clearCookie("refresh_token", refreshCookie);
 
-        express.res.status(200).json({ 
+        res.status(200).json({ 
             success: true,
             message: "User deleted successfully" 
         });
     } catch (error) {
-        express.next(error);
+        next(error);
     }
 };
 

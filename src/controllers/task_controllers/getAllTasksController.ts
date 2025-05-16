@@ -4,11 +4,11 @@ import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
 import { variables } from "../../global/variables";
 
 
-const getAllTasksController = async (express: Express) => {
+const getAllTasksController = async ({req, res, next}: Express) => {
     try {
 
 
-        const user_id: number = express.req.user?.user_id;
+        const user_id: number = req.user?.user_id;
 
 
         let task: GetAllTasksType = {
@@ -20,23 +20,23 @@ const getAllTasksController = async (express: Express) => {
  
         const results = await taskFn.getAllTasks(task)
 
-        if (!results) return express.res.status(500).json({
+        if (!results) return res.status(500).json({
             error: "Internal Server Error"
         })
 
         if (results.length === 0) {
-            return express.res.status(404).json({
+            return res.status(404).json({
                 error: "No tasks found!"
         });
         }
 
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "All tasks",
             body: results
         });
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

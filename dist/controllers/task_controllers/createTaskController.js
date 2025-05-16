@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
-const createNewTaskController = async (express) => {
+const createNewTaskController = async ({ req, res, next }) => {
     try {
-        const value = taskSchema_1.createTaskSchema.safeParse(express.req.body);
+        const value = taskSchema_1.createTaskSchema.safeParse(req.body);
         if (!value.success)
-            return express.res.status(400).json({
+            return res.status(400).json({
                 error: value.error.format()
             });
         const data = value.data;
-        const user_id = express.req.user?.user_id;
+        const user_id = req.user?.user_id;
         const deadline = new Date(data.deadline);
         const task = {
             title: data.title,
@@ -25,17 +25,17 @@ const createNewTaskController = async (express) => {
         };
         const results = await task_functions_1.default.createTask(task);
         if (!results)
-            return express.res.status(500).json({
+            return res.status(500).json({
                 error: "Error creating task"
             });
-        express.res.status(201).json({
+        res.status(201).json({
             success: true,
             message: "Task created successfully",
             body: results
         });
     }
     catch (error) {
-        express.next(error);
+        next(error);
     }
 };
 exports.default = createNewTaskController;

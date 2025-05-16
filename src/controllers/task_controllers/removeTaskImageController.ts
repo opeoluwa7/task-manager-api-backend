@@ -7,14 +7,14 @@ import RemoveImageType from "../../types/taskTypes/RemoveImageType";
 
 
 
-const removeTaskImageController = async (express: Express) => {
+const removeTaskImageController = async ({req, res, next}: Express) => {
     try {
-        const user_id: number = express.req.user?.user_id;
+        const user_id: number = req.user?.user_id;
 
       
-        const value = taskIdSchema.safeParse(express.req.params)
+        const value = taskIdSchema.safeParse(req.params)
 
-        if (!value.success) return express.res.status(400).json({
+        if (!value.success) return res.status(400).json({
             error: value.error.format()
         })
 
@@ -22,7 +22,7 @@ const removeTaskImageController = async (express: Express) => {
 
         const task_id = Number(id);
 
-        if (!task_id || isNaN(task_id)) return express.res.status(400).json({
+        if (!task_id || isNaN(task_id)) return res.status(400).json({
             error: "Task id is required and must be a number"
         })
 
@@ -33,11 +33,11 @@ const removeTaskImageController = async (express: Express) => {
 
         const existingTask = await taskFn.getTaskById(checkTask);
 
-        if (!existingTask) return express.res.status(404).json({
+        if (!existingTask) return res.status(404).json({
             error: "Task not found"
         })
 
-        if (existingTask.image_url === null) return express.res.status(404).json({
+        if (existingTask.image_url === null) return res.status(404).json({
             error: "Image not found"
         })
 
@@ -48,13 +48,13 @@ const removeTaskImageController = async (express: Express) => {
 
         const result = await taskFn.removeTaskImage(image);
         
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "Image removed successfully!",
             body: result
         })
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

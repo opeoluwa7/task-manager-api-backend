@@ -5,26 +5,26 @@ import { Express } from "../../types/express/types";
 
 
 
-const logoutController = async (express: Express) => {
+const logoutController = async ({req, res, next}: Express) => {
     try {
-        const accessToken = express.req.cookies['access_token'];
-        const refreshToken = express.req.cookies['refresh_token'];
+        const accessToken = req.cookies['access_token'];
+        const refreshToken = req.cookies['refresh_token'];
 
         await blacklistToken(accessToken);
         await blacklistToken(refreshToken)
 
 
-        express.res.clearCookie('access_token', accessCookie)
+        res.clearCookie('access_token', accessCookie)
 
-        express.res.clearCookie('refresh_token', refreshCookie)
+        res.clearCookie('refresh_token', refreshCookie)
 
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "User logged out successfully!"
         })
 
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
 

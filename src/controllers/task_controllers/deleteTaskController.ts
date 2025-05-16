@@ -4,13 +4,13 @@ import { taskIdSchema } from "../../schemas/taskSchema";
 import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 import DeleteTaskType from "../../types/taskTypes/DeleteTaskType";
 
-const deleteUserTaskController = async (express: Express) => {
+const deleteUserTaskController = async ({req, res, next}: Express) => {
     try {
-        const user_id: number = express.req.user?.user_id;
+        const user_id: number = req.user?.user_id;
 
-        const value = taskIdSchema.safeParse(express.req.params)
+        const value = taskIdSchema.safeParse(req.params)
 
-        if (!value.success) return express.res.status(400).json({
+        if (!value.success) return res.status(400).json({
             error: value.error.format()
         })
 
@@ -18,7 +18,7 @@ const deleteUserTaskController = async (express: Express) => {
 
         const task_id = Number(id);
 
-        if (!task_id || isNaN(task_id)) return express.res.status(400).json({
+        if (!task_id || isNaN(task_id)) return res.status(400).json({
             error: "Task id is required and must be a number"
         })
 
@@ -30,7 +30,7 @@ const deleteUserTaskController = async (express: Express) => {
         let task = await taskFn.getTaskById(checkTask);
 
         if (!task) {
-            return express.res.status(404).json({ 
+            return res.status(404).json({ 
                 error: "Task not found in the database!" 
             })
         }
@@ -42,17 +42,17 @@ const deleteUserTaskController = async (express: Express) => {
         const result = await taskFn.deleteTask(deletedTask);
 
         if(!result) {
-            return express.res.status(500).json({
+            return res.status(500).json({
                 error: "Error deleting task. Something went wrong"
             })
         }
 
-        express.res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "Task deleted successfully!"
         });
     } catch (error) {
-        express.next(error)
+        next(error)
     }
 }
  export default deleteUserTaskController

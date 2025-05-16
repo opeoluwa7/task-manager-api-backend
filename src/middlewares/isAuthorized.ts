@@ -4,20 +4,18 @@ import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions"
 import { verifyAccessTokenString } from "../utils/helper_functions/token-functions";
 
 const isAuthorized = {
-    check: async (express: Express) => {
+    check: async ({req, res, next}: Express) => {
         try {
+            const accessToken: string  = req.cookies['access_token'];
 
-
-            const accessToken: string  = express.req.cookies['access_token'];
-
-            if (!accessToken) return express.res.status(401).json({
+            if (!accessToken) return res.status(401).json({
                 error: "No Access Token found. please login"
             })
 
             const isBlacklisted = await checkRedisBlacklist(accessToken);
 
             if (isBlacklisted) {
-                return express.res.status(401).json({
+                return res.status(401).json({
                     error: "Token is blacklisted. Please login again"
                 })
             }
@@ -26,18 +24,16 @@ const isAuthorized = {
             const decoded = verifyAccessTokenString(accessToken);
                 
             if (!decoded) {
-                return express.res.status(401).json({
+                return res.status(401).json({
                     error: 'Invalid access token provided. Please login again'
                 });
             }
 
-        
+            req.user = decoded;
 
-            express.req.user = decoded;
-
-            express.next();
+            next();
         } catch (error) {
-            express.next(error)
+            next(error)
         }
     }
 }
