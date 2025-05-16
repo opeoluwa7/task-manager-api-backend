@@ -1,15 +1,15 @@
-import { NextFunction, Request, Response } from "express";
+import { Express } from "../../types/express/types";
 import taskFn from "../../utils/helper_functions/task-functions";
 import { taskIdSchema } from "../../schemas/taskSchema";
 
-const getOneTaskController = async (req: Request, res: Response, next: NextFunction) => {
+const getOneTaskController = async (express: Express) => {
     try {
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
       
-        const value = taskIdSchema.safeParse(req.params)
+        const value = taskIdSchema.safeParse(express.req.params)
 
-        if (!value.success) return res.status(400).json({
+        if (!value.success) return express.res.status(400).json({
             error: value.error.format()
         })
 
@@ -17,7 +17,7 @@ const getOneTaskController = async (req: Request, res: Response, next: NextFunct
 
         const task_id = Number(id);
 
-        if (!task_id || isNaN(task_id)) return res.status(400).json({
+        if (!task_id || isNaN(task_id)) return express.res.status(400).json({
             error: "Task id is required and must be a number"
         })
 
@@ -28,17 +28,17 @@ const getOneTaskController = async (req: Request, res: Response, next: NextFunct
 
         const results = await taskFn.getTaskById(task)
 
-        if (!results) return res.status(404).json({
+        if (!results) return express.res.status(404).json({
             error: "Task not found"
         })
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "Task",
             body: results
         })
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const variables_1 = require("../../global/variables");
-const getAllTasksController = async (req, res, next) => {
+const getAllTasksController = async (express) => {
     try {
-        const user_id = req.user?.user_id;
+        const user_id = express.req.user?.user_id;
         let task = {
             user_id: user_id,
             limit: variables_1.variables.limit,
@@ -15,22 +15,22 @@ const getAllTasksController = async (req, res, next) => {
         };
         const results = await task_functions_1.default.getAllTasks(task);
         if (!results)
-            return res.status(500).json({
+            return express.res.status(500).json({
                 error: "Internal Server Error"
             });
         if (results.length === 0) {
-            return res.status(404).json({
+            return express.res.status(404).json({
                 error: "No tasks found!"
             });
         }
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "All tasks",
             body: results
         });
     }
     catch (error) {
-        next(error);
+        express.next(error);
     }
 };
 exports.default = getAllTasksController;

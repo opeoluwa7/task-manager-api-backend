@@ -1,27 +1,27 @@
-import { NextFunction, Request, Response } from "express";
+import { Express } from "../../types/express/types";
 import { taskIdSchema, updateTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 import UpdateTaskType from "../../types/taskTypes/UpdateTaskType";
 import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 
 
-const updateUserTaskController = async (req: Request, res: Response, next: NextFunction) => {
+const updateUserTaskController = async (express: Express) => {
     try {
-        const value = updateTaskSchema.safeParse(req.body);
+        const value = updateTaskSchema.safeParse(express.req.body);
 
         if (!value.success) {
-            return res.status(400).json({
+            return express.res.status(400).json({
                 error: value.error.format()
             })
         }
 
         const data = value.data
 
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
-        const id_value = taskIdSchema.safeParse(req.params)
+        const id_value = taskIdSchema.safeParse(express.req.params)
 
-        if (!id_value.success) return res.status(400).json({
+        if (!id_value.success) return express.res.status(400).json({
             error: id_value.error.format()
         })
 
@@ -29,7 +29,7 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
 
         const task_id = Number(id);
 
-        if (!task_id || isNaN(task_id)) return res.status(400).json({
+        if (!task_id || isNaN(task_id)) return express.res.status(400).json({
             error: "Task id is required and must be a number"
         })
 
@@ -42,7 +42,7 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
 
         const checkTask = await taskFn.getTaskById(task);
 
-        if (!checkTask) return res.status(404).json({
+        if (!checkTask) return express.res.status(404).json({
             error: "Task not found in the database."
         })
 
@@ -59,18 +59,18 @@ const updateUserTaskController = async (req: Request, res: Response, next: NextF
         const results = await taskFn.updateTask(updatedTask);
 
         if (!results) {
-            return res.status(500).json({
+            return express.res.status(500).json({
                 error: "Error updating task. Something went wrong, try again"
             })
         }
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "Task updated succesfully!",
             body: results
         });
     } catch (error) {
-        next(error)
+        express.next(error)
     }   
 }
 

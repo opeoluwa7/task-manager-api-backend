@@ -6,17 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const variables_1 = require("../../global/variables");
-const queryTasksController = async (req, res, next) => {
+const queryTasksController = async (express) => {
     try {
-        const query = req.query;
+        const query = express.req.query;
         const queryArray = Object.entries(query);
         if (queryArray.length === 0)
-            return res.status(404).json({
+            return express.res.status(404).json({
                 error: "Query cannot be empty. At least one is required"
             });
         const value = taskSchema_1.queryTaskSchema.safeParse(query);
         if (!value.success)
-            return res.status(400).json({
+            return express.res.status(400).json({
                 error: value.error.format()
             });
         const { status, priority } = value.data;
@@ -24,7 +24,7 @@ const queryTasksController = async (req, res, next) => {
             status,
             priority
         };
-        const user_id = req.user?.user_id;
+        const user_id = express.req.user?.user_id;
         const task = {
             user_id: user_id,
             filters: filters,
@@ -33,17 +33,17 @@ const queryTasksController = async (req, res, next) => {
         };
         const result = await task_functions_1.default.queryAllTasks(task);
         if (result.length === 0)
-            return res.status(404).json({
+            return express.res.status(404).json({
                 error: `No tasks found`
             });
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "All queried tasks",
             body: result
         });
     }
     catch (error) {
-        next(error);
+        express.next(error);
     }
 };
 exports.default = queryTasksController;

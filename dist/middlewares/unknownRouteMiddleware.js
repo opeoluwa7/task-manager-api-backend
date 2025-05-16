@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const unknownRoute = (req, res) => {
-    res.status(404).json({
+const unknownRoute = (express) => {
+    express.res.status(404).json({
         error: "Route not found"
     });
 };

@@ -1,13 +1,12 @@
-import { NextFunction, Request, Response } from "express";
 import userFn from "../../utils/helper_functions/user-functions";
 import CheckUserWithIdType from "../../types/userTypes/CheckUserWithIdType";
+import { Express } from "../../types/express/types";
 
 
 
-
-const findUserController = async (req: Request, res: Response, next: NextFunction) => {
+const findUserController = async (express: Express) => {
     try {
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
         const user: CheckUserWithIdType = {
             user_id: user_id
@@ -15,11 +14,11 @@ const findUserController = async (req: Request, res: Response, next: NextFunctio
 
         const result = await userFn.checkUserWithId(user);
 
-        if (!result) return res.status(404).json({
+        if (!result) return express.res.status(404).json({
             error: "User not found"
         })
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             body: {
                 user_id: result.user_id,
@@ -28,7 +27,7 @@ const findUserController = async (req: Request, res: Response, next: NextFunctio
             }
         })
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

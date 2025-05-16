@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Express } from "../../types/express/types";
 import { updateUserSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
@@ -9,13 +9,13 @@ import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import UpdateUserType from "../../types/userTypes/UpdateUserType";
 import { accessCookie, refreshCookie } from "../../global/variables";
 
-const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
+const updateUserController = async (express: Express) => {
     try {
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
-        const value = updateUserSchema.safeParse(req.body)
+        const value = updateUserSchema.safeParse(express.req.body)
 
-        if (!value.success) return res.status(400).json({
+        if (!value.success) return express.res.status(400).json({
             error: value.error.format()
         })
 
@@ -33,11 +33,11 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
 
         const existingEmail = await userFn.checkUserWithEmail(checkUserEmail);
 
-        if (existingEmail) return res.status(400).json({
+        if (existingEmail) return express.res.status(400).json({
             error: "This email is not available. Try another one."
         })
 
-        if (!result) return res.status(404).json({
+        if (!result) return express.res.status(404).json({
             error: "User not found"
         })
 
@@ -49,22 +49,22 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
 
             defaultEmail = email
 
-            const accessToken = req.cookies['access_token'];
-            const refreshToken = req.cookies['refresh_token'];
+            const accessToken = express.req.cookies['access_token'];
+            const refreshToken = express.req.cookies['refresh_token'];
 
             await blacklistToken(accessToken);
             await blacklistToken(refreshToken)
 
-            res.clearCookie('access_token', accessCookie)
+            express.res.clearCookie('access_token', accessCookie)
 
-            res.clearCookie('refresh_token', refreshCookie)
+            express.res.clearCookie('refresh_token', refreshCookie)
 
             const newAccessToken: string = generateAccessTokenString(user_id);
             const newRefreshToken: string = generateRefreshTokenString(user_id)
 
-            res.cookie('access_token', newAccessToken, accessCookie)
+            express.res.cookie('access_token', newAccessToken, accessCookie)
 
-            res.cookie('refresh_token', newRefreshToken, refreshCookie)
+            express.res.cookie('refresh_token', newRefreshToken, refreshCookie)
 
         }
 
@@ -88,12 +88,12 @@ const updateUserController = async (req: Request, res: Response, next: NextFunct
         delete results.isVerified;
         delete results.created_at;
 
-        res.status(200).json({ 
+        express.res.status(200).json({ 
             success: true,
             body: results
         });
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

@@ -5,7 +5,7 @@ const allowedPriority = ["low", "medium", "high"];
 const statusError = "status must either be " + "pending, " + "in_progress, or " + "completed" 
 const priorityError = "priority must either be " + "low, " + "medium, or " + "high" 
 
-export const createTaskSchema = z.object({
+const schema = {
         title: z.string().trim(),
 
         description: z.string().trim().optional(),
@@ -13,14 +13,27 @@ export const createTaskSchema = z.object({
         status:  z.string().refine(
                 (val) => allowedStatus.includes(val),
                 { message: statusError }
-        ).optional(),
+        ),
 
         priority: z.string().refine(
                 (val) => allowedPriority.includes(val),
                 { message: priorityError }
-        ).optional(),
+        ),
 
-        deadline: z.string().date("Must be a valid datestring (YYYY-MM-DD)").optional()
+        deadline: z.string().date("Must be a valid datestring (YYYY-MM-DD)")
+}
+
+
+export const createTaskSchema = z.object({
+        title: schema.title,
+
+        description: schema.description.optional(),
+
+        status:  schema.status.optional(),
+
+        priority: schema.priority.optional(),
+
+        deadline: schema.deadline.optional()
 }).strict()
 
 export const taskIdSchema = z.object({
@@ -28,32 +41,20 @@ export const taskIdSchema = z.object({
 }).strict()
 
 export const updateTaskSchema = z.object({
-        title: z.string().trim().optional(),
+        title: schema.title.optional(),
 
-        description: z.string().trim().optional(),
+        description: schema.description.optional(),
 
-        status:  z.string().refine(
-                (val) => allowedStatus.includes(val),
-                { message: statusError }
-        ).optional(),
+        status: schema.status.optional(),
 
-        priority: z.string().refine(
-                (val) => allowedPriority.includes(val),
-                { message: priorityError }
-        ).optional(),
+        priority: schema.priority.optional(),
 
-        deadline: z.string().date("Must be a valid datestring (YYYY-MM-DD)").optional()
+        deadline: schema.deadline.optional()
 }).strict()
 
 export const queryTaskSchema = z.object({
-        status: z.string().refine(
-                (val) =>  allowedStatus.includes(val),
-                { message: statusError }
-        ).optional(),
+        status: schema.status.optional(),
 
-        priority: z.string().refine(
-                (val) => allowedPriority.includes(val),
-                { message: priorityError }
-        ).optional()
+        priority: schema.priority.optional()
 }).strict()
 

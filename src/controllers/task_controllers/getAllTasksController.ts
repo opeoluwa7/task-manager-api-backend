@@ -1,14 +1,14 @@
-import { NextFunction, Request, Response } from "express";
+import { Express } from "../../types/express/types";
 import taskFn from "../../utils/helper_functions/task-functions";
 import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
 import { variables } from "../../global/variables";
 
 
-const getAllTasksController = async (req: Request, res: Response, next: NextFunction) => {
+const getAllTasksController = async (express: Express) => {
     try {
 
 
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
 
         let task: GetAllTasksType = {
@@ -20,23 +20,23 @@ const getAllTasksController = async (req: Request, res: Response, next: NextFunc
  
         const results = await taskFn.getAllTasks(task)
 
-        if (!results) return res.status(500).json({
+        if (!results) return express.res.status(500).json({
             error: "Internal Server Error"
         })
 
         if (results.length === 0) {
-            return res.status(404).json({
+            return express.res.status(404).json({
                 error: "No tasks found!"
         });
         }
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "All tasks",
             body: results
         });
     } catch (error) {
-    next(error)
+        express.next(error)
     }
 }
 

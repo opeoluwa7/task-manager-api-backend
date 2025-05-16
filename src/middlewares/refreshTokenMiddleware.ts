@@ -1,16 +1,16 @@
 
 require("cookie-parser");
 import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions";
-import { Request, Response, NextFunction } from "express";
+import { Express } from "../types/express/types";
 
 import { verifyRefreshTokenString } from "../utils/helper_functions/token-functions";
 
-const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunction) => {
+const refreshTokenMiddlware = async(express: Express) => {
     try {
-        const refreshToken = req.cookies['refresh_token'];
+        const refreshToken = express.req.cookies['refresh_token'];
 
         if (!refreshToken) {
-            return res.status(401).json({
+            return express.res.status(401).json({
                 error: "No refresh token provided. Please login"
             })
         }
@@ -18,22 +18,23 @@ const refreshTokenMiddlware = async(req: Request, res: Response, next: NextFunct
         const blacklisted = await checkRedisBlacklist(refreshToken);
 
         if (blacklisted) {
-            return res.status(401).json({
+            return express.res.status(401).json({
                 error: "Token is blacklisted. Please login again"
             })
         }
 
         const decoded = verifyRefreshTokenString(refreshToken);
 
-        if (!decoded) return res.status(401).json({
+        if (!decoded) return express.res.status(401).json({
             error: "Invalid refresh token provided. Please login again."
         })
         
 
-        req.user = decoded;
-        next()
+        express.req.user = decoded;
+
+        express.next()
     } catch(error) {
-        next(error)
+        express.next(error)
     }
 }
 

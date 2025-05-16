@@ -1,21 +1,21 @@
-import { NextFunction, Request, Response } from "express";
+import { Express } from "../../types/express/types";
 import { createTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 import createTaskType from "../../types/taskTypes/CreateTaskType";
 
 
 
-const createNewTaskController = async (req: Request, res: Response, next: NextFunction) => {
+const createNewTaskController = async (express: Express) => {
     try {
-        const value = createTaskSchema.safeParse(req.body)
+        const value = createTaskSchema.safeParse(express.req.body)
 
-        if (!value.success) return res.status(400).json({
+        if (!value.success) return express.res.status(400).json({
             error: value.error.format()
         })
 
         const data = value.data;
 
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
         const deadline = new Date(data.deadline!);
 
@@ -30,17 +30,17 @@ const createNewTaskController = async (req: Request, res: Response, next: NextFu
 
         const results = await taskFn.createTask(task);
 
-        if (!results) return res.status(500).json({
+        if (!results) return express.res.status(500).json({
             error: "Error creating task"
         })
 
-        res.status(201).json({
+        express.res.status(201).json({
             success: true,
             message: "Task created successfully",
             body: results
         })
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

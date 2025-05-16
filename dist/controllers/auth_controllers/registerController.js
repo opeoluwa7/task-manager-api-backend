@@ -9,11 +9,11 @@ const token_functions_1 = require("../../utils/helper_functions/token-functions"
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
 const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-functions");
 const email_functions_1 = require("../../utils/helper_functions/email-functions");
-const registerController = async (req, res, next) => {
+const registerController = async (express) => {
     try {
-        const value = userSchema_1.registerSchema.safeParse(req.body);
+        const value = userSchema_1.registerSchema.safeParse(express.req.body);
         if (!value.success) {
-            return res.status(400).json({
+            return express.res.status(400).json({
                 error: value.error.format()
             });
         }
@@ -23,7 +23,7 @@ const registerController = async (req, res, next) => {
         };
         const existingUser = await user_functions_1.default.checkUserWithEmail(user);
         if (existingUser)
-            return res.status(400).json({
+            return express.res.status(400).json({
                 error: "User with this email already exists"
             });
         const hashedPassword = await (0, bcrypt_functions_1.encryptedPassword)(password);
@@ -33,13 +33,13 @@ const registerController = async (req, res, next) => {
         await (0, redis_functions_1.storeTempInRedis)("password", hashedPassword);
         await (0, redis_functions_1.storeTempInRedis)("verification:token", verificationToken);
         await (0, email_functions_1.sendVerificationEmail)(email);
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "An Email Verification link has been sent to you. Please verify"
         });
     }
     catch (error) {
-        next(error);
+        express.next(error);
     }
 };
 exports.default = registerController;

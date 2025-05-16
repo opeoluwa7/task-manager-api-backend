@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from "express";
 import { generateAccessTokenString, verifyRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import { accessCookie } from "../../global/variables";
+import { Express } from "../../types/express/types";
 
 
-const refreshAccessTokenController = async(req: Request, res: Response, next: NextFunction) => {
+const refreshAccessTokenController = async(express: Express) => {
     try {
 
-        const token = req.cookies["refresh_token"];
+        const token = express.req.cookies["refresh_token"];
 
         const refreshToken = verifyRefreshTokenString(token)
 
@@ -15,16 +15,16 @@ const refreshAccessTokenController = async(req: Request, res: Response, next: Ne
         const newAccessToken = generateAccessTokenString(user_id);
 
 
-        res.clearCookie('access_token', accessCookie);
+        express.res.clearCookie('access_token', accessCookie);
 
-        res.cookie('access_token', newAccessToken, accessCookie)
+        express.res.cookie('access_token', newAccessToken, accessCookie)
 
-        return res.status(201).json({
+        return express.res.status(201).json({
             success: true,
             message: "Token refreshed successfully"
         })
     } catch (err) {
-        next(err)
+        express.next(err)
     }
 }
 

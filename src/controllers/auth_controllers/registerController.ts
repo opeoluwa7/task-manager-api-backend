@@ -1,20 +1,20 @@
 
 import { registerSchema } from "../../schemas/userSchema";
 import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
-import { Request, Response, NextFunction } from "express";
 import { generateVerificationTokenString } from "../../utils/helper_functions/token-functions";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
 import { sendVerificationEmail } from "../../utils/helper_functions/email-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
+import { Express } from "../../types/express/types";
 
 
-const registerController = async (req: Request, res: Response, next: NextFunction) => {
+const registerController = async (express: Express) => {
     try {
-        const value = registerSchema.safeParse(req.body);
+        const value = registerSchema.safeParse(express.req.body);
 
         if (!value.success) {
-            return res.status(400).json({
+            return express.res.status(400).json({
             error: value.error.format()
             })
         }
@@ -27,7 +27,7 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
 
         const existingUser = await userFn.checkUserWithEmail(user);
 
-        if (existingUser) return res.status(400).json({
+        if (existingUser) return express.res.status(400).json({
             error: "User with this email already exists"
         })
 
@@ -43,13 +43,13 @@ const registerController = async (req: Request, res: Response, next: NextFunctio
 
         await sendVerificationEmail(email);
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "An Email Verification link has been sent to you. Please verify"
         })
 
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

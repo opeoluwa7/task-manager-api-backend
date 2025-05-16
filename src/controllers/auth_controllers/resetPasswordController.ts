@@ -3,18 +3,17 @@ import { matchPasswords, encryptedPassword } from "../../utils/helper_functions/
 import userFn from "../../utils/helper_functions/user-functions"; 
 import { verifyResetTokenString } from "../../utils/helper_functions/token-functions";
 import { getFromRedis } from "../../utils/helper_functions/redis-functions";
-import { Request, Response, NextFunction } from "express";
 import UpdateUserType from "../../types/userTypes/UpdateUserType";
+import { Express } from "../../types/express/types";
 
 
 
-
-const resetPasswordController = async(req: Request, res: Response, next: NextFunction) => {
+const resetPasswordController = async(express: Express) => {
     try {
 
-        const value = resetPasswordSchema.safeParse(req.body);
+        const value = resetPasswordSchema.safeParse(express.req.body);
 
-        if (!value.success) return res.status(400).json({
+        if (!value.success) return express.res.status(400).json({
             error: value.error.format()
         })
 
@@ -22,13 +21,13 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
 
         const resetToken = await getFromRedis("reset:token");
 
-        if (!resetToken) return res.status(401).json({
+        if (!resetToken) return express.res.status(401).json({
             error: "No reset token provided. Go back to forgot password"
         })
 
         const verified = verifyResetTokenString(resetToken);
 
-        if (!verified) return res.status(401).json({
+        if (!verified) return express.res.status(401).json({
             error: "Invalid reset token. go back to forgot password"
         })
 
@@ -36,7 +35,7 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
 
         const match = await matchPasswords(password, storedHashedPassword);
 
-        if (match) return res.status(400).json({
+        if (match) return express.res.status(400).json({
             error: "Passwords must not match. change it for better security."
         })
 
@@ -51,18 +50,18 @@ const resetPasswordController = async(req: Request, res: Response, next: NextFun
 
         const results = await userFn.updateUserInfo(updatePassword);
 
-        if (!results) return res.status(500).json({
+        if (!results) return express.res.status(500).json({
             success: false,
             error: "Internal Server Error"
         })
 
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "Password reset successful!"
         }) 
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

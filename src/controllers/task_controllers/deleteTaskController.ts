@@ -1,16 +1,16 @@
-import { NextFunction, Request, Response } from "express";
+import { Express } from "../../types/express/types";
 import taskFn from "../../utils/helper_functions/task-functions";
 import { taskIdSchema } from "../../schemas/taskSchema";
 import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 import DeleteTaskType from "../../types/taskTypes/DeleteTaskType";
 
-const deleteUserTaskController = async (req: Request, res: Response, next: NextFunction) => {
+const deleteUserTaskController = async (express: Express) => {
     try {
-        const user_id: number = req.user?.user_id;
+        const user_id: number = express.req.user?.user_id;
 
-        const value = taskIdSchema.safeParse(req.params)
+        const value = taskIdSchema.safeParse(express.req.params)
 
-        if (!value.success) return res.status(400).json({
+        if (!value.success) return express.res.status(400).json({
             error: value.error.format()
         })
 
@@ -18,7 +18,7 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
 
         const task_id = Number(id);
 
-        if (!task_id || isNaN(task_id)) return res.status(400).json({
+        if (!task_id || isNaN(task_id)) return express.res.status(400).json({
             error: "Task id is required and must be a number"
         })
 
@@ -30,7 +30,7 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
         let task = await taskFn.getTaskById(checkTask);
 
         if (!task) {
-            return res.status(404).json({ 
+            return express.res.status(404).json({ 
                 error: "Task not found in the database!" 
             })
         }
@@ -42,17 +42,17 @@ const deleteUserTaskController = async (req: Request, res: Response, next: NextF
         const result = await taskFn.deleteTask(deletedTask);
 
         if(!result) {
-            return res.status(500).json({
+            return express.res.status(500).json({
                 error: "Error deleting task. Something went wrong"
             })
         }
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "Task deleted successfully!"
         });
     } catch (error) {
-    next(error)
+        express.next(error)
     }
 }
  export default deleteUserTaskController

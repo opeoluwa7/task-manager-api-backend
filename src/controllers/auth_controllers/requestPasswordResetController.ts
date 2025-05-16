@@ -1,18 +1,18 @@
 import { forgotPasswordSchema } from "../../schemas/userSchema";
-import { Request, Response, NextFunction } from "express";
 import userFn from "../../utils/helper_functions/user-functions";
 import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
 import { sendPasswordResetEmail} from "../../utils/helper_functions/email-functions";
 import { generateResetTokenString } from "../../utils/helper_functions/token-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
+import { Express } from "../../types/express/types";
 
 
-const requestPasswordResetController = async(req: Request, res: Response, next: NextFunction) => {
+const requestPasswordResetController = async(express: Express) => {
 
     try {
-        const value = forgotPasswordSchema.safeParse(req.body);
+        const value = forgotPasswordSchema.safeParse(express.req.body);
 
-        if (!value.success) return res.status(400).json({
+        if (!value.success) return express.res.status(400).json({
             error: value.error.format()
         })        
 
@@ -25,7 +25,7 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
 
         const result = await userFn.checkUserWithEmail(user);
 
-        if (!result) return res.status(404).json({
+        if (!result) return express.res.status(404).json({
             error: "User not found"
         });
 
@@ -38,13 +38,13 @@ const requestPasswordResetController = async(req: Request, res: Response, next: 
         await sendPasswordResetEmail(result.email);
 
 
-        res.status(200).json({
+        express.res.status(200).json({
             success: true,
             message: "Your password reset email has been sent to you."
         })
 
     } catch (error) {
-        next(error)
+        express.next(error)
     }
 }
 

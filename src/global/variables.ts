@@ -25,4 +25,4 @@ export const refreshCookie = {
         sameSIte: 'none',
         path: "api/refresh-token",
         maxAge: ms("3d")
-}
+} 
