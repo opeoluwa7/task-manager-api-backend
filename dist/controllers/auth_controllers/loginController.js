@@ -9,7 +9,7 @@ const user_functions_1 = __importDefault(require("../../utils/helper_functions/u
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-functions");
 const variables_1 = require("../../global/variables");
-const loginController = async ({ req, res, next }) => {
+const loginController = async (req, res, next) => {
     try {
         const value = userSchema_1.loginSchema.safeParse(req.body);
         if (!value.success)
