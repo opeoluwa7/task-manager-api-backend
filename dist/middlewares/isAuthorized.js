@@ -4,7 +4,7 @@ require("cookie-parser");
 const redis_functions_1 = require("../utils/helper_functions/redis-functions");
 const token_functions_1 = require("../utils/helper_functions/token-functions");
 const isAuthorized = {
-    check: async (req, res, next) => {
+    check: async ({ req, res, next }) => {
         try {
             const accessToken = req.cookies['access_token'];
             if (!accessToken)

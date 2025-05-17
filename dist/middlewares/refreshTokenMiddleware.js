@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("cookie-parser");
 const redis_functions_1 = require("../utils/helper_functions/redis-functions");
 const token_functions_1 = require("../utils/helper_functions/token-functions");
-const refreshTokenMiddlware = async (req, res, next) => {
+const refreshTokenMiddlware = async ({ req, res, next }) => {
     try {
         const refreshToken = req.cookies['refresh_token'];
         if (!refreshToken) {

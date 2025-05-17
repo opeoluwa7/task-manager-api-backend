@@ -6,10 +6,9 @@ import { matchPasswords } from "../../utils/helper_functions/bcrypt-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import { accessCookie, refreshCookie } from "../../global/variables";
 import { Express } from "../../types/express/types";
-import { NextFunction, Request, Response } from "express";
 
 
-const loginController = async ( req: Request, res: Response, next: NextFunction) => {
+const loginController = async ({req, res, next}: Express) => {
     try {
 
         const value = loginSchema.safeParse(req.body);
