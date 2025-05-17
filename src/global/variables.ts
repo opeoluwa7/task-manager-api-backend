@@ -1,3 +1,4 @@
+import { CookieOptions } from "express";
 import ms from "ms";
 
 
@@ -15,14 +16,16 @@ export const variables = {
 export const accessCookie = {
         httpOnly: true,
         secure: true,
-        sameSIte: 'none',
+        sameSite: 'none',
         maxAge: ms("15m")
-}
+
+} as CookieOptions
 
 export const refreshCookie = {
         httpOnly: true,
         secure: true,
-        sameSIte: 'none',
+        sameSite: 'none',
         path: "api/refresh-token",
         maxAge: ms("3d")
-} 
+
+} as CookieOptions 

@@ -14,13 +14,13 @@ exports.variables = {
 exports.accessCookie = {
     httpOnly: true,
     secure: true,
-    sameSIte: 'none',
+    sameSite: 'none',
     maxAge: (0, ms_1.default)("15m")
 };
 exports.refreshCookie = {
     httpOnly: true,
     secure: true,
-    sameSIte: 'none',
+    sameSite: 'none',
     path: "api/refresh-token",
     maxAge: (0, ms_1.default)("3d")
 };
