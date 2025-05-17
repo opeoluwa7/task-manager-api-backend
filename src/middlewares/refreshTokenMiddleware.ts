@@ -4,8 +4,9 @@ import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions";
 import { Express } from "../types/express/types";
 
 import { verifyRefreshTokenString } from "../utils/helper_functions/token-functions";
+import { NextFunction, Request, Response } from "express";
 
-const refreshTokenMiddlware = async ({req, res, next}: Express) => {
+const refreshTokenMiddlware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const refreshToken = req.cookies['refresh_token'];
 

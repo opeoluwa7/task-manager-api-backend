@@ -1,10 +1,11 @@
+import { NextFunction, Request, Response } from "express";
 import { Express } from "../types/express/types"
 require("cookie-parser");
 import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions"
 import { verifyAccessTokenString } from "../utils/helper_functions/token-functions";
 
 const isAuthorized = {
-    check: async ({req, res, next}: Express) => {
+    check: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const accessToken: string  = req.cookies['access_token'];
 
