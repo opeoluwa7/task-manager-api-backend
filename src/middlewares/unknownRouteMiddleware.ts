@@ -1,8 +1,8 @@
 import { Express } from "../types/express/types"
 
 
-const unknownRoute = ({req, res, next}: Express) => {
-    res.status(404).json({
+const unknownRoute = (express: Express) => {
+    express.res.status(404).json({
         error: "Route not found"
     })
 }
