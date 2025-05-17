@@ -1,11 +1,12 @@
-import { Express } from "../../types/express/types";
+
 import { createTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 import createTaskType from "../../types/taskTypes/CreateTaskType";
+import { RequestHandler } from "express";
 
 
 
-const createNewTaskController = async ({req, res, next}: Express) => {
+const createNewTaskController: RequestHandler = async (req, res, next) => {
     try {
         const value = createTaskSchema.safeParse(req.body)
 

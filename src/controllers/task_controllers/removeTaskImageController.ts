@@ -1,13 +1,14 @@
-import { Express } from "../../types/express/types";
+
 import taskFn from "../../utils/helper_functions/task-functions"; 
 import { taskIdSchema } from "../../schemas/taskSchema";
 import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 import RemoveImageType from "../../types/taskTypes/RemoveImageType";
+import { RequestHandler } from "express";
 
 
 
 
-const removeTaskImageController = async ({req, res, next}: Express) => {
+const removeTaskImageController: RequestHandler = async (req, res, next) => {
     try {
         const user_id: number = req.user?.user_id;
 

@@ -8,7 +8,7 @@ const user_functions_1 = __importDefault(require("../../utils/helper_functions/u
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const email_functions_1 = require("../../utils/helper_functions/email-functions");
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
-const requestPasswordResetController = async ({ req, res, next }) => {
+const requestPasswordResetController = async (req, res, next) => {
     try {
         const value = userSchema_1.forgotPasswordSchema.safeParse(req.body);
         if (!value.success)

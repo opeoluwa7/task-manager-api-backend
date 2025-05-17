@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
-const createNewTaskController = async ({ req, res, next }) => {
+const createNewTaskController = async (req, res, next) => {
     try {
         const value = taskSchema_1.createTaskSchema.safeParse(req.body);
         if (!value.success)

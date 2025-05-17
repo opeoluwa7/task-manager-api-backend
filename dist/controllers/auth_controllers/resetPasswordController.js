@@ -8,7 +8,7 @@ const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-function
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
-const resetPasswordController = async ({ req, res, next }) => {
+const resetPasswordController = async (req, res, next) => {
     try {
         const value = userSchema_1.resetPasswordSchema.safeParse(req.body);
         if (!value.success)

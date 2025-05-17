@@ -16,7 +16,7 @@ const refreshTokenMiddleware_1 = __importDefault(require("../middlewares/refresh
 router.post('/register', registerController_1.default);
 router.get('/verify-email', verifyUserController_1.default);
 router.post('/login', loginController_1.default);
-router.post('/logout', isAuthorized_1.default.check, logoutController_1.default);
+router.post('/logout', isAuthorized_1.default, logoutController_1.default);
 router.post('/forgot-password', requestPasswordResetController_1.default);
 router.post('/reset-password', resetPasswordController_1.default);
 router.post('/refresh-token', refreshTokenMiddleware_1.default, refreshAccessTokenController_1.default);

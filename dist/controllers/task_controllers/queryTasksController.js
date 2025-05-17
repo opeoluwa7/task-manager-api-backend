@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const taskSchema_1 = require("../../schemas/taskSchema");
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const variables_1 = require("../../global/variables");
-const queryTasksController = async ({ req, res, next }) => {
+const queryTasksController = async (req, res, next) => {
     try {
         const query = req.query;
         const queryArray = Object.entries(query);

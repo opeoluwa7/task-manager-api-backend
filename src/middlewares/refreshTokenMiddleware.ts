@@ -1,11 +1,12 @@
 
 require("cookie-parser");
+import { RequestHandler } from "express";
 import { checkRedisBlacklist } from "../utils/helper_functions/redis-functions";
-import { Express } from "../types/express/types";
+
 
 import { verifyRefreshTokenString } from "../utils/helper_functions/token-functions";
 
-const refreshTokenMiddlware = async ({req, res, next}: Express) => {
+const refreshTokenMiddlware: RequestHandler = async (req, res, next) => {
     try {
         const refreshToken = req.cookies['refresh_token'];
 

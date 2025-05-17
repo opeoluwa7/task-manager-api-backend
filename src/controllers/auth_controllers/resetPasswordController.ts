@@ -4,11 +4,12 @@ import userFn from "../../utils/helper_functions/user-functions";
 import { verifyResetTokenString } from "../../utils/helper_functions/token-functions";
 import { getFromRedis } from "../../utils/helper_functions/redis-functions";
 import UpdateUserType from "../../types/userTypes/UpdateUserType";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
 
-const resetPasswordController = async({req, res, next}: Express) => {
+
+const resetPasswordController: RequestHandler = async(req, res, next) => {
     try {
 
         const value = resetPasswordSchema.safeParse(req.body);

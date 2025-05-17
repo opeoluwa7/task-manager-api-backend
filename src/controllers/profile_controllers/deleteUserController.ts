@@ -2,10 +2,11 @@ import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import userFn from "../../utils/helper_functions/user-functions";
 import DeleteUserType from "../../types/userTypes/DeleteUserType";
 import { accessCookie, refreshCookie } from "../../global/variables";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
-const deleteUserController = async ({req, res, next}: Express) => {
+
+const deleteUserController: RequestHandler = async (req, res, next) => {
     try {
         const user_id: number = req.user?.user_id;
 

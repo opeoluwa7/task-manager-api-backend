@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
 const variables_1 = require("../../global/variables");
-const deleteUserController = async ({ req, res, next }) => {
+const deleteUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
         const user = {

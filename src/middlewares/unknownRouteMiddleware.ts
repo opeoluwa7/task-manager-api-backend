@@ -1,8 +1,7 @@
-import { Express } from "../types/express/types"
+import { RequestHandler } from "express"
 
-
-const unknownRoute = (express: Express) => {
-    express.res.status(404).json({
+const unknownRoute: RequestHandler = (req, res, next) => {
+    res.status(404).json({
         error: "Route not found"
     })
 }

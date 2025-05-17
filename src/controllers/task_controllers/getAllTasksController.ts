@@ -1,10 +1,11 @@
-import { Express } from "../../types/express/types";
+
 import taskFn from "../../utils/helper_functions/task-functions";
 import GetAllTasksType from "../../types/taskTypes/GetAllTasksType";
 import { variables } from "../../global/variables";
+import { RequestHandler } from "express";
 
 
-const getAllTasksController = async ({req, res, next}: Express) => {
+const getAllTasksController: RequestHandler = async (req, res, next) => {
     try {
 
 

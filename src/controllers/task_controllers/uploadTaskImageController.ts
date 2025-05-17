@@ -1,11 +1,12 @@
-import { Express } from "../../types/express/types";
+
 import cloudinary from "../../config/cloudinaryConfig";
 import taskFn from "../../utils/helper_functions/task-functions";
 import { taskIdSchema } from "../../schemas/taskSchema";
 import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 import UpdateImageType from "../../types/taskTypes/UpdateImageType";
+import { RequestHandler } from "express";
 
-const uploadTaskImageController = async({req, res, next}: Express) => {
+const uploadTaskImageController: RequestHandler = async(req, res, next) => {
     try { 
 
         const file = req.file;

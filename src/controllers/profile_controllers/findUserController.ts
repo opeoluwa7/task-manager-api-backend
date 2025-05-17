@@ -1,10 +1,11 @@
 import userFn from "../../utils/helper_functions/user-functions";
 import CheckUserWithIdType from "../../types/userTypes/CheckUserWithIdType";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
 
-const findUserController = async ({req, res, next}: Express) => {
+
+const findUserController: RequestHandler = async (req, res, next) => {
     try {
         const user_id: number = req.user?.user_id;
 

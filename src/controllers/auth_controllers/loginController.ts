@@ -5,7 +5,6 @@ import { generateAccessTokenString, generateRefreshTokenString } from "../../uti
 import { matchPasswords } from "../../utils/helper_functions/bcrypt-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import { accessCookie, refreshCookie } from "../../global/variables";
-import { Express } from "../../types/express/types";
 import { RequestHandler } from "express";
 
 

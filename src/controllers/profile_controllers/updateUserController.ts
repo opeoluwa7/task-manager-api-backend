@@ -1,4 +1,4 @@
-import { Express } from "../../types/express/types";
+
 import { updateUserSchema } from "../../schemas/userSchema";
 import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
@@ -8,8 +8,9 @@ import CheckUserWithIdType from "../../types/userTypes/CheckUserWithIdType";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
 import UpdateUserType from "../../types/userTypes/UpdateUserType";
 import { accessCookie, refreshCookie } from "../../global/variables";
+import { RequestHandler } from "express";
 
-const updateUserController = async ({req, res, next}: Express) => {
+const updateUserController: RequestHandler = async (req, res, next) => {
     try {
         const user_id: number = req.user?.user_id;
 

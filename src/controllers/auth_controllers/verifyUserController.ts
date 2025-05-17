@@ -2,10 +2,11 @@ import { getFromRedis } from "../../utils/helper_functions/redis-functions";
 import { verifyVerificationTokenString } from "../../utils/helper_functions/token-functions";
 import userFn from "../../utils/helper_functions/user-functions";
 import CreateUserType from "../../types/userTypes/CreateUserType";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
-const verifyUserController = async ({req, res, next}: Express) => {
+
+const verifyUserController: RequestHandler = async (req, res, next) => {
     try {
            
         const token = await getFromRedis("verification:token");

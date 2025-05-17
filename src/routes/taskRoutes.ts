@@ -17,13 +17,13 @@ import queryTasksController from "../controllers/task_controllers/queryTasksCont
 
 
 
-router.get('/all-tasks', isAuthorized.check, getAllTasksController);
-router.get('/query-tasks', isAuthorized.check, queryTasksController);
-router.get('/task/:id', isAuthorized.check, getOneTaskController);
-router.post('/create-task', isAuthorized.check, createNewTaskController);
-router.patch('/update-task/:id', isAuthorized.check, updateUserTaskController);
-router.delete('/delete-task/:id', isAuthorized.check, deleteUserTaskController);
+router.get('/all-tasks', isAuthorized, getAllTasksController);
+router.get('/query-tasks', isAuthorized, queryTasksController);
+router.get('/task/:id', isAuthorized, getOneTaskController);
+router.post('/create-task', isAuthorized, createNewTaskController);
+router.patch('/update-task/:id', isAuthorized, updateUserTaskController);
+router.delete('/delete-task/:id', isAuthorized, deleteUserTaskController);
 
-router.post('/task/image/:id', [isAuthorized.check, upload.single("image")], uploadTaskImageController);
-router.patch('/task/remove-image/:id', [isAuthorized.check], removeTaskImageController)
+router.post('/task/image/:id', [isAuthorized, upload.single("image")], uploadTaskImageController);
+router.patch('/task/remove-image/:id', isAuthorized, removeTaskImageController)
 export default router;

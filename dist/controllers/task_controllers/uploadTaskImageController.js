@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cloudinaryConfig_1 = __importDefault(require("../../config/cloudinaryConfig"));
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const taskSchema_1 = require("../../schemas/taskSchema");
-const uploadTaskImageController = async ({ req, res, next }) => {
+const uploadTaskImageController = async (req, res, next) => {
     try {
         const file = req.file;
         if (!file)

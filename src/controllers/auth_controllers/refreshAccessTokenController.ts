@@ -1,9 +1,10 @@
-import { Express } from "../../types/express/types";
+
 import { generateAccessTokenString, verifyRefreshTokenString } from "../../utils/helper_functions/token-functions";
 import { accessCookie } from "../../global/variables";
+import { RequestHandler } from "express";
 
 
-const refreshAccessTokenController = async({req, res, next}: Express) => {
+const refreshAccessTokenController: RequestHandler = async(req, res, next) => {
     try {
 
         const token = req.cookies["refresh_token"];

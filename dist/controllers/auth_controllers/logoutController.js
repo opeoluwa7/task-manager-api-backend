@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("cookie-parser");
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const variables_1 = require("../../global/variables");
-const logoutController = async ({ req, res, next }) => {
+const logoutController = async (req, res, next) => {
     try {
         const accessToken = req.cookies['access_token'];
         const refreshToken = req.cookies['refresh_token'];

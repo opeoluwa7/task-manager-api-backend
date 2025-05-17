@@ -1,13 +1,14 @@
-import { Express } from "../../types/express/types";
+
 import { queryTaskSchema } from "../../schemas/taskSchema";
 import taskFn from "../../utils/helper_functions/task-functions";
 import QueryTasksType from "../../types/taskTypes/QueryTasksType";
 import { FiltersType } from "../../types/utils/FiltersType";
 import { variables } from "../../global/variables";
+import { RequestHandler } from "express";
 
 
 
-const queryTasksController = async ({req, res, next}: Express) => {
+const queryTasksController: RequestHandler = async (req, res, next) => {
     try {
 
         const query = req.query;

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const variables_1 = require("../../global/variables");
-const refreshAccessTokenController = async ({ req, res, next }) => {
+const refreshAccessTokenController = async (req, res, next) => {
     try {
         const token = req.cookies["refresh_token"];
         const refreshToken = (0, token_functions_1.verifyRefreshTokenString)(token);

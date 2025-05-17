@@ -11,10 +11,10 @@ const router = express.Router();
 
 
 
-router.get('/find-user', isAuthorized.check, findUserController);
+router.get('/find-user', isAuthorized, findUserController);
 
-router.patch('/update-user', isAuthorized.check, updateUserController);
+router.patch('/update-user', isAuthorized, updateUserController);
 
-router.delete('/delete-user', isAuthorized.check, deleteUserController)
+router.delete('/delete-user', isAuthorized, deleteUserController)
 
 export = router

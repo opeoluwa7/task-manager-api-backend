@@ -6,10 +6,10 @@ import userFn from "../../utils/helper_functions/user-functions";
 import { encryptedPassword } from "../../utils/helper_functions/bcrypt-functions";
 import { sendVerificationEmail } from "../../utils/helper_functions/email-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
-const registerController = async ({req, res, next}: Express) => {
+const registerController: RequestHandler = async (req, res, next) => {
     try {
         const value = registerSchema.safeParse(req.body);
 

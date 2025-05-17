@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
-const findUserController = async ({ req, res, next }) => {
+const findUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
         const user = {

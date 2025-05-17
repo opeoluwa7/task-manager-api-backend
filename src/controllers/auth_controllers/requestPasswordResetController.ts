@@ -4,10 +4,11 @@ import { storeTempInRedis } from "../../utils/helper_functions/redis-functions";
 import { sendPasswordResetEmail} from "../../utils/helper_functions/email-functions";
 import { generateResetTokenString } from "../../utils/helper_functions/token-functions";
 import CheckUserWithEmailType from "../../types/userTypes/CheckWithEmailType";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
-const requestPasswordResetController = async({req, res, next}: Express) => {
+
+const requestPasswordResetController: RequestHandler = async(req, res, next) => {
 
     try {
         const value = forgotPasswordSchema.safeParse(req.body);

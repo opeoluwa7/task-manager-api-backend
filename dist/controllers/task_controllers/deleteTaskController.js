@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const task_functions_1 = __importDefault(require("../../utils/helper_functions/task-functions"));
 const taskSchema_1 = require("../../schemas/taskSchema");
-const deleteUserTaskController = async ({ req, res, next }) => {
+const deleteUserTaskController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
         const value = taskSchema_1.taskIdSchema.safeParse(req.params);

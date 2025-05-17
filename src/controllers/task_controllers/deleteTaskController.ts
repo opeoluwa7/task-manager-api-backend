@@ -1,10 +1,11 @@
-import { Express } from "../../types/express/types";
+
 import taskFn from "../../utils/helper_functions/task-functions";
 import { taskIdSchema } from "../../schemas/taskSchema";
 import GetOneTaskType from "../../types/taskTypes/GetOneTaskType";
 import DeleteTaskType from "../../types/taskTypes/DeleteTaskType";
+import { RequestHandler } from "express";
 
-const deleteUserTaskController = async ({req, res, next}: Express) => {
+const deleteUserTaskController: RequestHandler = async (req, res, next) => {
     try {
         const user_id: number = req.user?.user_id;
 

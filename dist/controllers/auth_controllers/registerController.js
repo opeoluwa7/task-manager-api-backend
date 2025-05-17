@@ -9,7 +9,7 @@ const token_functions_1 = require("../../utils/helper_functions/token-functions"
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
 const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-functions");
 const email_functions_1 = require("../../utils/helper_functions/email-functions");
-const registerController = async ({ req, res, next }) => {
+const registerController = async (req, res, next) => {
     try {
         const value = userSchema_1.registerSchema.safeParse(req.body);
         if (!value.success) {

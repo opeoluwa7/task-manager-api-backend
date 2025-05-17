@@ -1,11 +1,12 @@
 require("cookie-parser")
 import { blacklistToken } from "../../utils/helper_functions/redis-functions";
 import { accessCookie, refreshCookie } from "../../global/variables";
-import { Express } from "../../types/express/types";
+import { RequestHandler } from "express";
 
 
 
-const logoutController = async ({req, res, next}: Express) => {
+
+const logoutController: RequestHandler = async (req, res, next) => {
     try {
         const accessToken = req.cookies['access_token'];
         const refreshToken = req.cookies['refresh_token'];

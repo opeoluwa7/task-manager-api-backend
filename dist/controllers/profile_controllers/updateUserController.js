@@ -9,7 +9,7 @@ const bcrypt_functions_1 = require("../../utils/helper_functions/bcrypt-function
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const variables_1 = require("../../global/variables");
-const updateUserController = async ({ req, res, next }) => {
+const updateUserController = async (req, res, next) => {
     try {
         const user_id = req.user?.user_id;
         const value = userSchema_1.updateUserSchema.safeParse(req.body);

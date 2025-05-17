@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const redis_functions_1 = require("../../utils/helper_functions/redis-functions");
 const token_functions_1 = require("../../utils/helper_functions/token-functions");
 const user_functions_1 = __importDefault(require("../../utils/helper_functions/user-functions"));
-const verifyUserController = async ({ req, res, next }) => {
+const verifyUserController = async (req, res, next) => {
     try {
         const token = await (0, redis_functions_1.getFromRedis)("verification:token");
         const verificationToken = (0, token_functions_1.verifyVerificationTokenString)(token);

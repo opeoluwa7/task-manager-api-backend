@@ -16,7 +16,7 @@ import refreshTokenMiddlware from "../middlewares/refreshTokenMiddleware";
 router.post('/register', registerController);
 router.get('/verify-email', verifyUserController);
 router.post('/login', loginController);
-router.post('/logout', isAuthorized.check, logoutController);
+router.post('/logout', isAuthorized, logoutController);
 router.post('/forgot-password', requestPasswordResetController);
 router.post('/reset-password', resetPasswordController);
 router.post('/refresh-token', refreshTokenMiddlware, refreshAccessTokenController)
