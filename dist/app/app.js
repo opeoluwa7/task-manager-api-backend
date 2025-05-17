@@ -16,7 +16,7 @@ const unknownRouteMiddleware_1 = __importDefault(require("../middlewares/unknown
 const rateLimit = (0, rateLimiterMiddleware_1.default)(60, 1000, "The server has received too many requests from this IP. Try again in one hour.");
 //API CORS CONFIG
 const corsOptions = {
-    origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:5173'],
+    origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:3000'],
     credentials: true,
     methods: 'GET,PATCH,POST,DELETE',
     allowedHeaders: "Content-Type"
