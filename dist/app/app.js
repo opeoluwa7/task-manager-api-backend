@@ -19,7 +19,6 @@ const corsOptions = {
     origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:3000'],
     credentials: true,
     methods: 'GET,PATCH,POST,DELETE',
-    allowedHeaders: "Content-Type"
 };
 const app = (0, express_1.default)();
 app.set('trust proxy', 1);

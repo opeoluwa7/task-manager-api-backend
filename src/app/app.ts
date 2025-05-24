@@ -13,10 +13,10 @@ const rateLimit = createRateLimiter(60, 1000, "The server has received too many 
 
 //API CORS CONFIG
 const corsOptions = {
-                origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:3000'],
-                credentials: true,
-                methods: 'GET,PATCH,POST,DELETE',
-                allowedHeaders: "Content-Type"
+	origin: ['https://task-manager-app-frontend-blue.vercel.app', 'http://localhost:3000'],
+	credentials: true,
+	methods: 'GET,PATCH,POST,DELETE',
+
 }
 
 const app = express();

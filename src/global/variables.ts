@@ -8,24 +8,24 @@ var offset: number = 0;
 
 
 export const variables = {
-        limit,
-        offset
+	limit,
+	offset
 }
 
 
 export const accessCookie = {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        maxAge: ms("15m")
+	httpOnly: true,
+	secure: false,
+	sameSite: 'none',
+	maxAge: ms("15m")
 
 } as CookieOptions
 
 export const refreshCookie = {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        path: "api/refresh-token",
-        maxAge: ms("3d")
+	httpOnly: true,
+	secure: false,
+	sameSite: 'none',
+	path: "api/refresh-token",
+	maxAge: ms("3d")
 
 } as CookieOptions 
